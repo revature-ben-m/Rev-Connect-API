@@ -15,24 +15,26 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer userId;
-
     @Column(unique = true)
     private String username;
-
     private String userPwd;
-    
     @Column(unique = true)
     private String email;
-
     private String firstName;
-
     private String lastName;
-
     boolean isBusiness;
 
+    public User() {}
 
-    public User() {
-        
+    public User(Integer userId, String username, String password){
+        this.userId = userId;
+        this.username = username;
+        this.password = password;
+    }
+
+    public User(String username, String password){
+        this.username = username;
+        this.password = password;
     }
 
     public User(String username, String userPwd, String email, String firstName, String lastName, boolean isBusiness) {

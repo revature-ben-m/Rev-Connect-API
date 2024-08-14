@@ -17,10 +17,12 @@ public class Post {
     @Column(name="postId")
     @Id 
     @GeneratedValue(strategy = GenerationType.AUTO)
-    
     private Integer postId;
+    @Column(name="postBy")
     private Integer postedBy;
+    @Column(name="postText")
     private String postText;
+    @Column(name="timePostedEpoch")
     private Long timePostedEpoch;
 
     public Post(Integer postId, Integer postedBy, String postText, Long timePostedEpoch) {
