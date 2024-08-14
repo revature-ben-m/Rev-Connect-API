@@ -2,6 +2,7 @@ package com.rev_connect_api.services;
 
 import com.rev_connect_api.models.Post;
 import com.rev_connect_api.repositories.PostRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -26,5 +27,15 @@ public class PostService {
             return null;
         }
         return post.get();
+    }
+
+    @Transactional
+    public String deletePostById(int id) {
+        Post post = getPostById(id);
+        if(post == null) {
+            return "Post of id " + id + " does not exist in database";
+        }
+        postRepository.deletePostByPostId(id);
+        return "Successfully deleted post of id " + id;
     }
 }
