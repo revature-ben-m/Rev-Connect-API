@@ -4,15 +4,10 @@ import com.rev_connect_api.dto.PostCreateRequest;
 import com.rev_connect_api.models.Post;
 import com.rev_connect_api.services.PostService;
 import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigInteger;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/api/post")
@@ -26,7 +21,10 @@ public class PostController {
 
     @PostMapping()
     public ResponseEntity<Post> CreatePost(@RequestBody @Valid PostCreateRequest postCreateRequest) {
-        Post post = new Post(postCreateRequest.getText(), LocalDateTime.now());
+        // Convert request to post entity
+        Post post = postService.postDtoToPost(postCreateRequest);
+        post.setCreatedAt(postService.getCurrentTimestamp());
+        // Call service to save it
         Post response = postService.savePost(post);
         return ResponseEntity.ok(response);
     }
