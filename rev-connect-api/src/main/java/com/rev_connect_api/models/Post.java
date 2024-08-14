@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 
 import java.math.BigInteger;
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "posts")

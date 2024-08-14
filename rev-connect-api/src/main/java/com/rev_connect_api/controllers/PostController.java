@@ -26,10 +26,7 @@ public class PostController {
 
     @PostMapping()
     public ResponseEntity<Post> CreatePost(@RequestBody @Valid PostCreateRequest postCreateRequest) {
-        // Convert request to post entity
-        Post post = postService.postDtoToPost(postCreateRequest);
-        post.setCreatedAt(postService.getCurrentTimestamp());
-        // Call service to save it
+        Post post = new Post(postCreateRequest.getText(), LocalDateTime.now());
         Post response = postService.savePost(post);
         return ResponseEntity.ok(response);
     }

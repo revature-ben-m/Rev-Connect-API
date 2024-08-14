@@ -8,9 +8,9 @@ import java.math.BigInteger;
 import java.util.Optional;
 
 @Repository
-public interface PostRepository extends JpaRepository<Post, Integer> {
+public interface PostRepository extends JpaRepository<Post, BigInteger> {
 
     Optional<Post> getPostByPostId(BigInteger id);
-
     void deletePostByPostId(BigInteger id);
+    
 }
