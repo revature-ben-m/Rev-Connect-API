@@ -38,6 +38,7 @@ public class User {
     public User(String username, String password){
         this.username = username;
         this.password = password;
+        ///
     }
     /**
      * Whem retrieving an Account from the database, all fields will be needed. In that case, a constructor with all
