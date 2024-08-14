@@ -20,15 +20,14 @@ public class Post {
     private String text;
 
     @Column(name = "timePosted")
-    private LocalDateTime timePosted;
+    private String timePosted;
 
     @Column(name = "likesCount")
     private Integer likesCount;
 
     public Post() {}
 
-    public Post(int postId, String userId, String text, LocalDateTime timePosted, Integer likesCount) {
-        this.postId = postId;
+    public Post(String userId, String text, String timePosted, Integer likesCount) {
         this.userId = userId;
         this.text = text;
         this.timePosted = timePosted;
@@ -61,11 +60,11 @@ public class Post {
         this.text = text;
     }
 
-    public LocalDateTime getTimePosted() {
+    public String getTimePosted() {
         return timePosted;
     }
 
-    public void setTimePosted(LocalDateTime timePosted) {
+    public void setTimePosted(String timePosted) {
         this.timePosted = timePosted;
     }
 
