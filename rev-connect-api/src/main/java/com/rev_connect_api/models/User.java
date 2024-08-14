@@ -1,6 +1,4 @@
 package com.rev_connect_api.models;
-
-import jakarta.annotation.Generated;
 import jakarta.persistence.*;
 
 @Entity

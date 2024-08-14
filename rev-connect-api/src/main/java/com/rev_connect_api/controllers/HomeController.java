@@ -31,8 +31,15 @@ public class HomeController {
 		userService.register(newUser);
 
 		User registeredUser = userService.getUser(userId);
-		if(registeredUser != null) return "User Found!";
-		else	return registeredUser.toString();
+		if(registeredUser != null) return registeredUser.toString();
+		else	return "User not Found!";
 	 }
+
+	 @PostMapping(value = "/checkUserId")
+	public Boolean checkUserId(@RequestParam String userId){
+		User registeredUser = userService.getUser(userId);
+		if(registeredUser != null) return true;
+		else	return false;
+	}
 
 }
