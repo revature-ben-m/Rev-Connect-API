@@ -16,6 +16,12 @@ public class Post {
 
     public Post() {}
 
+    public Post(int id, String text, LocalDateTime createdAt) {
+        this.postId = id;
+        this.createdAt = createdAt;
+        this.text = text;
+    }
+
     public Post(String text, LocalDateTime createdAt) {
         this.createdAt = createdAt;
         this.text = text;

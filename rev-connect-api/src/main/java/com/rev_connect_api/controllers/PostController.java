@@ -40,4 +40,12 @@ public class PostController {
         String response = postService.deletePostById(id);
         return ResponseEntity.ok(response);
     }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<Post> UpdatePostById(@RequestBody @Valid PostCreateRequest postCreateRequest,
+                                               @PathVariable int id) {
+        Post post = new Post(id, postCreateRequest.getText(), LocalDateTime.now());
+        post = postService.updatePost(post);
+        return ResponseEntity.ok(post);
+    }
 }
