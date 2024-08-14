@@ -26,17 +26,21 @@ public class User {
 	@Column(name = "userPwd")
 	private String password;
 
+	@Column(name = "isBusiness")
+	private Boolean isBusiness;
+
 
 
 	public User(){}
 	
-	public User(Long id,String userId, String firstName, String lastName,String userEmail,String password ) {
+	public User(Long id,String userId, String firstName, String lastName,String userEmail,String password,Boolean isBusiness ) {
 		this.id = id;
 		this.userId = userId;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.userEmail = userEmail;
 		this.password = password;
+		this.isBusiness = isBusiness;
 	}
 
 	public String getUserId() {
@@ -86,5 +90,13 @@ public class User {
 
 	public Long getId() {
 		return id;
+	}
+
+	public Boolean getBusiness() {
+		return isBusiness;
+	}
+
+	public void setBusiness(Boolean business) {
+		isBusiness = business;
 	}
 }
