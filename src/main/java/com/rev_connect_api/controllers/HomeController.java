@@ -1,5 +1,6 @@
 package com.rev_connect_api.controllers;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,6 +19,7 @@ public class HomeController {
     private UserService userService;
     private PostService postService;
 
+    @Autowired
     public HomeController(UserService userService, PostService postService){
         this.userService = userService;
         this.postService = postService;
@@ -41,7 +43,7 @@ public class HomeController {
 
     @GetMapping("/post/{postId}")
     public ResponseEntity<Post> getPost(@PathVariable int postId) {
-        return ResponseEntity.ok(postService.getMessageById());
+        return ResponseEntity.ok(postService.getMessageById(postId));
     }
     
     

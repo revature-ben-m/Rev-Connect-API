@@ -16,7 +16,9 @@ public class PostService {
         this.userRepository = userRepository;
     }
 
+    //Checks conditions for allowing a post, and persists to database
     public Post createPost(Post post) {
+        //possibly add authentication check here
         if (post.getPostText().length() <= 255 &&
             post.getPostText() != "" &&
             userRepository.existsById(post.getPostedBy())) {
@@ -25,7 +27,7 @@ public class PostService {
         else return null;
     }
 
-    public Post getMessageById() {
+    public Post getMessageById(int postId) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'getMessageById'");
     }
