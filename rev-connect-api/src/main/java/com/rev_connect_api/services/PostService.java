@@ -1,5 +1,6 @@
 package com.rev_connect_api.services;
 
+import com.rev_connect_api.dto.PostCreateRequest;
 import com.rev_connect_api.models.Post;
 import com.rev_connect_api.repositories.PostRepository;
 import jakarta.transaction.Transactional;
@@ -37,5 +38,15 @@ public class PostService {
         }
         postRepository.deletePostByPostId(id);
         return "Successfully deleted post of id " + id;
+    }
+
+    @Transactional
+    public Post updatePost(Post post) {
+        Post response = getPostById(post.getPostId());
+        if(post == null) {
+            return null;
+        }
+        response = savePost(post);
+        return response;
     }
 }
