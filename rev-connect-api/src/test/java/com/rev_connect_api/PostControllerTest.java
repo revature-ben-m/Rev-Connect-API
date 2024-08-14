@@ -88,4 +88,17 @@ public class PostControllerTest {
         assertEquals(postRequest.getTitle(), post.getTitle());
         assertEquals(postRequest.getContent(), post.getContent());
     }
+
+    @Test
+    public void TestDeletePost() {
+        int id = 1;
+        PostCreateRequest post = new PostCreateRequest("test");
+        postController.CreatePost(post);
+
+        ResponseEntity<String> response = postController.DeletePostById(1);
+        assertEquals("Successfully deleted post of id " + id, response.getBody());
+
+        response = postController.DeletePostById(1);
+        assertEquals("Post of id " + id + " does not exist in database", response.getBody());
+    }
 }
