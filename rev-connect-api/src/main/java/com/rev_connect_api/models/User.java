@@ -28,13 +28,13 @@ public class User {
 
 	@Column(name = "isBusiness")
 	private Boolean isBusiness;
+	
 
 
 
 	public User(){}
 	
-	public User(Long id,String userId, String firstName, String lastName,String userEmail,String password,Boolean isBusiness ) {
-		this.id = id;
+	public User(String userId, String firstName, String lastName,String userEmail,String password,Boolean isBusiness ) {
 		this.userId = userId;
 		this.firstName = firstName;
 		this.lastName = lastName;
