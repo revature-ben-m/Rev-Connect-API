@@ -10,4 +10,6 @@ import java.util.Optional;
 public interface PostRepository extends JpaRepository<Post, Integer> {
 
     Optional<Post> getPostByPostId(int id);
+
+    void deletePostByPostId(int id);
 }
