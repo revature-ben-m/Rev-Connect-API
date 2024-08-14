@@ -1,0 +1,36 @@
+package com.rev_connect_api;
+
+
+import com.rev_connect_api.controllers.PostController;
+import com.rev_connect_api.dto.PostCreateRequest;
+import com.rev_connect_api.models.Post;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.beanvalidation.MethodValidationPostProcessor;
+
+import java.time.LocalDateTime;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+@SpringBootTest
+public class PostControllerTest {
+
+    @Autowired
+    private PostController postController;
+
+    @Test
+    public void TestCreatePost() {
+        PostCreateRequest post = new PostCreateRequest("test");
+        ResponseEntity<Post> response = postController.CreatePost(post);
+
+        assertEquals(post.getText(), response.getBody().getText());
+
+        response = postController.GetPostById(1);
+        assertEquals(1, response.getBody().getPostId());
+    }
+}
