@@ -7,8 +7,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 /**
@@ -31,8 +29,7 @@ public class EndorsementLink {
   /**
    * The user id of the user who created the endorsement link
    */
-  @ManyToOne
-  @JoinColumn(name = "user_id")
+  @Column(name = "user_id")
   private Long businessUserId;
 
   /**
@@ -43,23 +40,23 @@ public class EndorsementLink {
   private String link;
 
   /**
-   * The description of the endorsement link (e.g. "LinkedIn Profile") which will
+   * The link_text of the endorsement link (e.g. "LinkedIn Profile") which will
    * be displayed to the user
    */
-  @Column(name = "description")
-  private String description;
+  @Column(name = "link_text")
+  private String link_text;
 
   /**
    * Constructor for the EndorsementLink object
    * 
    * @param businessUserId      The user id of the user who created the endorsement link
    * @param link        The URL of the endorsement link
-   * @param description The description of the endorsement link
+   * @param link_text The link_text of the endorsement link
    */
-  public EndorsementLink(Long businessUserId, String link, String description) {
+  public EndorsementLink(Long businessUserId, String link, String link_text) {
     this.businessUserId = businessUserId;
     this.link = link;
-    this.description = description;
+    this.link_text = link_text;
   }
 
   /**
@@ -123,21 +120,21 @@ public class EndorsementLink {
   }
 
   /**
-   * Get the description of the endorsement link
+   * Get the link_text of the endorsement link
    * 
-   * @return The description of the endorsement link
+   * @return The link_text of the endorsement link
    */
-  public String getDescription() {
-    return description;
+  public String getlink_text() {
+    return link_text;
   }
 
   /**
-   * Set the description of the endorsement link
+   * Set the link_text of the endorsement link
    * 
-   * @param description The description of the endorsement link
+   * @param link_text The link_text of the endorsement link
    */
-  public void setDescription(String description) {
-    this.description = description;
+  public void setlink_text(String link_text) {
+    this.link_text = link_text;
   }
 
   /**
@@ -160,7 +157,7 @@ public class EndorsementLink {
     return (id != null ? id.equals(that.id) : that.id == null)
         && (businessUserId != null ? businessUserId.equals(that.businessUserId) : that.businessUserId == null)
         && (link != null ? link.equals(that.link) : that.link == null)
-        && (description != null ? description.equals(that.description) : that.description == null);
+        && (link_text != null ? link_text.equals(that.link_text) : that.link_text == null);
   }
 
   /**
@@ -174,7 +171,7 @@ public class EndorsementLink {
         "id=" + id +
         ", user=" + businessUserId +
         ", link='" + link + '\'' +
-        ", description='" + description + '\'' +
+        ", link_text='" + link_text + '\'' +
         '}';
   }
 

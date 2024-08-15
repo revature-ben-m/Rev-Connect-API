@@ -30,48 +30,48 @@ public class EndorsementLinkService {
     public EndorsementLinkService() {
     }
 
-    public EndorsementLink createEndorsementLink(Long businessUserId, String link, String description) {
+    private void userExists(Long businessUserId){
         BusinessProfile businessProfile = businessProfileRepository.findBusinessProfileByUserId(businessUserId);
 
         if (businessProfile == null) {
             throw new IllegalArgumentException("User does not have a business profile: " + businessUserId);
         }
-        EndorsementLink endorsementLink = new EndorsementLink(businessUserId, link, description);
-        return endorsementLinkRepository.save(endorsementLink);
     }
 
-    public List<EndorsementLink> getEndorsementLinksByUserId(Long businessUserId) {
-        return endorsementLinkRepository.findByUserId(businessUserId);
-    }
-
-    public EndorsementLink updateEndorsementLink(Long id, Long businessUserId, String link, String description) {
-        BusinessProfile businessProfile = businessProfileRepository.findBusinessProfileByUserId(businessUserId);
-
-        if (businessProfile == null) {
-            throw new IllegalArgumentException("User does not have a business profile: " + businessUserId);
-        }
-
+    private EndorsementLink retrievEndorsementLink(Long id){
         EndorsementLink endorsementLink = endorsementLinkRepository.findById(id).orElse(null);
 
         if (endorsementLink == null) {
             throw new IllegalArgumentException("Endorsement link not found: " + id);
         }
+        return endorsementLink;
+    }
+
+    public EndorsementLink createEndorsementLink(Long businessUserId, String link, String link_text) {
+        userExists(businessUserId);
+        EndorsementLink endorsementLink = new EndorsementLink(businessUserId, link, link_text);
+        return endorsementLinkRepository.save(endorsementLink);
+    }
+
+    public List<EndorsementLink> getEndorsementLinksByUserId(Long businessUserId) {
+        userExists(businessUserId);
+        return endorsementLinkRepository.findByBusinessUserId(businessUserId);
+    }
+
+    public EndorsementLink updateEndorsementLink(Long id, Long businessUserId, String link, String link_text) {
+        userExists(businessUserId);
+
+        EndorsementLink endorsementLink = retrievEndorsementLink(id);
 
         endorsementLink.setUser(businessUserId);
         endorsementLink.setLink(link);
-        endorsementLink.setDescription(description);
+        endorsementLink.setlink_text(link_text);
 
         return endorsementLinkRepository.save(endorsementLink);
     }
 
     public void deleteEndorsementLink(Long endorsementLinkId) {
-        EndorsementLink endorsementLink = endorsementLinkRepository.findById(endorsementLinkId).orElse(null);
-
-        if (endorsementLink == null) {
-            throw new IllegalArgumentException("Endorsement link not found: " + endorsementLinkId);
-        }
-
-        endorsementLinkRepository.delete(endorsementLink);
+        endorsementLinkRepository.delete(retrievEndorsementLink(endorsementLinkId));
     }
 
 }

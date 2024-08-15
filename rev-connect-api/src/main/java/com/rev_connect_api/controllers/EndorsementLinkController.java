@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rev_connect_api.models.EndorsementLink;
 import com.rev_connect_api.services.EndorsementLinkService;
@@ -27,55 +29,35 @@ public class EndorsementLinkController {
   ObjectMapper objectMapper = new ObjectMapper();
 
   @PostMapping
-  public ResponseEntity<EndorsementLink> createEndorsementLink(@RequestBody String endorsementLinkString) {
-    try {
+  public ResponseEntity<EndorsementLink> createEndorsementLink(@RequestBody String endorsementLinkString) throws JsonProcessingException, JsonMappingException{
       EndorsementLink endorsementLink = objectMapper.readValue(endorsementLinkString, EndorsementLink.class);
       EndorsementLink createdEndorsementLink = endorsementLinkService.createEndorsementLink(
           endorsementLink.getUser(),
           endorsementLink.getLink(),
-          endorsementLink.getDescription());
+          endorsementLink.getlink_text());
       return ResponseEntity.ok(createdEndorsementLink);
-    } catch (Exception e) {
-      e.printStackTrace();
-      return ResponseEntity.badRequest().build();
-    }
   }
 
   @GetMapping
   public ResponseEntity<List<EndorsementLink>> getEndorsementLinksByUserId(@RequestParam Long userId) {
-    try {
       List<EndorsementLink> endorsementLinks = endorsementLinkService.getEndorsementLinksByUserId(userId);
       return ResponseEntity.ok(endorsementLinks);
-    } catch (Exception e) {
-      e.printStackTrace();
-      return ResponseEntity.badRequest().build();
-    }
   }
 
   @PatchMapping
-  public ResponseEntity<EndorsementLink> updateEndorsementLink(@RequestBody String endorsementLinkString) {
-    try {
+  public ResponseEntity<EndorsementLink> updateEndorsementLink(@RequestBody String endorsementLinkString) throws JsonProcessingException, JsonMappingException{
       EndorsementLink endorsementLink = objectMapper.readValue(endorsementLinkString, EndorsementLink.class);
       EndorsementLink updatedEndorsementLink = endorsementLinkService.updateEndorsementLink(
           endorsementLink.getId(),
           endorsementLink.getUser(),
           endorsementLink.getLink(),
-          endorsementLink.getDescription());
+          endorsementLink.getlink_text());
       return ResponseEntity.ok(updatedEndorsementLink);
-    } catch (Exception e) {
-      e.printStackTrace();
-      return ResponseEntity.badRequest().build();
-    }
   }
 
   @DeleteMapping
   public ResponseEntity<Void> deleteEndorsementLink(@RequestParam Long endorsementLinkId) {
-    try {
       endorsementLinkService.deleteEndorsementLink(endorsementLinkId);
       return ResponseEntity.noContent().build();
-    } catch (Exception e) {
-      e.printStackTrace();
-      return ResponseEntity.badRequest().build();
-    }
   }
 }
