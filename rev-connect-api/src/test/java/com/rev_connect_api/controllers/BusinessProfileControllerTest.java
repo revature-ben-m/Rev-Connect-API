@@ -20,8 +20,8 @@ import com.rev_connect_api.services.BusinessProfileService;
 public class BusinessProfileControllerTest {
     
     @Mock private BusinessProfileService businessProfileService;
-    @InjectMocks public HomeController underTest;
-
+    @InjectMocks public ProfileController underTest;
+    
     @Test
     public void getAllBusinessProfilesReturns200() {
         final List<BusinessProfile> profiles = List.of(

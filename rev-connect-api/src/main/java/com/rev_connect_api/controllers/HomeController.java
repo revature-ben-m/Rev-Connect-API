@@ -1,62 +1,62 @@
 package com.rev_connect_api.controllers;
 
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
+import com.rev_connect_api.models.User;
+import com.rev_connect_api.services.UserService;
 import com.rev_connect_api.models.BusinessProfile;
 import com.rev_connect_api.services.BusinessProfileService;
-
 import java.util.*;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 
 
 @RestController
 public class HomeController {
+	
+	@Autowired
+	private UserService userService;
+
     @Autowired
     private BusinessProfileService businessProfileService;
 
-    @GetMapping("/profiles/business/{userId}")
-    public ResponseEntity<BusinessProfile> getBusinessProfileByUserId(@PathVariable long userId) {
-        BusinessProfile resultBusinessProfile = businessProfileService.findByUserId(userId);
-        if (resultBusinessProfile != null) {
-            return new ResponseEntity<>(resultBusinessProfile, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-    }
+	@RequestMapping("/")  
+    public String hello()   
+    {  
+        return "Hello Localhost World!!";  
+    }  
 
-    @GetMapping("/profiles/business")
-    public ResponseEntity<List<BusinessProfile>> getBusinessProfiles() {
-        return new ResponseEntity<>(businessProfileService.findAllBusinessProfiles(), HttpStatus.OK);
-    }
+	@PostMapping(value = "/register")
+	public String register(
+		@RequestParam String firstName,
+		@RequestParam String lastName,
+		@RequestParam String username,
+		@RequestParam String email,
+		@RequestParam String password,
+		@RequestParam Boolean isBusiness ){
+		
+		User newUser = new User(username,firstName,lastName,email,password,isBusiness);
+		userService.register(newUser);
 
-    @PostMapping("/profiles/business")
-    public ResponseEntity<BusinessProfile> createNewBusinessProfile(@RequestBody BusinessProfile businessProfile) {
-        BusinessProfile confirmCreate = businessProfileService.createBusinessProfile(businessProfile);
-        if (confirmCreate != null) {
-            return new ResponseEntity<>(confirmCreate, HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-    }
+		User registeredUser = userService.getUser(username);
+		if(registeredUser != null) {
+            if (registeredUser.getBusiness()) {
+                businessProfileService.createBusinessProfile(new BusinessProfile(registeredUser.getId(), ""));
+            }
+            return registeredUser.toString();
+        } else{
+            return "User not Found!";
+        }	
+	 }
 
-    @PatchMapping("/profiles/business/{userId}")
-    public ResponseEntity<BusinessProfile> updateBioTextForBusinessProfile (
-            @RequestBody BusinessProfile businessProfile,
-            @PathVariable long userId
-            ) {
-        BusinessProfile confirmUpdate = businessProfileService.updateBioText(businessProfile, userId);
-        if (confirmUpdate != null) {
-            return new ResponseEntity<>(confirmUpdate, HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-    }
+	 @PostMapping(value = "/checkUsername")
+	public Boolean checkUserId(@RequestParam String username){
+		User registeredUser = userService.getUser(username);
+		if(registeredUser != null) return true;
+		else	return false;
+	}
+
 
 }
