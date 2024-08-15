@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import java.time.LocalDateTime;
+import java.time.format.*;
+import java.util.*;
 
 import java.util.List;
 
@@ -31,7 +34,14 @@ public class PostController {
 
     @PostMapping(value="/posts")
     public void createPosts() {
-        Post post = new Post("username", "First post", "today", 0 );
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss a");
+
+        LocalDateTime now = LocalDateTime.now();
+
+        String dateTimeString = now.format(formatter);
+        
+        Post post = new Post("username", "First post", dateTimeString, 0 );
         postService.createPost(post);
     }
 }
