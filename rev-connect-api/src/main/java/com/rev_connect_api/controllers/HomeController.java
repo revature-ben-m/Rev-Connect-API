@@ -26,7 +26,6 @@ public class HomeController {
     @GetMapping("/profiles/business/{userId}")
     public ResponseEntity<BusinessProfile> getBusinessProfileByUserId(@PathVariable long userId) {
         BusinessProfile resultBusinessProfile = businessProfileService.findByUserId(userId);
-        System.out.println("this is in controller " + resultBusinessProfile);
         return new ResponseEntity<>(resultBusinessProfile, HttpStatus.OK);
     }
 
@@ -43,12 +42,6 @@ public class HomeController {
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
-    // Optional<Account> check = accountService.findAccountById(newMessage.getPostedBy());
-    //     if (check.isEmpty()) {
-    //         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-    //     }
-    //     return new ResponseEntity<>(messageService.createMessage(newMessage), HttpStatus.OK);
-    // }
     
     
 }
