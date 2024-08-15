@@ -1,0 +1,24 @@
+package com.rev_connect_api;
+
+import com.rev_connect_api.models.BusinessProfile;
+
+public final class BusinessProfileTestDataUtil {
+    public static BusinessProfile createTestProfileA() {
+        return new BusinessProfile(999, 111, "Test Bio 1");
+    }
+
+    public static BusinessProfile createTestProfileB() {
+        return new BusinessProfile(998, 112, "Test Bio 2");
+    }
+
+    public static BusinessProfile createTestProfileC() {
+        return new BusinessProfile(997, 113, "Test Bio 3");
+    }
+
+    public static BusinessProfile createTestProfileD() {
+        return new BusinessProfile(996, 114, "123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678900");
+    }
+
+    private BusinessProfileTestDataUtil() {}
+
+}

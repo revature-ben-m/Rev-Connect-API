@@ -13,7 +13,7 @@ public class BusinessProfile {
     @Column(name = "user_id", unique = true, nullable = false)
     private long userId;
 
-    @Column(name = "bio_text")
+    @Column(name = "bio_text", columnDefinition = "VARCHAR(MAX)")
     private String bioText;
 
     public BusinessProfile() {

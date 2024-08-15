@@ -1,13 +1,8 @@
-package com.rev_connect_api;
+package com.rev_connect_api.models;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.util.Assert;
-
-import com.rev_connect_api.models.BusinessProfile;
 
 public class BusinessProfileTests {
 
