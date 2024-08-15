@@ -106,8 +106,8 @@ public class User {
 
     /**
      * Overriding the default equals() method adds functionality to tell when two objects are identical, allowing
-     * Assert.assertEquals and List.contains to function.
-     * @param o the other object.
+     * To Assert.assertEquals and List. Contains to function.
+     * @param  obj other object.
      * @return true if o is equal to this object.
      */
     @Override
