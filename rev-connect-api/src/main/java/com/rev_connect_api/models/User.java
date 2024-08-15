@@ -33,7 +33,6 @@ public class User {
         
     }
 
-
     public User(String username, String password, String email, String firstName, String lastName, boolean isBusiness) {
         this.username = username;
         this.password = password;
@@ -113,7 +112,6 @@ public class User {
         this.isBusiness = isBusiness;
     }
 
-
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
@@ -158,19 +156,10 @@ public class User {
         return true;
     }
 
-
     @Override
     public String toString() {
         return "User [userId=" + userId + ", username=" + username + ", password=" + password + ", email=" + email
                 + ", firstName=" + firstName + ", lastName=" + lastName + ", isBusiness=" + isBusiness + "]";
     }
-
-    
-
-    
-
-
-
-
 
 }
