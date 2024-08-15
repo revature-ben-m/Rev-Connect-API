@@ -124,7 +124,7 @@ public class EndorsementLink {
    * 
    * @return The link_text of the endorsement link
    */
-  public String getlink_text() {
+  public String getLinkText() {
     return link_text;
   }
 
@@ -133,7 +133,7 @@ public class EndorsementLink {
    * 
    * @param link_text The link_text of the endorsement link
    */
-  public void setlink_text(String link_text) {
+  public void setLinkText(String link_text) {
     this.link_text = link_text;
   }
 

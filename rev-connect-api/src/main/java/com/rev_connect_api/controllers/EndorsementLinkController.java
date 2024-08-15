@@ -34,7 +34,7 @@ public class EndorsementLinkController {
       EndorsementLink createdEndorsementLink = endorsementLinkService.createEndorsementLink(
           endorsementLink.getUser(),
           endorsementLink.getLink(),
-          endorsementLink.getlink_text());
+          endorsementLink.getLinkText());
       return ResponseEntity.ok(createdEndorsementLink);
   }
 
@@ -51,7 +51,7 @@ public class EndorsementLinkController {
           endorsementLink.getId(),
           endorsementLink.getUser(),
           endorsementLink.getLink(),
-          endorsementLink.getlink_text());
+          endorsementLink.getLinkText());
       return ResponseEntity.ok(updatedEndorsementLink);
   }
 

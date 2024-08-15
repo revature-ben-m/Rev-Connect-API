@@ -38,7 +38,7 @@ public class EndorsementLinkService {
         }
     }
 
-    private EndorsementLink retrievEndorsementLink(Long id){
+    private EndorsementLink retrieveEndorsementLink(Long id){
         EndorsementLink endorsementLink = endorsementLinkRepository.findById(id).orElse(null);
 
         if (endorsementLink == null) {
@@ -48,7 +48,10 @@ public class EndorsementLinkService {
     }
 
     public EndorsementLink createEndorsementLink(Long businessUserId, String link, String link_text) {
+        //Checks to see if businessUserId is valid.
         userExists(businessUserId);
+
+        //Creates new EndorsementLink object and saves to repository.
         EndorsementLink endorsementLink = new EndorsementLink(businessUserId, link, link_text);
         return endorsementLinkRepository.save(endorsementLink);
     }
@@ -61,17 +64,17 @@ public class EndorsementLinkService {
     public EndorsementLink updateEndorsementLink(Long id, Long businessUserId, String link, String link_text) {
         userExists(businessUserId);
 
-        EndorsementLink endorsementLink = retrievEndorsementLink(id);
+        EndorsementLink endorsementLink = retrieveEndorsementLink(id);
 
         endorsementLink.setUser(businessUserId);
         endorsementLink.setLink(link);
-        endorsementLink.setlink_text(link_text);
+        endorsementLink.setLinkText(link_text);
 
         return endorsementLinkRepository.save(endorsementLink);
     }
 
     public void deleteEndorsementLink(Long endorsementLinkId) {
-        endorsementLinkRepository.delete(retrievEndorsementLink(endorsementLinkId));
+        endorsementLinkRepository.delete(retrieveEndorsementLink(endorsementLinkId));
     }
 
 }
