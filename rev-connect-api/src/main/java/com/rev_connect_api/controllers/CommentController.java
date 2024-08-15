@@ -1,5 +1,6 @@
 package com.rev_connect_api.controllers;
 
+import com.rev_connect_api.dto.CommentResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
@@ -20,12 +21,19 @@ public class CommentController {
 
 
     @GetMapping("/{userId}/post/{postId}/comments")
-    public List<Comment> getCommentsForPost(@PathVariable long userId, @PathVariable long postId) {
+    @CrossOrigin(origins = "*")
+    public List<CommentResponse> getCommentsForPost(@PathVariable long userId, @PathVariable long postId) {
         List<Comment> commentsForPost = commentService.getCommentForPost(userId, postId);
-        return commentsForPost;
+        List<CommentResponse> responses = new ArrayList<>();
+        for (Comment comment : commentsForPost) {
+            long likesCount = commentService.getLikesCountForComment(comment.getCommentId());
+            responses.add(new CommentResponse(comment, likesCount));
+        }
+        return responses;
     }
 
     @PostMapping("/comments")
+    @CrossOrigin(origins = "*")
     public void createComment() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss a");
 
