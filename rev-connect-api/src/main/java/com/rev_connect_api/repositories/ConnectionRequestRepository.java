@@ -9,6 +9,15 @@ import java.util.List;
 
 public interface ConnectionRequestRepository extends JpaRepository<ConnectionRequest, Long> {
 
-    @Query("SELECT cr FROM ConnectionRequest cr WHERE cr.recipient.id = :userId AND cr.status = 'PENDING'")
+    @Query("SELECT cr FROM ConnectionRequest cr WHERE cr.recipient.accountId = :userId AND cr.status = 'PENDING'")
     List<ConnectionRequest> findPendingRequestsForUser(@Param("userId") Long userId);
+
+    @Query("SELECT cr FROM ConnectionRequest cr WHERE cr.recipient.accountId = :userId AND cr.status = 'ACCEPTED'")
+    List<ConnectionRequest> findAcceptedConnectionsForUser(@Param("userId") Long userId);
+
+    @Query("SELECT cr FROM ConnectionRequest cr WHERE cr.requester.accountId = :userId OR cr.recipient.accountId = :userId AND cr.status = 'ACCEPTED'")
+    List<ConnectionRequest> findConnectionsByUserId(@Param("userId") Long userId);
+
+    @Query("SELECT cr FROM ConnectionRequest")
+    List<ConnectionRequest> findAllConnections();
 }

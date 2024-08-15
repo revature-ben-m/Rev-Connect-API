@@ -1,7 +1,6 @@
 package com.rev_connect_api.entity;
 
 import org.hibernate.annotations.CreationTimestamp;
-
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
@@ -12,7 +11,7 @@ public class ConnectionRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "connection_id")
-    private Long connection_id;
+    private Long connectionId;
 
     @ManyToOne
     @JoinColumn(name = "requester_id", nullable = false)
@@ -31,12 +30,13 @@ public class ConnectionRequest {
     private LocalDateTime createdAt;
 
     // Getters and Setters
+
     public Long getConnectionId() {
-        return connection_id;
+        return connectionId;
     }
 
-    public void setConnectionId(Long connection_id) {
-        this.connection_id = connection_id;
+    public void setConnectionId(Long connectionId) {
+        this.connectionId = connectionId;
     }
 
     public User getRequester() {

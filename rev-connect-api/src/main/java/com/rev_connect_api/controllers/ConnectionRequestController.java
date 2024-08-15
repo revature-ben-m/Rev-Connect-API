@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/connection-requests")
+@RequestMapping("/connect")
 public class ConnectionRequestController {
 
     private final ConnectionRequestService connectionRequestService;
@@ -19,26 +19,50 @@ public class ConnectionRequestController {
     }
 
     @PostMapping("/send")
-    public ResponseEntity<ConnectionRequest> sendConnectionRequest(@RequestParam Long requesterId, @RequestParam Long recipientId) {
-        ConnectionRequest request = connectionRequestService.sendRequest(requesterId, recipientId);
-        return ResponseEntity.status(HttpStatus.CREATED).body(request);
+    public ResponseEntity<ConnectionRequest> sendRequest(@RequestParam Long requesterId, @RequestParam Long recipientId) {
+        try {
+            ConnectionRequest request = connectionRequestService.sendRequest(requesterId, recipientId);
+            return new ResponseEntity<>(request, HttpStatus.CREATED);
+        } catch (IllegalArgumentException ex) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping("/pending/{userId}")
-    public ResponseEntity<List<ConnectionRequest>> getPendingRequests(@PathVariable Long userId) {
-        List<ConnectionRequest> requests = connectionRequestService.getPendingRequestsForUser(userId);
-        return ResponseEntity.ok(requests);
+    public ResponseEntity<List<ConnectionRequest>> getPendingRequestsForUser(@PathVariable Long userId) {
+        List<ConnectionRequest> pendingRequests = connectionRequestService.getPendingRequestsForUser(userId);
+        return new ResponseEntity<>(pendingRequests, HttpStatus.OK);
     }
 
     @PostMapping("/accept/{requestId}")
     public ResponseEntity<Void> acceptRequest(@PathVariable Long requestId) {
-        connectionRequestService.acceptRequest(requestId);
-        return ResponseEntity.noContent().build();
+        try {
+            connectionRequestService.acceptRequest(requestId);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (IllegalArgumentException | IllegalStateException ex) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PostMapping("/reject/{requestId}")
     public ResponseEntity<Void> rejectRequest(@PathVariable Long requestId) {
-        connectionRequestService.rejectRequest(requestId);
-        return ResponseEntity.noContent().build();
+        try {
+            connectionRequestService.rejectRequest(requestId);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (IllegalArgumentException | IllegalStateException ex) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/connections/{userId}")
+    public ResponseEntity<List<ConnectionRequest>> findConnectionsByUserId(@PathVariable Long userId) {
+        List<ConnectionRequest> connections = connectionRequestService.findConnectionsByUserId(userId);
+        return new ResponseEntity<>(connections, HttpStatus.OK);
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<ConnectionRequest>> findAllConnections() {
+        List<ConnectionRequest> connections = connectionRequestService.findAllConnections();
+        return new ResponseEntity<>(connections, HttpStatus.OK);
     }
 }
