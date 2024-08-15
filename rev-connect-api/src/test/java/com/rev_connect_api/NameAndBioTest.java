@@ -4,15 +4,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 
 import java.net.URI;
 import java.net.http.*;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rev_connect_api.models.FieldErrorResponse;
 import com.rev_connect_api.models.PersonalProfile;
 import com.rev_connect_api.models.User;
+import com.rev_connect_api.models.dto.UpdateProfileDto;
 import com.rev_connect_api.repositories.ProfileRepository;
 import com.rev_connect_api.repositories.UserRepository;
 
@@ -32,8 +37,8 @@ public class NameAndBioTest {
     private String serviceLocation;
     private HttpClient client;
     private ObjectMapper mapper;
-
-    private Long testUserId = 123L;
+    
+    private User testUser;
     private String testBio = "Test bio!";
 
     @BeforeEach
@@ -44,7 +49,9 @@ public class NameAndBioTest {
         userRepository.deleteAll();
         profileRepository.deleteAll();
 
-        User testUser = new User();
+        testUser = new User();
+        testUser.setFirstName("Test");
+        testUser.setLastName("User");
         PersonalProfile testProfile = new PersonalProfile(testUser, testBio);
         userRepository.save(testUser);
         profileRepository.save(testProfile);
@@ -66,27 +73,24 @@ public class NameAndBioTest {
     }
 
     @Test
-    public void respondToRetrieveProfile() {
+    public void respondToRetrieveProfile() throws JsonMappingException, JsonProcessingException  {
+        ResponseEntity<String> response = testRestTemplate.getForEntity(serviceLocation + "/" + testUser.getId(), String.class);
 
-        try {
-            
-            ResponseEntity<String> response = testRestTemplate.getForEntity(serviceLocation + "/" + testUserId, String.class);
+        int statusCode = response.getStatusCode().value();
+        Assertions.assertEquals(statusCode, 200, "Expected status code 200. Actual result was " + statusCode);
 
-            int statusCode = response.getStatusCode().value();
-            Assertions.assertEquals(statusCode, 200, "Expected status code 200. Actual result was " + statusCode);
+        
 
-            PersonalProfile actualResult = mapper.readValue(response.getBody().toString(), PersonalProfile.class);
-            PersonalProfile expectedResult = new PersonalProfile(new User(testUserId), testBio);
-            Assertions.assertEquals(expectedResult, actualResult, "Expected " + expectedResult.toString() + ". Actual result was " + actualResult.toString());
-        } catch (Exception e) {
-            Assertions.fail("Caught exception when sending: " + e.getMessage());
-        }
+        PersonalProfile actualResult = mapper.readValue(response.getBody().toString(), PersonalProfile.class);
+
+        Assertions.assertEquals(testBio, actualResult.getBio(), "Expected: " + testBio + "\nActual: " + actualResult.getBio());
+        Assertions.assertEquals(testUser, actualResult.getUser(), "Expected: " + testUser + "\nActual: " + actualResult.getUser());
     }
 
     @Test
     public void respondToRetrieveProfileUnauthorized() {
         HttpRequest request = HttpRequest.newBuilder()
-            .uri(URI.create(serviceLocation + "/" + testUserId))
+            .uri(URI.create(serviceLocation + "/" + testUser.getId()))
             .GET()
             .header("Content-Type", "application/json")
             .build();
@@ -104,45 +108,36 @@ public class NameAndBioTest {
     }
 
     @Test
-    public void respondToUpdateProfileSuccessful() {
-        String json = "{ \"name\": \"John Doe\", \"bio\": \"Example bio!\" }";
-        HttpRequest request = HttpRequest.newBuilder()
-            .uri(URI.create(serviceLocation))
-            .PUT(HttpRequest.BodyPublishers.ofString(json))
-            .header("Content-Type", "application/json")
-            .build();
+    public void respondToUpdateProfileSuccessful() throws JsonMappingException, JsonProcessingException {
+        User newUser = new User(testUser.getId());
+        newUser.setFirstName("John");
+        newUser.setLastName("Doe");
+        PersonalProfile newProfile = new PersonalProfile(newUser, "Example bio!");
+        HttpEntity<PersonalProfile> requestEntity = new HttpEntity<>(newProfile);
+        ResponseEntity<String> response = testRestTemplate.exchange(serviceLocation, HttpMethod.PUT, requestEntity, String.class);
 
-        try {
-            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
-            int statusCode = response.statusCode();
-            PersonalProfile profile = mapper.readValue(response.body().toString(), PersonalProfile.class);
-
-            PersonalProfile expectedResult = new PersonalProfile(new User(testUserId), "Example bio!");
-            Assertions.assertEquals(statusCode, 200, "Expected status code 200. Actual result was " + statusCode);
-            Assertions.assertEquals(profile, expectedResult, "Expected " + expectedResult.toString() + ". Actual result was " + profile.toString());
-        } catch (Exception e) {
-            Assertions.fail("Caught exception when sending: " + e.getMessage());
-        }
+        int statusCode = response.getStatusCode().value();
+        Assertions.assertEquals(200, statusCode, "Expected status code 200. Actual result was " + statusCode);
+    
+        PersonalProfile profile = mapper.readValue(response.getBody().toString(), PersonalProfile.class);
+        
+        Assertions.assertEquals("Doe, John", profile.getUser().fullName(), "Expected: Doe, John\nActual result was " + profile.getUser().fullName());
+        Assertions.assertEquals("Example bio!", profile.getBio(), "Expected: Example bio!\nActual result was " + profile.getBio());
     }
 
     @Test
     public void processUpdateProfileSuccessful() {
-        String json = "{ \"name\": \"John Doe\", \"bio\": \"Example bio!\" }";
-        HttpRequest request = HttpRequest.newBuilder()
-            .uri(URI.create(serviceLocation))
-            .PUT(HttpRequest.BodyPublishers.ofString(json))
-            .header("Content-Type", "application/json")
-            .build();
+        User newUser = new User(testUser.getId());
+        newUser.setFirstName("John");
+        newUser.setLastName("Doe");
+        PersonalProfile newProfile = new PersonalProfile(newUser, "Example bio!");
+        HttpEntity<PersonalProfile> requestEntity = new HttpEntity<>(newProfile);
+        testRestTemplate.exchange(serviceLocation, HttpMethod.PUT, requestEntity, String.class);
+        
+        PersonalProfile profile = profileRepository.findById(testUser.getId()).get();
 
-        try {
-            client.send(request, HttpResponse.BodyHandlers.ofString());
-            PersonalProfile profile = profileRepository.findById(testUserId).get();
-            PersonalProfile expectedResult = new PersonalProfile(new User(testUserId), "Example bio!");
-            Assertions.assertEquals(profile, expectedResult, "Expected " + expectedResult.toString() + ". Actual result was " + profile.toString());
-        } catch (Exception e) {
-            Assertions.fail("Caught exception when sending: " + e.getMessage());
-        }
+        Assertions.assertEquals("Example bio!", profile.getBio(), "Expected: Example bio!\nActual result was " + profile.getBio());
+        Assertions.assertEquals("Doe, John", profile.getUser().fullName(), "Expected: Doe, John\nActual result was " + profile.getUser().fullName());
     }
 
     @Test
@@ -177,9 +172,9 @@ public class NameAndBioTest {
 
         try {
             client.send(request, HttpResponse.BodyHandlers.ofString());
-            PersonalProfile profile = profileRepository.findById(testUserId).get();
+            PersonalProfile profile = profileRepository.findById(testUser.getId()).get();
 
-            PersonalProfile expectedResult = new PersonalProfile(new User(testUserId), testBio);
+            PersonalProfile expectedResult = new PersonalProfile(new User(testUser.getId()), testBio);
             Assertions.assertEquals(profile, expectedResult, "Expected " + expectedResult.toString() + ". Actual result was " + profile.toString());
         } catch (Exception e) {
             Assertions.fail("Caught exception when sending: " + e.getMessage());
@@ -219,9 +214,9 @@ public class NameAndBioTest {
 
         try {
             client.send(request, HttpResponse.BodyHandlers.ofString());
-            PersonalProfile profile = profileRepository.findById(testUserId).get();
+            PersonalProfile profile = profileRepository.findById(testUser.getId()).get();
 
-            PersonalProfile expectedResult = new PersonalProfile(new User(testUserId), testBio);
+            PersonalProfile expectedResult = new PersonalProfile(new User(testUser.getId()), testBio);
             Assertions.assertEquals(profile, expectedResult, "Expected " + expectedResult.toString() + ". Actual result was " + profile.toString());
         } catch (Exception e) {
             Assertions.fail("Caught exception when sending: " + e.getMessage());

@@ -1,4 +1,6 @@
 package com.rev_connect_api.models;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -15,6 +17,7 @@ public class User {
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     @Column(name="uId")
+    @JsonProperty("id")
     private Long uId;
 
     private String username;
@@ -42,6 +45,30 @@ public class User {
 
     public Long getId() {
         return this.uId;
+    }
+
+    public void setId(Long uId) {
+        this.uId = uId;
+    }
+
+    public String getFirstName() {
+        return this.firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getLastName() {
+        return this.lastName;
+    }
+
+    public String fullName() {
+        return this.lastName + ", " + this.firstName;
     }
 
     @Override

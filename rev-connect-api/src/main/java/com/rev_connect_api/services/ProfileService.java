@@ -28,13 +28,27 @@ public class ProfileService {
 
   public PersonalProfile retrieveProfile(long uId) {
     Optional<PersonalProfile> optionalProfile = profileRepository.findByUser_UId(uId);
-    if(!optionalProfile.isPresent()) {
-      return new PersonalProfile(null, "Wrong Bio!");
-      // Handle error
+    if(optionalProfile.isPresent()) {
+      PersonalProfile ret = optionalProfile.get();
+      return ret;
     } else {
-      return optionalProfile.get();
+      return null;
     }
     
+  }
+
+  public PersonalProfile updateProfile(PersonalProfile newProfile) {
+    Optional<PersonalProfile> optionalProfile = profileRepository.findByUser_UId(newProfile.getUser().getId());
+    if(!optionalProfile.isPresent()) {
+      // throw new exception
+      return new PersonalProfile(null, "Wrong!");
+    }
+    PersonalProfile profile = optionalProfile.get();
+    profile.getUser().setFirstName(newProfile.getUser().getFirstName());
+    profile.getUser().setLastName(newProfile.getUser().getLastName());
+    profile.setBio(newProfile.getBio());
+    profileRepository.save(profile);
+    return profile;
   }
   
 }

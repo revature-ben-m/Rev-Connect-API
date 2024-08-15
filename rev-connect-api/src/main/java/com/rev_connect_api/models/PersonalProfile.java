@@ -42,6 +42,10 @@ public class PersonalProfile {
         return this.bio;
     }
 
+    public void setBio(String bio) {
+        this.bio = bio;
+    }
+
     public User getUser(){
         return this.user;
     }
