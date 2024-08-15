@@ -19,7 +19,7 @@ public class User {
     @Column(unique = true)
     private String username;
 
-    private String password;
+    private String userPwd;
     
     @Column(unique = true)
     private String email;
@@ -35,9 +35,9 @@ public class User {
         
     }
 
-    public User(String username, String password, String email, String firstName, String lastName, boolean isBusiness) {
+    public User(String username, String userPwd, String email, String firstName, String lastName, boolean isBusiness) {
         this.username = username;
-        this.password = password;
+        this.userPwd = userPwd;
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -63,18 +63,7 @@ public class User {
     public void setUsername(String username) {
         this.username = username;
     }
-
-
-    public String getPassword() {
-        return password;
-    }
-
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-
+    
     public String getEmail() {
         return email;
     }
@@ -114,6 +103,14 @@ public class User {
         this.isBusiness = isBusiness;
     }
 
+    public String getUserPwd() {
+        return userPwd;
+    }
+
+    public void setUserPwd(String userPwd) {
+        this.userPwd = userPwd;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
@@ -133,10 +130,10 @@ public class User {
                 return false;
         } else if (!username.equals(other.username))
             return false;
-        if (password == null) {
-            if (other.password != null)
+        if (userPwd == null) {
+            if (other.userPwd != null)
                 return false;
-        } else if (!password.equals(other.password))
+        } else if (!userPwd.equals(other.userPwd))
             return false;
         if (email == null) {
             if (other.email != null)
@@ -160,7 +157,7 @@ public class User {
 
     @Override
     public String toString() {
-        return "User [userId=" + userId + ", username=" + username + ", password=" + password + ", email=" + email
+        return "User [userId=" + userId + ", username=" + username + ", userPwd=" + userPwd + ", email=" + email
                 + ", firstName=" + firstName + ", lastName=" + lastName + ", isBusiness=" + isBusiness + "]";
     }
 

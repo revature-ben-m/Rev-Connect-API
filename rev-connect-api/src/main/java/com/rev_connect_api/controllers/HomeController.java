@@ -18,6 +18,7 @@ public class HomeController {
 
     @PostMapping
     public ResponseEntity<String> registerUser(@RequestBody User user) {
+        System.out.println("*************************Startig point*****************");
         try {
             userService.registerUser(user);
             return ResponseEntity.ok("Person created successfully");
