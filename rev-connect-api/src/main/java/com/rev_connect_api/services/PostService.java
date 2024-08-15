@@ -11,6 +11,7 @@ import java.util.Optional;
 
 @Service
 public class PostService {
+
     @Autowired
     private PostRepository postRepository;
     public List<Post> findAll()
