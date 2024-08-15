@@ -5,6 +5,8 @@ import org.springframework.web.bind.annotation.*;
 
 import com.rev_connect_api.models.User;
 import com.rev_connect_api.services.UserService;
+
+import java.io.Console;
 import java.util.*;
 
 @RestController
@@ -26,6 +28,7 @@ public class HomeController {
 	}
 
 	@PostMapping(value = "/register")
+	@CrossOrigin(origins = "*")
 	public String register(
 		@RequestParam String firstName,
 		@RequestParam String lastName,
@@ -34,6 +37,7 @@ public class HomeController {
 		@RequestParam String password,
 		@RequestParam Boolean isBusiness ){
 		
+		System.out.println(firstName+" "+lastName+" "+userName+" "+email+" "+password);
 		User newUser = new User(userName,firstName,lastName,email,password,isBusiness);
 		userService.register(newUser);
 
@@ -43,8 +47,9 @@ public class HomeController {
 	 }
 
 	 @PostMapping(value = "/checkUserId")
-	public Boolean checkUserId(@RequestParam String userId){
-		User registeredUser = userService.getUser(userId);
+	 @CrossOrigin(origins = "*")
+	public Boolean checkUserId(@RequestParam String userName){
+		User registeredUser = userService.getUser(userName);
 		if(registeredUser != null) return true;
 		else	return false;
 	}
