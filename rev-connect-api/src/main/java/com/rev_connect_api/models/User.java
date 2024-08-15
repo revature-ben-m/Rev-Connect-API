@@ -8,10 +8,10 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "userAccount")
+@Table(name = "users")
 public class User {
 
-    @Column(name = "userId")
+    @Column(name = "id")
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer userId;
@@ -26,9 +26,7 @@ public class User {
 
     private String lastName;
 
-    private String phoneNumber;
-
-    private String accountType;
+    boolean isBusiness;
 
 
     public User() {
@@ -36,16 +34,13 @@ public class User {
     }
 
 
-    public User(Integer userId, String username, String password, String email, String firstName, String lastName,
-            String phoneNumber, String accountType) {
-        this.userId = userId;
+    public User(String username, String password, String email, String firstName, String lastName, boolean isBusiness) {
         this.username = username;
         this.password = password;
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.phoneNumber = phoneNumber;
-        this.accountType = accountType;
+        this.isBusiness = isBusiness;
     }
 
 
@@ -109,23 +104,13 @@ public class User {
     }
 
 
-    public String getPhoneNumber() {
-        return phoneNumber;
+    public boolean isBusiness() {
+        return isBusiness;
     }
 
 
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-
-    public String getAccountType() {
-        return accountType;
-    }
-
-
-    public void setAccountType(String accountType) {
-        this.accountType = accountType;
+    public void setBusiness(boolean isBusiness) {
+        this.isBusiness = isBusiness;
     }
 
 
@@ -168,15 +153,7 @@ public class User {
                 return false;
         } else if (!lastName.equals(other.lastName))
             return false;
-        if (phoneNumber == null) {
-            if (other.phoneNumber != null)
-                return false;
-        } else if (!phoneNumber.equals(other.phoneNumber))
-            return false;
-        if (accountType == null) {
-            if (other.accountType != null)
-                return false;
-        } else if (!accountType.equals(other.accountType))
+        if (isBusiness != other.isBusiness)
             return false;
         return true;
     }
@@ -185,10 +162,12 @@ public class User {
     @Override
     public String toString() {
         return "User [userId=" + userId + ", username=" + username + ", password=" + password + ", email=" + email
-                + ", firstName=" + firstName + ", lastName=" + lastName + ", phoneNumber=" + phoneNumber
-                + ", accountType=" + accountType + "]";
+                + ", firstName=" + firstName + ", lastName=" + lastName + ", isBusiness=" + isBusiness + "]";
     }
 
+    
+
+    
 
 
 
