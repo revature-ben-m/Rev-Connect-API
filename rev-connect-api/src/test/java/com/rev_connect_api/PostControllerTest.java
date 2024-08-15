@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.beanvalidation.MethodValidationPostProcessor;
 
+import java.math.BigInteger;
 import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -26,44 +27,71 @@ public class PostControllerTest {
 
     @Test
     public void TestCreatePost() {
-        PostCreateRequest post = new PostCreateRequest("test");
-        ResponseEntity<Post> response = postController.CreatePost(post);
+        final BigInteger id = new BigInteger("1");
 
-        assertEquals(post.getText(), response.getBody().getText());
+        // Create post
+        PostCreateRequest postRequest = new PostCreateRequest("title", "content");
+        ResponseEntity<Post> response = postController.CreatePost(postRequest);
+        Post postResponse = response.getBody();
 
-        response = postController.GetPostById(1);
-        assertEquals(1, response.getBody().getPostId());
+        // Verifies that the controller returns a post entity similar to the post request
+        assertEqualsPost(postRequest, postResponse);
+
+        // Verifies that a post id is given to the response, it should be 1 as the entity is auto-generating
+        response = postController.GetPostById(id);
+        assertEquals(id, response.getBody().getPostId());
     }
 
     @Test
     public void TestDeletePost() {
-        int id = 1;
-        PostCreateRequest post = new PostCreateRequest("test");
-        postController.CreatePost(post);
+        final BigInteger id = new BigInteger("1");
 
-        ResponseEntity<String> response = postController.DeletePostById(1);
-        assertEquals("Successfully deleted post of id " + id, response.getBody());
+        // Creates a post
+        PostCreateRequest postRequest = new PostCreateRequest("title", "content");
+        postController.CreatePost(postRequest);
 
-        response = postController.DeletePostById(1);
-        assertEquals("Post of id " + id + " does not exist in database", response.getBody());
+        // Delete a post, controller should return true if successfully deleted
+        ResponseEntity<Boolean> response = postController.DeletePostById(id);
+        assertEquals(true, response.getBody());
+
+        // Try to delete the same post again, false should be returned as that post was already deleted and thus cannot be found
+        response = postController.DeletePostById(id);
+        assertEquals(false, response.getBody());
     }
 
+    // This test should test both the update and get operation
     @Test
     public void TestUpdatePost() {
-        int id = 1;
-        PostCreateRequest post = new PostCreateRequest("test");
-        postController.CreatePost(post);
+        final BigInteger id = new BigInteger("1");
+        String title = "title test";
+        String content = "content test";
 
+        // Create post
+        PostCreateRequest postRequest = new PostCreateRequest(title, content);
+        postController.CreatePost(postRequest);
+
+        // Fetches that post for comparison to ensure the get request is working
         ResponseEntity<Post> response = postController.GetPostById(id);
+        Post postResponse = response.getBody();
 
-        assertNotNull(response.getBody());
-        assertEquals("test", response.getBody().getText());
+        assertEqualsPost(postRequest, postResponse);
 
-        post = new PostCreateRequest("updated");
+        // Creates the request to update the previous post
+        title = "updated title";
+        content = "updated content";
+        postRequest = new PostCreateRequest(title, content);
 
-        response = postController.UpdatePostById(post, response.getBody().getPostId());
+        response = postController.UpdatePostById(postRequest, postResponse.getPostId());
+        postResponse = response.getBody();
 
-        assertNotNull(response.getBody());
-        assertEquals("updated", response.getBody().getText());
+        // Verifies that the request is equal to the response
+        assertEqualsPost(postRequest, postResponse);
+        assertNotNull(postResponse.getUpdatedAt());
+    }
+
+    // Verifies if the request content of post is equal to the post from response body
+    private void assertEqualsPost(PostCreateRequest postRequest, Post post) {
+        assertEquals(postRequest.getTitle(), post.getTitle());
+        assertEquals(postRequest.getContent(), post.getContent());
     }
 }

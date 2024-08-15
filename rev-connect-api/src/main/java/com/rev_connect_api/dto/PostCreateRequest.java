@@ -8,17 +8,23 @@ import java.time.LocalDateTime;
 
 public class PostCreateRequest {
 
-    private LocalDateTime createdAt;
-    @NotEmpty(message = "text is blank")
-    private String text;
+    @NotEmpty(message = "title is blank")
+    private String title;
+    @NotEmpty(message = "content is blank")
+    private String content;
 
     public PostCreateRequest() {}
 
-    public PostCreateRequest(String text) {
-        this.text = text;
+    public PostCreateRequest(String title, String content) {
+        this.title = title;
+        this.content = content;
     }
 
-    public String getText() {
-        return text;
+    public String getTitle() {
+        return title;
+    }
+
+    public String getContent() {
+        return content;
     }
 }

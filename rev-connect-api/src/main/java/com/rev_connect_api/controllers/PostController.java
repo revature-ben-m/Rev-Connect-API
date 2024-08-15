@@ -10,6 +10,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigInteger;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 @RestController
@@ -24,27 +26,31 @@ public class PostController {
 
     @PostMapping()
     public ResponseEntity<Post> CreatePost(@RequestBody @Valid PostCreateRequest postCreateRequest) {
-        Post post = new Post(postCreateRequest.getText(), LocalDateTime.now());
+        // Convert request to post entity
+        Post post = postService.postDtoToPost(postCreateRequest);
+        post.setCreatedAt(postService.getCurrentTimestamp());
+        // Call service to save it
         Post response = postService.savePost(post);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Post> GetPostById(@PathVariable int id) {
+    public ResponseEntity<Post> GetPostById(@PathVariable BigInteger id) {
         Post response = postService.getPostById(id);
         return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> DeletePostById(@PathVariable int id) {
-        String response = postService.deletePostById(id);
-        return ResponseEntity.ok(response);
+    public ResponseEntity<Boolean> DeletePostById(@PathVariable BigInteger id) {
+        boolean deleted = postService.deletePostById(id);
+        return ResponseEntity.ok(deleted);
     }
 
     @PatchMapping("/{id}")
     public ResponseEntity<Post> UpdatePostById(@RequestBody @Valid PostCreateRequest postCreateRequest,
-                                               @PathVariable int id) {
-        Post post = new Post(id, postCreateRequest.getText(), LocalDateTime.now());
+                                               @PathVariable BigInteger id) {
+        Post post = postService.postDtoToPost(postCreateRequest);
+        post.setPostId(id);
         post = postService.updatePost(post);
         return ResponseEntity.ok(post);
     }
