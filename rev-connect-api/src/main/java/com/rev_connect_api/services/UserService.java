@@ -18,8 +18,8 @@ public class UserService {
 		userRepository.save(user);
 	}
 	
-	public User getUser(String userId){
-		Optional<User> user = userRepository.findByuserId(userId);
+	public User getUser(String userName){
+		Optional<User> user = userRepository.findByUserName(userName);
 		if(user.isPresent())
 			return user.get();
 		else
