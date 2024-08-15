@@ -38,11 +38,25 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
     }
 
+    /**
+     * Handles JsonProcessingExceptions thrown by the application.
+     * 
+     * @param e the exception
+     * @return a response entity with the exception message and a status of 400 Bad
+     *         Request
+     */
     @ExceptionHandler(JsonProcessingException.class)
     public ResponseEntity<String> handleJsonProcessingException(JsonProcessingException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     }
 
+    /**
+     * Handles JsonMappingExceptions thrown by the application.
+     * 
+     * @param e the exception
+     * @return a response entity with the exception message and a status of 400 Bad
+     *         Request
+     */
     @ExceptionHandler(JsonMappingException.class)
     public ResponseEntity<String> handleJsonMappingException(JsonMappingException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());

@@ -19,6 +19,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rev_connect_api.models.EndorsementLink;
 import com.rev_connect_api.services.EndorsementLinkService;
 
+/**
+ * Controller for the EndorsementLink model. This class handles HTTP requests
+ * for the EndorsementLink model.
+ */
 @RestController
 @RequestMapping("/api/endorsement_links")
 public class EndorsementLinkController {
@@ -28,6 +32,9 @@ public class EndorsementLinkController {
 
   ObjectMapper objectMapper = new ObjectMapper();
 
+  /**
+   * The handler for the POST request to create an endorsement link
+   */
   @PostMapping
   public ResponseEntity<EndorsementLink> createEndorsementLink(@RequestBody String endorsementLinkString) throws JsonProcessingException, JsonMappingException{
       EndorsementLink endorsementLink = objectMapper.readValue(endorsementLinkString, EndorsementLink.class);
@@ -38,12 +45,18 @@ public class EndorsementLinkController {
       return ResponseEntity.ok(createdEndorsementLink);
   }
 
+  /**
+   * The handler for the GET request to retrieve endorsement links by user id
+   */
   @GetMapping
   public ResponseEntity<List<EndorsementLink>> getEndorsementLinksByUserId(@RequestParam Long userId) {
       List<EndorsementLink> endorsementLinks = endorsementLinkService.getEndorsementLinksByUserId(userId);
       return ResponseEntity.ok(endorsementLinks);
   }
 
+  /**
+   * The handler for the PATCH request to update an endorsement link
+   */
   @PatchMapping
   public ResponseEntity<EndorsementLink> updateEndorsementLink(@RequestBody String endorsementLinkString) throws JsonProcessingException, JsonMappingException{
       EndorsementLink endorsementLink = objectMapper.readValue(endorsementLinkString, EndorsementLink.class);
@@ -55,6 +68,9 @@ public class EndorsementLinkController {
       return ResponseEntity.ok(updatedEndorsementLink);
   }
 
+  /**
+   * The handler for the DELETE request to delete an endorsement link
+   */
   @DeleteMapping
   public ResponseEntity<Void> deleteEndorsementLink(@RequestParam Long endorsementLinkId) {
       endorsementLinkService.deleteEndorsementLink(endorsementLinkId);
