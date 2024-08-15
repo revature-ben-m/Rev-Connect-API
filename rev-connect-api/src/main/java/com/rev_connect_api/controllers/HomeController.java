@@ -1,6 +1,8 @@
 package com.rev_connect_api.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.rev_connect_api.models.User;
@@ -29,7 +31,7 @@ public class HomeController {
 
 	@PostMapping(value = "/register")
 	@CrossOrigin(origins = "*")
-	public String register(
+	public ResponseEntity<Map<String, Object>> register(
 		@RequestParam String firstName,
 		@RequestParam String lastName,
 		@RequestParam String userName,
@@ -42,9 +44,17 @@ public class HomeController {
 		userService.register(newUser);
 
 		User registeredUser = userService.getUser(userName);
-		if(registeredUser != null) return registeredUser.toString();
-		else	return "User not Found!";
-	 }
+		Map<String, Object> response = new HashMap<>();
+			if (registeredUser != null) {
+				response.put("success", true);
+				response.put("user", registeredUser);
+				return ResponseEntity.ok(response);
+			} else {
+				response.put("success", false);
+				response.put("message", "User not found!");
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+			}
+    }
 
 	 @PostMapping(value = "/checkUserId")
 	 @CrossOrigin(origins = "*")
