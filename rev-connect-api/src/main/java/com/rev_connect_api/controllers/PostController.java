@@ -41,7 +41,7 @@ public class PostController {
 
         String dateTimeString = now.format(formatter);
         
-        Post post = new Post("username", "First post", dateTimeString, 0 );
+        Post post = new Post(1, "First post", dateTimeString );
         postService.createPost(post);
     }
 }

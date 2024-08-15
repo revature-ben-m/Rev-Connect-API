@@ -11,10 +11,10 @@ public class Post {
     @Column(name="postId")
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Integer postId;
+    private long postId;
 
     @Column(name = "userId")
-    private String userId;
+    private long userId;
 
     @Column(name = "text")
     private String text;
@@ -22,21 +22,20 @@ public class Post {
     @Column(name = "timePosted")
     private String timePosted;
 
-    @Column(name = "likesCount")
-    private Integer likesCount;
+
 
     public Post() {}
 
-    public Post(String userId, String text, String timePosted, Integer likesCount) {
+    public Post(long userId, String text, String timePosted) {
         this.userId = userId;
         this.text = text;
         this.timePosted = timePosted;
-        this.likesCount = likesCount;
+
     }
 
     // Getters and Setters
 
-    public Integer getPostId() {
+    public long getPostId() {
         return postId;
     }
 
@@ -44,11 +43,11 @@ public class Post {
         this.postId = postId;
     }
 
-    public String getUserId() {
+    public long getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(long userId) {
         this.userId = userId;
     }
 
@@ -68,13 +67,7 @@ public class Post {
         this.timePosted = timePosted;
     }
 
-    public Integer getLikesCount() {
-        return likesCount;
-    }
 
-    public void setLikesCount(Integer likesCount) {
-        this.likesCount = likesCount;
-    }
 
     // toString method
 
@@ -85,7 +78,6 @@ public class Post {
                 ", userId='" + userId + '\'' +
                 ", text='" + text + '\'' +
                 ", timePosted=" + timePosted +
-                ", likesCount=" + likesCount +
                 '}';
     }
 }

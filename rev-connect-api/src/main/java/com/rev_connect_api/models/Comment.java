@@ -13,10 +13,10 @@ public class Comment {
     private long commentId;
 
     @Column(name = "userId")
-    private String userId;
+    private long userId;
 
     @Column(name = "postId")
-    private String postId;
+    private long postId;
 
     @Column(name = "text")
     private String text;
@@ -24,15 +24,15 @@ public class Comment {
     @Column(name = "timePosted")
     private String timePosted;
 
-    @Column(name = "likesCount")
-    private Integer likesCount;
-
-    public Comment(String userId, String postId, String text, String timePosted, Integer likesCount) {
+    public Comment(long userId, long postId, String text, String timePosted) {
         this.userId = userId;
         this.postId = postId;
         this.text = text;
         this.timePosted = timePosted;
-        this.likesCount = likesCount;
+    }
+
+    public Comment() {
+
     }
 
     // Getters and Setters
@@ -45,19 +45,19 @@ public class Comment {
         this.commentId = commentId;
     }
 
-    public String getUserId() {
+    public long getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(long userId) {
         this.userId = userId;
     }
 
-    public String getPostId() {
+    public long getPostId() {
         return postId;
     }
 
-    public void setPostId(String postId) {
+    public void setPostId(long postId) {
         this.postId = postId;
     }
 
@@ -77,13 +77,6 @@ public class Comment {
         this.timePosted = timePosted;
     }
 
-    public Integer getLikesCount() {
-        return likesCount;
-    }
-
-    public void setLikesCount(Integer likesCount) {
-        this.likesCount = likesCount;
-    }
 
     // toString method
 
@@ -95,7 +88,6 @@ public class Comment {
                 ", postId='" + postId + '\'' +
                 ", text='" + text + '\'' +
                 ", timePosted=" + timePosted +
-                ", likesCount=" + likesCount +
                 '}';
     }
 }
