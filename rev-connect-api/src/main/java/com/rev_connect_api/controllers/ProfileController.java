@@ -26,11 +26,6 @@ public class ProfileController {
 
   @PutMapping()
   public PersonalProfile updateProfile(@RequestBody PersonalProfile profile) {
-    // User user = new User();
-    // user.setId(profileDto.getUId());
-    // user.setFirstName(profileDto.getFirstName());
-    // user.setLastName(profileDto.getLastName());
-    // PersonalProfile profile = new PersonalProfile(user, profileDto.getBio());
     return profileService.updateProfile(profile);
   }
 }

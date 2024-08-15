@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 import com.rev_connect_api.models.PersonalProfile;
 import com.rev_connect_api.models.User;
 
-//@Repository
+@Repository
 public interface ProfileRepository extends JpaRepository<PersonalProfile, Long> {
   Optional<PersonalProfile> findByUser(User user);
   Optional<PersonalProfile> findByUser_UId(Long userId);

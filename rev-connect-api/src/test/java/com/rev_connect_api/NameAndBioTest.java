@@ -46,8 +46,8 @@ public class NameAndBioTest {
         serviceLocation = "http://localhost:" + port + "/api/profile";
         client = HttpClient.newHttpClient();
         mapper = new ObjectMapper();
-        userRepository.deleteAll();
         profileRepository.deleteAll();
+        userRepository.deleteAll();
 
         testUser = new User();
         testUser.setFirstName("Test");
@@ -100,7 +100,7 @@ public class NameAndBioTest {
 
             int statusCode = response.statusCode();
 
-            Assertions.assertEquals(statusCode, 401, "Expected status code 401. Actual result was " + statusCode);
+            Assertions.assertEquals(401, statusCode, "Expected status code 401. Actual result was " + statusCode);
             Assertions.assertEquals(response.body().toString(), "", "Expected response body to be empty. Actual response body: " + response.body().toString());
         } catch (Exception e) {
             Assertions.fail("Caught exception when sending: " + e.getMessage());
