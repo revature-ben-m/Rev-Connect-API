@@ -49,9 +49,11 @@ public class CreatePostTest {
      *  Status Code: 200
      *  Response Body: JSON representation of Post object
      */
+
+     // sample UUID: cebfc8ff-182f-4ede-8c93-765375db59b5
     @Test
     public void createPostSuccessful() throws IOException, InterruptedException {
-    	String json = "{\"postedBy\":9999,\"PostText\": \"hello Post\",\"timePostedEpoch\": 1669947792}";
+    	String json = "{\"postedBy\":9999,\"postText\": \"hello Post\",\"timePostedEpoch\": 1669947792}";
         HttpRequest postPostRequest = HttpRequest.newBuilder()
                 .uri(URI.create("http://localhost:8080/post"))
                 .POST(HttpRequest.BodyPublishers.ofString(json))
@@ -73,8 +75,8 @@ public class CreatePostTest {
      *  Status Code: 400
      */
     @Test
-    public void createPostPostTextBlank() throws IOException, InterruptedException {
-    	String json = "{\"postedBy\":9999,\"PostText\": \"\",\"timePostedEpoch\": 1669947792}";
+    public void createPostpostTextBlank() throws IOException, InterruptedException {
+    	String json = "{\"postedBy\":9999,\"postText\": \"\",\"timePostedEpoch\": 1669947792}";
         HttpRequest postPostRequest = HttpRequest.newBuilder()
                 .uri(URI.create("http://localhost:8080/post"))
                 .POST(HttpRequest.BodyPublishers.ofString(json))
@@ -96,7 +98,7 @@ public class CreatePostTest {
     @Test
     public void createPostPostGreaterThan255() throws IOException, InterruptedException {
     	String json = "{\"postedBy\":9999,"
-    			+ "\"PostText\": \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\","
+    			+ "\"postText\": \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\","
     			+ "\"timePostedEpoch\": 1669947792}";
         HttpRequest postPostRequest = HttpRequest.newBuilder()
                 .uri(URI.create("http://localhost:8080/post"))
@@ -112,11 +114,11 @@ public class CreatePostTest {
      * Sending an http request to POST localhost:8080/post with a user id that doesnt exist in db
      * 
      * Expected Response:
-     *  Status Code: 400
+     * Status Code: 400
      */
     @Test
     public void createPostUserNotInDb() throws IOException, InterruptedException {
-    	String json = "{\"postedBy\":5050,\"PostText\": \"hello Post\",\"timePostedEpoch\": 1669947792}";
+    	String json = "{\"postedBy\":5050,\"postText\": \"hello Post\",\"timePostedEpoch\": 1669947792}";
         HttpRequest postPostRequest = HttpRequest.newBuilder()
                 .uri(URI.create("http://localhost:8080/post"))
                 .POST(HttpRequest.BodyPublishers.ofString(json))

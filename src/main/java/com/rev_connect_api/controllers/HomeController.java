@@ -38,6 +38,7 @@ public class HomeController {
     @PostMapping("/post")
     public ResponseEntity<Post> createPost(@RequestBody Post post) {
         Post response = postService.createPost(post);
+        if(response == null) return ResponseEntity.status(400).body(null);
         return ResponseEntity.ok(response);
     }
 

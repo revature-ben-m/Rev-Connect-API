@@ -1,6 +1,7 @@
 drop table if exists users cascade;
 drop table if exists post;
 
+
 create table users(
     id BIGINT AUTO_INCREMENT PRIMARY KEY, 
     username VARCHAR(255) NOT NULL UNIQUE,
