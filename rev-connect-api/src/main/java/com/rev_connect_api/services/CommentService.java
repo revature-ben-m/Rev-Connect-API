@@ -23,7 +23,9 @@ public class CommentService {
   public void createComment(Comment comment) {
     commentRepository.save(comment);
   }
-
+  public boolean doesCommentExist(long commentId) {
+    return commentRepository.existsByCommentId(commentId);
+  }
   public long getLikesCountForComment(long commentId) {
     return commentLikesRepository.countByCommentId(commentId);
   }

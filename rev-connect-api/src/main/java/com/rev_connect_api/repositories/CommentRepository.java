@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Long> {
     List<Comment> findByUserIdAndPostId(long userId, long postId);
+    boolean existsByCommentId(long commentId);
 }
