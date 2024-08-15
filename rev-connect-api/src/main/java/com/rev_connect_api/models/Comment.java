@@ -22,15 +22,12 @@ public class Comment {
     private String text;
 
     @Column(name = "timePosted")
-    private LocalDateTime timePosted;
+    private String timePosted;
 
     @Column(name = "likesCount")
     private Integer likesCount;
 
-    public Comment() {}
-
-    public Comment(int commentId, String userId, String postId, String text, LocalDateTime timePosted, Integer likesCount) {
-        this.commentId = commentId;
+    public Comment(String userId, String postId, String text, String timePosted, Integer likesCount) {
         this.userId = userId;
         this.postId = postId;
         this.text = text;
@@ -72,11 +69,11 @@ public class Comment {
         this.text = text;
     }
 
-    public LocalDateTime getTimePosted() {
+    public String getTimePosted() {
         return timePosted;
     }
 
-    public void setTimePosted(LocalDateTime timePosted) {
+    public void setTimePosted(String timePosted) {
         this.timePosted = timePosted;
     }
 
