@@ -1,6 +1,6 @@
 package com.rev_connect_api.services;
 
-import java.util.Optional;
+import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +24,10 @@ public class UserService {
 			return user.get();
 		else
 			return null;
+	}
+
+	public List<User> getAllUsers(){
+		return userRepository.findAll();
 	}
 
 }

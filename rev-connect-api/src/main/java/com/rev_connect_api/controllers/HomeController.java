@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.rev_connect_api.models.User;
 import com.rev_connect_api.services.UserService;
+import java.util.*;
 
 @RestController
 public class HomeController {
@@ -17,6 +18,12 @@ public class HomeController {
     {  
         return "Hello Localhost World!!";  
     }  
+
+	@GetMapping("/users")
+	@CrossOrigin(origins = "*")
+	public List<User> getAllUsers(){
+		return userService.getAllUsers();
+	}
 
 	@PostMapping(value = "/register")
 	public String register(
