@@ -22,15 +22,15 @@ public class HomeController {
 	public String register(
 		@RequestParam String firstName,
 		@RequestParam String lastName,
-		@RequestParam String userId,
+		@RequestParam String userName,
 		@RequestParam String email,
 		@RequestParam String password,
 		@RequestParam Boolean isBusiness ){
 		
-		User newUser = new User(userId,firstName,lastName,email,password,isBusiness);
+		User newUser = new User(userName,firstName,lastName,email,password,isBusiness);
 		userService.register(newUser);
 
-		User registeredUser = userService.getUser(userId);
+		User registeredUser = userService.getUser(userName);
 		if(registeredUser != null) return registeredUser.toString();
 		else	return "User not Found!";
 	 }

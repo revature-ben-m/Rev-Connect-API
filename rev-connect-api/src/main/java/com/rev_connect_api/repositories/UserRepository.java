@@ -9,5 +9,5 @@ import com.rev_connect_api.models.User;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-    Optional<User> findByuserId(String userId);
+    Optional<User> findByUserName(String userName);
 }

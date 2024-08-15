@@ -9,8 +9,8 @@ public class User {
 	@GeneratedValue
 	private Long id;
 
-	@Column(name = "userId")
-	private String userId;
+	@Column(name = "userName")
+	private String userName;
 
 	@Column(name = "FirstName")
 	private String firstName;
@@ -32,8 +32,8 @@ public class User {
 
 	public User(){}
 	
-	public User(String userId, String firstName, String lastName,String userEmail,String password,Boolean isBusiness ) {
-		this.userId = userId;
+	public User(String userName, String firstName, String lastName,String userEmail,String password,Boolean isBusiness ) {
+		this.userName = userName;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.userEmail = userEmail;
@@ -41,12 +41,12 @@ public class User {
 		this.isBusiness = isBusiness;
 	}
 
-	public String getUserId() {
-		return userId;
+	public String getUserName() {
+		return userName;
 	}
 
-	public void setUserId(String userId) {
-		this.userId = userId;
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 
 	public String getFirstName() {
