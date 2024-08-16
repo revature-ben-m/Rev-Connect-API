@@ -20,9 +20,9 @@ public class UserService {
         List<User> checkDuplicates=getUserDetails(username,emailId);
         if(checkDuplicates.stream().anyMatch(userDetails->emailId.equals(userDetails.getEmail())))
             throw new IllegalArgumentException("Email alredy Exits");
-        else if(checkDuplicates.stream().anyMatch(userDetails->username.equals(userDetails.getUsername())))
+        if(checkDuplicates.stream().anyMatch(userDetails->username.equals(userDetails.getUsername())))
             throw new IllegalArgumentException("User Name alredy Exits");
-        else
+        
             return userRepository.saveAndFlush(user);
     }
      public List<User> getUserDetails(String userName,String email){
