@@ -1,4 +1,6 @@
 package com.rev_connect_api.models;
+import java.time.LocalDateTime;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -32,7 +34,9 @@ public class User {
 	private Boolean isBusiness;
 	
 
-
+	// private String token;
+    // @Column(columnDefinition = "TIMESTAMP")
+    // private LocalDateTime tokenCreationDate;
 
 	public User(){}
 	
@@ -106,4 +110,20 @@ public class User {
 		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException("Unimplemented method 'orElse'");
 	}
+
+	// public String getToken() {
+    //     return token;
+    // }
+
+    // public void setToken(String token) {
+    //     this.token = token;
+    // }
+
+    // public LocalDateTime getTokenCreationDate() {
+    //     return tokenCreationDate;
+    // }
+
+    // public void setTokenCreationDate(LocalDateTime tokenCreationDate) {
+    //     this.tokenCreationDate = tokenCreationDate;
+    // }
 }
