@@ -14,7 +14,7 @@ create table users(
 
 create table post (
     postId int primary key auto_increment,
-    postedBy int,
+    postedBy bigint,
     postText varchar(255),
     timePostedEpoch bigint,
     foreign key (postedBy) references user(userId)

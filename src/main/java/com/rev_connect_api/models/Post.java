@@ -17,7 +17,7 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer postId;
     @Column(name="postedBy")
-    private Integer postedBy;
+    private Long postedBy;
     @Column(name="postText")
     private String postText;
     @Column(name="timePostedEpoch")
@@ -26,17 +26,17 @@ public class Post {
     @Autowired
     public Post(){
         this.postId = 9001;
-        this.postedBy = 9001;
+        this.postedBy = 9001L;
         this.postText = "default post";
         this.timePostedEpoch = 123456789L;
     }
-    public Post(Integer postId, Integer postedBy, String postText, Long timePostedEpoch) {
+    public Post(Integer postId, Long postedBy, String postText, Long timePostedEpoch) {
         this.postId = postId;
         this.postedBy = postedBy;
         this.postText = postText;
         this.timePostedEpoch = timePostedEpoch;
     }
-    public Post(Integer postedBy, String postText, Long timePostedEpoch) {
+    public Post(Long postedBy, String postText, Long timePostedEpoch) {
         this.postedBy = postedBy;
         this.postText = postText;
         this.timePostedEpoch = timePostedEpoch;
@@ -47,10 +47,10 @@ public class Post {
     public void setPostId(Integer postId) {
         this.postId = postId;
     }
-    public Integer getPostedBy() {
+    public Long getPostedBy() {
         return postedBy;
     }
-    public void setPostedBy(Integer postedBy) {
+    public void setPostedBy(Long postedBy) {
         this.postedBy = postedBy;
     }
     public String getPostText() {

@@ -63,7 +63,7 @@ public class CreatePostTest {
         int status = response.statusCode();
         Assertions.assertEquals(200, status, "Expected Status Code 200 - Actual Code was: " + status);
         ObjectMapper om = new ObjectMapper();
-        Post expectedResult = new Post(1, 9999, "hello Post", Long.valueOf(1669947792));
+        Post expectedResult = new Post(1, 9999L, "hello Post", Long.valueOf(1669947792));
         Post actualResult = om.readValue(response.body().toString(), Post.class);
         Assertions.assertEquals(expectedResult, actualResult, "Expected="+expectedResult + ", Actual="+actualResult);
     }

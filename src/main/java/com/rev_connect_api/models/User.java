@@ -12,26 +12,42 @@ import jakarta.persistence.Table;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer userId;
-    private String email;
-    @Column(name="username")
+    private Long userId;
+    @Column(unique = true)
     private String username;
-    @Column(name="password")
-    private String password;
+    private String userPwd;
+    @Column(unique = true)
+    private String email;
+    private String firstName;
+    private String lastName;
     private Boolean isBusiness;
 
+
     public User(){
-        this.userId = 9001;
+        this.userId = 9001L;
         this.email = "test@revature.net";
         this.username = "test";
         this.password = "testpassword";
         this.isBusiness = false;
     }
-    public User(Integer userId, String email, String username, String password, Boolean isBusiness){
+
+    public User(Long userId, String username, String userPwd){
         this.userId = userId;
-        this.email = email;
         this.username = username;
-        this.password = password;
+        this.userPwd = userPwd;
+    }
+
+    public User(String username, String userPwd){
+        this.username = username;
+        this.userPwd = userPwd;
+    }
+
+    public User(String username, String userPwd, String email, String firstName, String lastName, boolean isBusiness) {
+        this.username = username;
+        this.userPwd = userPwd;
+        this.email = email;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.isBusiness = isBusiness;
     }
 
@@ -42,11 +58,12 @@ public class User {
         this.isBusiness = isBusiness;
     }
 
-    public Integer getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(Integer userId) {
+
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 
