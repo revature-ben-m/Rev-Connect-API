@@ -10,12 +10,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 @RestController
+@CrossOrigin(origins = "*")
 public class ProfileController {
 
     @Autowired
     private BusinessProfileService businessProfileService;
 
     @GetMapping("/profiles/business/{userId}")
+    @CrossOrigin(origins = "*")
     public ResponseEntity<BusinessProfile> getBusinessProfileByUserId(@PathVariable long userId) {
         BusinessProfile resultBusinessProfile = businessProfileService.findByUserId(userId);
         if (resultBusinessProfile != null) {
@@ -26,11 +28,13 @@ public class ProfileController {
     }
 
     @GetMapping("/profiles/business")
+    @CrossOrigin(origins = "*")
     public ResponseEntity<List<BusinessProfile>> getBusinessProfiles() {
         return new ResponseEntity<>(businessProfileService.findAllBusinessProfiles(), HttpStatus.OK);
     }
 
     @PostMapping("/profiles/business")
+    @CrossOrigin(origins = "*")
     public ResponseEntity<BusinessProfile> createNewBusinessProfile(@RequestBody BusinessProfile businessProfile) {
         BusinessProfile confirmCreate = businessProfileService.createBusinessProfile(businessProfile);
         if (confirmCreate != null) {
@@ -40,6 +44,7 @@ public class ProfileController {
     }
 
     @PatchMapping("/profiles/business/{userId}")
+    @CrossOrigin(origins = "*")
     public ResponseEntity<BusinessProfile> updateBioTextForBusinessProfile (
             @RequestBody BusinessProfile businessProfile,
             @PathVariable long userId
