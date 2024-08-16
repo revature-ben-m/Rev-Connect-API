@@ -17,18 +17,6 @@ public class HomeController {
 	@Autowired
 	UserService userService;
 
-	@RequestMapping("/")  
-    public String hello()   
-    {  
-        return "Hello Localhost World!!";  
-    }  
-
-	@GetMapping("/users")
-	@CrossOrigin(origins = "*")
-	public List<User> getAllUsers(){
-		return userService.getAllUsers();
-	}
-
 	@PostMapping(value = "/register")
 	@CrossOrigin(origins = "*")
 	public ResponseEntity<Map<String, Object>> register(
@@ -59,7 +47,7 @@ public class HomeController {
 	 @PostMapping(value = "/checkUserId")
 	 @CrossOrigin(origins = "*")
 	public Boolean checkUserId(@RequestParam String userName){
-		User registeredUser = userService.getUser(userName);
+		User registeredUser = userService.checkUserId(userName);
 		if(registeredUser != null) return true;
 		else	return false;
 	}
