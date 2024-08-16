@@ -111,7 +111,21 @@ public class User {
         this.userPwd = userPwd;
     }
 
-    @Override
+@Override
+public boolean equals(Object obj) {
+    if (this == obj) return true;
+    if (obj == null || getClass() != obj.getClass()) return false;
+
+    User other = (User) obj;
+
+    return isBusiness == other.isBusiness &&
+           (userId != null ? userId.equals(other.userId) : other.userId == null) &&
+           (username != null ? username.equals(other.username) : other.username == null) &&
+           (userPwd != null ? userPwd.equals(other.userPwd) : other.userPwd == null) &&
+           (email != null ? email.equals(other.email) : other.email == null) &&
+           (firstName != null ? firstName.equals(other.firstName) : other.firstName == null) &&
+           (lastName != null ? lastName.equals(other.lastName) : other.lastName == null);
+}
     public boolean equals(Object obj) {
         if (this == obj)
             return true;
