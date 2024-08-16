@@ -1,5 +1,7 @@
 package com.rev_connect_api.services;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import com.rev_connect_api.models.Post;
@@ -27,8 +29,11 @@ public class PostService {
         else return null;
     }
 
-    public Post getMessageById(int postId) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getMessageById'");
+    public Post getPostById(int postId) {
+        return postRepository.findById(postId).orElse(null);
+    }
+
+    public List<Post> getAllPosts() {
+        return postRepository.findAll();
     }
 }

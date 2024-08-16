@@ -1,5 +1,7 @@
 package com.rev_connect_api.controllers;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -46,8 +48,14 @@ public class HomeController {
 
     @GetMapping("/post/{postId}")
     public ResponseEntity<Post> getPost(@PathVariable int postId) {
-        return ResponseEntity.ok(postService.getMessageById(postId));
+        return ResponseEntity.ok(postService.getPostById(postId));
     }
+
+    @GetMapping("/posts")
+    public ResponseEntity<List<Post>> getAllPosts() {
+        return ResponseEntity.ok(postService.getAllPosts());
+    }
+
     
     
     
