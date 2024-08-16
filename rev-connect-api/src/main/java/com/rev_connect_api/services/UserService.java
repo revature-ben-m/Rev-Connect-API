@@ -18,12 +18,14 @@ public class UserService {
         String username=user.getUsername();
         String emailId=user.getEmail();
         List<User> checkDuplicates=getUserDetails(username,emailId);
+
         if(checkDuplicates.stream().anyMatch(userDetails->emailId.equals(userDetails.getEmail())))
-            throw new IllegalArgumentException("Email alredy Exits");
+            throw new IllegalArgumentException("Email already exists");
+
         if(checkDuplicates.stream().anyMatch(userDetails->username.equals(userDetails.getUsername())))
-            throw new IllegalArgumentException("User Name alredy Exits");
-        
-            return userRepository.saveAndFlush(user);
+            throw new IllegalArgumentException("Username already exists");
+
+        return userRepository.saveAndFlush(user);
     }
      public List<User> getUserDetails(String userName,String email){
          List<User> users=userRepository.findByUsernameOrEmail(userName,email);
