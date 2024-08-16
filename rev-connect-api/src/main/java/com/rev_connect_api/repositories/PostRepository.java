@@ -9,7 +9,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-
 @Repository
 public interface PostRepository extends JpaRepository<Post,Long> {
 
@@ -19,4 +18,5 @@ public interface PostRepository extends JpaRepository<Post,Long> {
     @Modifying
     @Query("DELETE  FROM Post p WHERE p.user.accountId = :accountId")
     void deleteByUserAccountId(@Param("accountId") Integer accountId);
+    void deleteByIdAndUserAccountId(Long id, Integer accountId);
 }

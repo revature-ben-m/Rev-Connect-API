@@ -22,6 +22,7 @@ public class Post {
     private LocalDateTime createdAt;
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
+    private String title;
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
@@ -30,6 +31,14 @@ public class Post {
     @PreUpdate
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
+    }
+
+    public Post(User user, String content, LocalDateTime createdAt, LocalDateTime updatedAt, String title) {
+        this.user = user;
+        this.content = content;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.title = title;
     }
 
     public Post(User user, String content, LocalDateTime createdAt, LocalDateTime updatedAt) {
@@ -59,6 +68,14 @@ public class Post {
 
     public String getContent() {
         return content;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public void setContent(String content) {
