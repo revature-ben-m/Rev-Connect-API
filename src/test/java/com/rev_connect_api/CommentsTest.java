@@ -11,7 +11,7 @@ import org.springframework.context.ApplicationContext;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class LikesTest {
+public class CommentsTest {
     ApplicationContext app;
     HttpClient webClient;
     ObjectMapper objectMapper;
@@ -33,7 +33,7 @@ public class LikesTest {
 
 
     @Test
-    public void postLikeSuccessful() throws IOException, InterruptedException{
+    public void postCommentSuccessful() throws IOException, InterruptedException{
         
     }
 
