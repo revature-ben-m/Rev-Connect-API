@@ -16,10 +16,12 @@ public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer userId;
 
+    @Column(unique = true)
     private String username;
 
-    private String password;
-
+    private String userPwd;
+    
+    @Column(unique = true)
     private String email;
 
     private String firstName;
@@ -33,9 +35,9 @@ public class User {
         
     }
 
-    public User(String username, String password, String email, String firstName, String lastName, boolean isBusiness) {
+    public User(String username, String userPwd, String email, String firstName, String lastName, boolean isBusiness) {
         this.username = username;
-        this.password = password;
+        this.userPwd = userPwd;
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -61,18 +63,7 @@ public class User {
     public void setUsername(String username) {
         this.username = username;
     }
-
-
-    public String getPassword() {
-        return password;
-    }
-
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-
+    
     public String getEmail() {
         return email;
     }
@@ -112,53 +103,33 @@ public class User {
         this.isBusiness = isBusiness;
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        User other = (User) obj;
-        if (userId == null) {
-            if (other.userId != null)
-                return false;
-        } else if (!userId.equals(other.userId))
-            return false;
-        if (username == null) {
-            if (other.username != null)
-                return false;
-        } else if (!username.equals(other.username))
-            return false;
-        if (password == null) {
-            if (other.password != null)
-                return false;
-        } else if (!password.equals(other.password))
-            return false;
-        if (email == null) {
-            if (other.email != null)
-                return false;
-        } else if (!email.equals(other.email))
-            return false;
-        if (firstName == null) {
-            if (other.firstName != null)
-                return false;
-        } else if (!firstName.equals(other.firstName))
-            return false;
-        if (lastName == null) {
-            if (other.lastName != null)
-                return false;
-        } else if (!lastName.equals(other.lastName))
-            return false;
-        if (isBusiness != other.isBusiness)
-            return false;
-        return true;
+    public String getUserPwd() {
+        return userPwd;
     }
 
+    public void setUserPwd(String userPwd) {
+        this.userPwd = userPwd;
+    }
+
+@Override
+public boolean equals(Object obj) {
+    if (this == obj) return true;
+    if (obj == null || getClass() != obj.getClass()) return false;
+
+    User other = (User) obj;
+
+    return isBusiness == other.isBusiness &&
+           (userId != null ? userId.equals(other.userId) : other.userId == null) &&
+           (username != null ? username.equals(other.username) : other.username == null) &&
+           (userPwd != null ? userPwd.equals(other.userPwd) : other.userPwd == null) &&
+           (email != null ? email.equals(other.email) : other.email == null) &&
+           (firstName != null ? firstName.equals(other.firstName) : other.firstName == null) &&
+           (lastName != null ? lastName.equals(other.lastName) : other.lastName == null);
+}
+    
     @Override
     public String toString() {
-        return "User [userId=" + userId + ", username=" + username + ", password=" + password + ", email=" + email
+        return "User [userId=" + userId + ", username=" + username + ", userPwd=" + userPwd + ", email=" + email
                 + ", firstName=" + firstName + ", lastName=" + lastName + ", isBusiness=" + isBusiness + "]";
     }
 
