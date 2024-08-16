@@ -84,10 +84,11 @@ public class Comment {
     public String toString() {
         return "Comment{" +
                 "commentId=" + commentId +
-                ", userId='" + userId + '\'' +
-                ", postId='" + postId + '\'' +
+                ", userId=" + userId +
+                ", postId=" + postId +
                 ", text='" + text + '\'' +
-                ", timePosted=" + timePosted +
+                ", timePosted='" + timePosted + '\'' +
                 '}';
     }
+
 }
