@@ -48,7 +48,7 @@ public class UserController {
 		User newUser = new User(userName,firstName,lastName,email,password,isBusiness);
 		userService.register(newUser);
 
-		User registeredUser = userService.getUser(userName);
+		User registeredUser = userService.checkUserId(userName);
 		Map<String, Object> response = new HashMap<>();
 			if (registeredUser != null) {
 				response.put("success", true);
