@@ -28,7 +28,7 @@ public class HomeController {
         this.userService = userService;
         this.postService = postService;
     }
-    @PostMapping
+    @PostMapping("/users")
     public ResponseEntity<String> registerUser(@RequestBody User user) {
         System.out.println("*************************Startig point*****************");
         try {

@@ -55,7 +55,7 @@ public class CreatePostTest {
     public void createPostSuccessful() throws IOException, InterruptedException {
     	String json = "{\"postedBy\":9999,\"postText\": \"hello Post\",\"timePostedEpoch\": 1669947792}";
         HttpRequest postPostRequest = HttpRequest.newBuilder()
-                .uri(URI.create("http://localhost:8080/post"))
+                .uri(URI.create("http://localhost:8080/api/post"))
                 .POST(HttpRequest.BodyPublishers.ofString(json))
                 .header("Content-Type", "application/json")
                 .build();
@@ -78,7 +78,7 @@ public class CreatePostTest {
     public void createPostpostTextBlank() throws IOException, InterruptedException {
     	String json = "{\"postedBy\":9999,\"postText\": \"\",\"timePostedEpoch\": 1669947792}";
         HttpRequest postPostRequest = HttpRequest.newBuilder()
-                .uri(URI.create("http://localhost:8080/post"))
+                .uri(URI.create("http://localhost:8080/api/post"))
                 .POST(HttpRequest.BodyPublishers.ofString(json))
                 .header("Content-Type", "application/json")
                 .build();
@@ -101,7 +101,7 @@ public class CreatePostTest {
     			+ "\"postText\": \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\","
     			+ "\"timePostedEpoch\": 1669947792}";
         HttpRequest postPostRequest = HttpRequest.newBuilder()
-                .uri(URI.create("http://localhost:8080/post"))
+                .uri(URI.create("http://localhost:8080/api/post"))
                 .POST(HttpRequest.BodyPublishers.ofString(json))
                 .header("Content-Type", "application/json")
                 .build();
@@ -120,7 +120,7 @@ public class CreatePostTest {
     public void createPostUserNotInDb() throws IOException, InterruptedException {
     	String json = "{\"postedBy\":5050,\"postText\": \"hello Post\",\"timePostedEpoch\": 1669947792}";
         HttpRequest postPostRequest = HttpRequest.newBuilder()
-                .uri(URI.create("http://localhost:8080/post"))
+                .uri(URI.create("http://localhost:8080/api/post"))
                 .POST(HttpRequest.BodyPublishers.ofString(json))
                 .header("Content-Type", "application/json")
                 .build();

@@ -27,7 +27,7 @@ public class User {
         this.userId = 9001L;
         this.email = "test@revature.net";
         this.username = "test";
-        this.password = "testpassword";
+        this.userPwd = "testpassword";
         this.isBusiness = false;
     }
 
@@ -51,10 +51,10 @@ public class User {
         this.isBusiness = isBusiness;
     }
 
-    public User(String email, String username, String password, Boolean isBusiness){
+    public User(String email, String username, String userPwd, Boolean isBusiness){
         this.email = email;
         this.username = username;
-        this.password = password;
+        this.userPwd = userPwd;
         this.isBusiness = isBusiness;
     }
 
@@ -76,11 +76,11 @@ public class User {
     }
 
     public String getPassword() {
-        return password;
+        return userPwd;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setPassword(String userPwd) {
+        this.userPwd = userPwd;
     }
     public String getEmail() {
         return email;
@@ -110,10 +110,10 @@ public class User {
 				return false;
 		} else if (!userId.equals(other.userId))
 			return false;
-		if (password == null) {
-			if (other.password != null)
+		if (userPwd == null) {
+			if (other.userPwd != null)
 				return false;
-		} else if (!password.equals(other.password))
+		} else if (!userPwd.equals(other.userPwd))
 			return false;
 		if (username == null) {
 			if (other.username != null)
@@ -132,7 +132,7 @@ public class User {
         return "User{" +
                 "userId=" + userId +
                 ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
+                ", password='" + userPwd + '\'' +
                 '}';
     }
 }
