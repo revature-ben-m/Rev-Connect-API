@@ -14,6 +14,7 @@ public class Media {
     private BigInteger mediaId;
     private BigInteger postId;
     private String mediaUrl;
+    @Enumerated(EnumType.STRING)
     private MediaType mediaType;
     private Timestamp createdAt;
 

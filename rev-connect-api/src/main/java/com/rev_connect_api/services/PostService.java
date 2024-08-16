@@ -4,6 +4,7 @@ import com.rev_connect_api.dto.PostCreateRequest;
 import com.rev_connect_api.models.Media;
 import com.rev_connect_api.models.Post;
 import com.rev_connect_api.repositories.PostRepository;
+import com.rev_connect_api.util.TimestampUtil;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -23,9 +24,13 @@ public class PostService {
     private static final int MAX_POST_PER_PAGE = 5;
 
     private final PostRepository postRepository;
+    private final MediaService mediaService;
+    private final TimestampUtil timestampUtil;
 
-    public PostService(PostRepository postRepository) {
+    public PostService(PostRepository postRepository, MediaService mediaService, TimestampUtil timestampUtil) {
         this.postRepository = postRepository;
+        this.mediaService = mediaService;
+        this.timestampUtil = timestampUtil;
     }
 
     public Post savePost(Post post) {
@@ -35,14 +40,9 @@ public class PostService {
 
     @Transactional
     public Post savePost(Post post, MultipartFile file) {
-        return null;
-    }
-
-    public Media saveMedia(MultipartFile file) {
-
-        String fileName = UUID.randomUUID().toString();
-
-        return null;
+        Post response = postRepository.save(post);
+        mediaService.saveMedia(file, response.getPostId(), response.getCreatedAt());
+        return response;
     }
 
     public Post getPostById(BigInteger id) {
@@ -65,6 +65,7 @@ public class PostService {
         if(post == null) {
             return false;
         }
+        mediaService.deleteMediaByPostId(id);
         postRepository.deletePostByPostId(id);
         return true;
     }
@@ -75,7 +76,7 @@ public class PostService {
         if(fetchedPost == null) {
             return null;
         }
-        fetchedPost.setUpdatedAt(getCurrentTimestamp());
+        fetchedPost.setUpdatedAt(timestampUtil.getCurrentTimestamp());
         fetchedPost.setTitle(post.getTitle());
         fetchedPost.setContent(post.getContent());
 
@@ -92,9 +93,5 @@ public class PostService {
                 .title(postCreateRequest.getTitle())
                 .content(postCreateRequest.getContent())
                 .build();
-    }
-
-    public Timestamp getCurrentTimestamp() {
-        return Timestamp.valueOf(LocalDateTime.now());
     }
 }

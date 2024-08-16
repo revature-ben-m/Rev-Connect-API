@@ -3,6 +3,7 @@ package com.rev_connect_api.controllers;
 import com.rev_connect_api.dto.PostCreateRequest;
 import com.rev_connect_api.models.Post;
 import com.rev_connect_api.services.PostService;
+import com.rev_connect_api.util.TimestampUtil;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -21,38 +22,29 @@ import java.util.List;
 @RequestMapping("/api/post")
 public class PostController {
 
-    // The directory to upload media
-    private final String attachmentsDirectory = "../attachments";
+    private final TimestampUtil timestampUtil;
     private final PostService postService;
 
-    public PostController(PostService postService) {
+    public PostController(TimestampUtil timestampUtil, PostService postService) {
+        this.timestampUtil = timestampUtil;
         this.postService = postService;
     }
 
+    // Could not get ModelAttribute working, so I used this solution which is not the best
     @PostMapping
-    public ResponseEntity<Post> CreatePost(@RequestBody PostCreateRequest postCreateRequest) {
-        // Convert request to post entity
-        Post post = postService.postDtoToPost(postCreateRequest);
-        post.setCreatedAt(postService.getCurrentTimestamp());
-        // Call service to save it
-        Post response = postService.savePost(post);
+    public ResponseEntity<Post> CreatePost(@RequestParam("title") String title,
+                                           @RequestParam("content") String content,
+                                           @RequestParam(value = "file", required = false) MultipartFile file) {
+        Post post = postService.postDtoToPost(new PostCreateRequest(title, content));
+        post.setCreatedAt(timestampUtil.getCurrentTimestamp());
+        Post response;
+        if(file != null) {
+            response = postService.savePost(post, file);
+        } else {
+            response = postService.savePost(post);
+        }
         return ResponseEntity.ok(response);
     }
-
-//    @PostMapping
-//    public ResponseEntity<Post> CreatePost(@RequestParam("title") String title,
-//                                           @RequestParam("content") String content,
-//                                           @RequestParam(value = "file", required = false) MultipartFile file) {
-//
-//        System.out.println("Title: " + title);
-//        System.out.println("Content: " + content);
-//        System.out.println("File: " + file);
-//        if(file != null) {
-//            System.out.println("File content: " + file.getContentType());
-//        }
-//
-//        return null;
-//    }
 
     @GetMapping("/{id}")
     public ResponseEntity<Post> GetPostById(@PathVariable BigInteger id) {

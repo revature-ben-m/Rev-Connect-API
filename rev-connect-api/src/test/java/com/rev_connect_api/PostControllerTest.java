@@ -3,7 +3,11 @@ package com.rev_connect_api;
 
 import com.rev_connect_api.controllers.PostController;
 import com.rev_connect_api.dto.PostCreateRequest;
+import com.rev_connect_api.models.Media;
 import com.rev_connect_api.models.Post;
+import com.rev_connect_api.repositories.MediaRepository;
+import com.rev_connect_api.repositories.PostRepository;
+import com.rev_connect_api.services.MediaService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -11,12 +15,19 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.validation.beanvalidation.MethodValidationPostProcessor;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -25,6 +36,8 @@ public class PostControllerTest {
 
     @Autowired
     private PostController postController;
+    @Autowired
+    private MediaService mediaService;
 
     @Test
     @DirtiesContext // Ensures each test do not share state or data with each other
@@ -33,7 +46,7 @@ public class PostControllerTest {
 
         // Create post
         PostCreateRequest postRequest = new PostCreateRequest("title", "content");
-        ResponseEntity<Post> response = postController.CreatePost(postRequest);
+        ResponseEntity<Post> response = postController.CreatePost(postRequest.getTitle(), postRequest.getContent(), null);
         Post postResponse = response.getBody();
 
         // Verifies that the controller returns a post entity similar to the post request
@@ -45,12 +58,40 @@ public class PostControllerTest {
     }
 
     @Test
+    @DirtiesContext
+    public void TestCreateAndDeletePostWithImage() {
+        File image = new File("src/test/java/com/rev_connect_api/testimage.jpeg");
+        MultipartFile file;
+        try {
+            file = convertFileToMultipart(image);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        PostCreateRequest postRequest = new PostCreateRequest("title", "content");
+        ResponseEntity<Post> response = postController.CreatePost(postRequest.getTitle(), postRequest.getContent(), file);
+        Post postResponse = response.getBody();
+
+        // Gets the media by post id and sees if it exists
+        BigInteger postId = postResponse.getPostId();
+        Media media = mediaService.getMediaByPostId(postId);
+
+        assertNotNull(media);
+        assertEquals(postResponse.getPostId(), media.getPostId());
+        assertEquals(postResponse.getCreatedAt(), media.getCreatedAt());
+
+        // Test delete post, should delete the media as well
+        boolean deletedMedia = mediaService.deleteMediaByPostId(postId);
+        assertTrue(deletedMedia);
+    }
+
+    @Test
+    @DirtiesContext
     public void TestDeletePost() {
         final BigInteger id = new BigInteger("1");
 
         // Creates a post
         PostCreateRequest postRequest = new PostCreateRequest("title", "content");
-        postController.CreatePost(postRequest);
+        postController.CreatePost(postRequest.getTitle(), postRequest.getContent(), null);
 
         // Delete a post, controller should return true if successfully deleted
         ResponseEntity<Boolean> response = postController.DeletePostById(id);
@@ -71,7 +112,7 @@ public class PostControllerTest {
 
         // Create post
         PostCreateRequest postRequest = new PostCreateRequest(title, content);
-        postController.CreatePost(postRequest);
+        postController.CreatePost(title, content, null);
 
         // Fetches that post for comparison to ensure the get request is working
         ResponseEntity<Post> response = postController.GetPostById(id);
@@ -104,11 +145,11 @@ public class PostControllerTest {
 
         for(int i = 0; i < initialPostCount; i++) {
             PostCreateRequest postRequest = new PostCreateRequest(title, content);
-            postController.CreatePost(postRequest);
+            postController.CreatePost(title, content, null);
         }
 
         ResponseEntity<List<Post>> postsResponse = postController.GetRecentPosts(0);
-        // Should return the most recent post sorted from most recent to least recent
+        // Should return the most recent post sorted from most recent to the least recent
         List<Post> posts = postsResponse.getBody();
         // Checks to make sure there 5 posts are returned
         assertEquals(initialPostCount, posts.size());
@@ -126,7 +167,7 @@ public class PostControllerTest {
         // After the first posts creation, create more posts by remainderPostCount, then fetch the next page (1) and verify that it is equal to remainderPostCount
         for(int i = 0; i < remainderPostCount; i++) {
             PostCreateRequest postRequest = new PostCreateRequest(title, content);
-            postController.CreatePost(postRequest);
+            postController.CreatePost(postRequest.getTitle(), postRequest.getContent(), null);
         }
         // Gets the next page, should verify if pagination is working
         postsResponse = postController.GetRecentPosts(1);
@@ -138,5 +179,13 @@ public class PostControllerTest {
     private void assertEqualsPost(PostCreateRequest postRequest, Post post) {
         assertEquals(postRequest.getTitle(), post.getTitle());
         assertEquals(postRequest.getContent(), post.getContent());
+    }
+
+    // Converts jpegs into multipart object
+    private MultipartFile convertFileToMultipart(File file) throws IOException {
+        FileInputStream input = new FileInputStream(file);
+        return new MockMultipartFile(
+                file.getName(), file.getName(), "image/jpeg", input
+        );
     }
 }
