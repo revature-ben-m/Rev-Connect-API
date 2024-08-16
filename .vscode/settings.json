@@ -1,7 +1,3 @@
 {
-<<<<<<< HEAD
     "java.configuration.updateBuildConfiguration": "interactive"
-=======
-    "java.compile.nullAnalysis.mode": "automatic"
->>>>>>> cc1eed4 (#3-registration-api)
 }
