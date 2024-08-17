@@ -16,6 +16,10 @@ import io.jsonwebtoken.Jwts.SIG;
 public class JwtUtil {
 
     private final SecretKey SECRET_KEY = SIG.HS256.key().build();
+
+    public SecretKey getSecretKey() {
+        return SECRET_KEY;
+    }
     
     public String generateToken(String username) {
         return Jwts.builder()
@@ -77,7 +81,7 @@ public class JwtUtil {
      * @param token The jwt token.
      * @return True if the token is expired, otherwise false
      */
-    private Boolean isTokenExpired(String token) {
+    public Boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
     }
 
