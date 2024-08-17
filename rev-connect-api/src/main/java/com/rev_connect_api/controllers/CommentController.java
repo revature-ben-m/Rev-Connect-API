@@ -32,14 +32,14 @@ public class CommentController {
 
     @PostMapping("/comments")
     @CrossOrigin(origins = "*")
-    public ResponseEntity<String> createComment(@RequestBody Comment comment) {
+    public ResponseEntity<Comment> createComment(@RequestBody Comment comment) {
         try {
             System.out.println(comment);
             commentService.createComment(comment);
-            return new ResponseEntity<>("Comment created successfully", HttpStatus.CREATED);
+            return ResponseEntity.ok().body(comment);
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResponseEntity<>("An error occurred while creating the comment", HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
 }

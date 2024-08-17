@@ -4,6 +4,8 @@ import com.rev_connect_api.models.CommentLikes;
 import com.rev_connect_api.services.CommentLikesService;
 import com.rev_connect_api.services.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -18,8 +20,7 @@ public class CommentLikesController {
 
     @PostMapping("/comment/{commentId}/like/{userId}")
     @CrossOrigin(origins = "*")
-    public void likeComment(@PathVariable long userId, @PathVariable long commentId) {
-
+    public ResponseEntity<Void> likeComment(@PathVariable long userId, @PathVariable long commentId) {
         if (commentService.doesCommentExist(commentId)) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss a");
             LocalDateTime now = LocalDateTime.now();
@@ -27,18 +28,20 @@ public class CommentLikesController {
 
             CommentLikes like = new CommentLikes(userId, commentId, dateTimeString);
             commentLikesService.like(like);
+            return new ResponseEntity<>(HttpStatus.OK);
         } else {
-            throw new RuntimeException("User not found");
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
     @PostMapping("/comment/{commentId}/unlike/{userId}")
     @CrossOrigin(origins = "*")
-    public void unlikeComment(@PathVariable long userId, @PathVariable long commentId) {
+    public ResponseEntity<Void> unlikeComment(@PathVariable long userId, @PathVariable long commentId) {
         if (commentService.doesCommentExist(commentId)) {
             commentLikesService.unlike(userId, commentId);
+            return new ResponseEntity<>(HttpStatus.OK);
         } else {
-            throw new RuntimeException("User not found");
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 }
