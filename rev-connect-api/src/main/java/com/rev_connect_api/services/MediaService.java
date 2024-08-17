@@ -16,6 +16,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -50,25 +51,32 @@ public class MediaService {
         return mediaRepository.save(media);
     }
 
-    public Media getMediaByPostId(BigInteger postId) {
-        Optional<Media> optionalMedia = mediaRepository.getMediaByPostId(postId);
-        return optionalMedia.orElse(null);
+    public List<Media> getMediaByPostId(BigInteger postId) {
+        return mediaRepository.findAllByPostId(postId);
     }
 
     @Transactional
     public boolean deleteMediaByPostId(BigInteger postId) {
-        Media media = getMediaByPostId(postId);
-        if(media == null) {
-            return false;
-        }
-        mediaRepository.deleteMediaByPostId(postId);
+    List<Media> mediaList = getMediaByPostId(postId);
+    if (mediaList == null || mediaList.isEmpty()) {
+        return false;
+    }
+    // Iterate through the list of media and delete each one
+    for (Media media : mediaList) {
         try {
             File file = new File(attachmentsDirectory + "/" + media.getMediaUrl());
-            return file.delete();
+            if (!file.delete()) {
+                throw new RuntimeException("Failed to delete file: " + media.getMediaUrl());
+            }
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
+    
+    mediaRepository.deleteMediaByPostId(postId);
+    return true;
+    }
+
 
     // Saves attachments locally, should probably switch out implementation in production
     private String saveFile(MultipartFile file) throws IOException {

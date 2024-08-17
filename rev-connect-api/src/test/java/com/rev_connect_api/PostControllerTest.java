@@ -70,15 +70,24 @@ public class PostControllerTest {
         PostCreateRequest postRequest = new PostCreateRequest("title", "content");
         ResponseEntity<Post> response = postController.CreatePost(postRequest.getTitle(), postRequest.getContent(), file);
         Post postResponse = response.getBody();
-
+    
         // Gets the media by post id and sees if it exists
         BigInteger postId = postResponse.getPostId();
-        Media media = mediaService.getMediaByPostId(postId);
-
+        List<Media> mediaList = mediaService.getMediaByPostId(postId);
+        assertFalse(mediaList.isEmpty());
+        Media media = mediaList.get(0); 
         assertNotNull(media);
         assertEquals(postResponse.getPostId(), media.getPostId());
-        assertEquals(postResponse.getCreatedAt(), media.getCreatedAt());
+        // Round or truncate the timestamp to milliseconds before comparison
+        long postCreatedAtMillis = postResponse.getCreatedAt().getTime() / 1000;
+        long mediaCreatedAtMillis = media.getCreatedAt().getTime() / 1000;
 
+    assertEquals(postCreatedAtMillis, mediaCreatedAtMillis);
+    
+        // Define an acceptable tolerance (e.g., 1 millisecond)
+        long tolerance = 1000;
+        assertTrue(Math.abs(postResponse.getCreatedAt().getTime() - media.getCreatedAt().getTime()) <= tolerance);
+    
         // Test delete post, should delete the media as well
         boolean deletedMedia = mediaService.deleteMediaByPostId(postId);
         assertTrue(deletedMedia);

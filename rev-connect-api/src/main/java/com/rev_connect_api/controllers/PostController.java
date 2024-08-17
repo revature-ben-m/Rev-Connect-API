@@ -1,7 +1,9 @@
 package com.rev_connect_api.controllers;
 
 import com.rev_connect_api.dto.PostCreateRequest;
+import com.rev_connect_api.models.Media;
 import com.rev_connect_api.models.Post;
+import com.rev_connect_api.services.MediaService;
 import com.rev_connect_api.services.PostService;
 import com.rev_connect_api.util.TimestampUtil;
 import jakarta.validation.Valid;
@@ -24,10 +26,12 @@ public class PostController {
 
     private final TimestampUtil timestampUtil;
     private final PostService postService;
+    private final MediaService mediaService;
 
-    public PostController(TimestampUtil timestampUtil, PostService postService) {
+    public PostController(TimestampUtil timestampUtil, PostService postService, MediaService mediaService) {
         this.timestampUtil = timestampUtil;
         this.postService = postService;
+        this.mediaService = mediaService;
     }
 
     // Could not get ModelAttribute working, so I used this solution which is not the best
@@ -57,6 +61,13 @@ public class PostController {
         List<Post> posts = postService.getRecentPosts(page);
         return ResponseEntity.ok(posts);
     }
+
+    @GetMapping("/media/{postId}")
+    public ResponseEntity<List<Media>> getMediaByPostId(@PathVariable BigInteger postId) {
+    List<Media> mediaList =  mediaService.getMediaByPostId(postId);
+    return ResponseEntity.ok(mediaList);
+    }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Boolean> DeletePostById(@PathVariable BigInteger id) {
