@@ -21,8 +21,9 @@ public class UserService {
         String username=user.getUsername();
         String emailId=user.getEmail();
         List<User> checkDuplicates=getUserDetails(username,emailId);
-        String hashedPassword = passwordEncoder.encode(user.getUserPwd());
-        user.setUserPwd(hashedPassword);
+        // hashing password then persisting hashed password to the database
+        String hashedPassword = passwordEncoder.encode(user.getPassword());
+        user.setPassword(hashedPassword);
 
         if(checkDuplicates.stream().anyMatch(userDetails->emailId.equals(userDetails.getEmail())))
             throw new IllegalArgumentException("Email already exists");
@@ -36,7 +37,7 @@ public class UserService {
     public boolean authenticateUser(String username, String plainPassword) {
         User user = userRepository.findByUsername(username);
         if(user != null) {
-            return passwordEncoder.matches(plainPassword, user.getUserPwd());
+            return passwordEncoder.matches(plainPassword, user.getPassword());
         }
         return false;
     }

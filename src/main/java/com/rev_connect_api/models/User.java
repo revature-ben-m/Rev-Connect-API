@@ -21,26 +21,33 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq")
     @SequenceGenerator(name = "user_seq", sequenceName = "user_sequence", allocationSize = 1)
+    @Column(name = "user_id")
     private Long userId;
-    @Column(unique = true, nullable = false)
+
+    @Column(name = "username", unique = true, nullable = false)
     private String username;
-    @Column(nullable = false)
-    private String userPwd;
-    @Column(unique = true, nullable = false)
+
+    @Column(name = "user_password", nullable = false)
+    private String password;
+
+    @Column(name = "email", unique = true, nullable = false)
     private String email;
-    @Column(nullable = false)
+
+    @Column(name = "first_name", nullable = false)
     private String firstName;
-    @Column(nullable = false)
+
+    @Column(name = "last_name", nullable = false)
     private String lastName;
-    @Column(nullable = false)
+
+    @Column(name = "is_business", nullable = false)
     private Boolean isBusiness;
 
     @CreatedDate
-    @Column(updatable = false, nullable = false)
+    @Column(name = "created_at", updatable = false, nullable = false)
     private LocalDateTime createdAt;
 
     @LastModifiedDate
-    @Column(updatable = true, nullable = false)
+    @Column(name = "updated_at", updatable = true, nullable = false)
     private LocalDateTime updatedAt;
 
     @ElementCollection(fetch = FetchType.EAGER)
@@ -59,30 +66,30 @@ public class User {
         updatedAt = LocalDateTime.now();
     }
 
-    public User(Long userId, String username, String userPwd){
+    public User(Long userId, String username, String password){
         this.userId = userId;
         this.username = username;
-        this.userPwd = userPwd;
+        this.password = password;
     }
 
-    public User(String username, String userPwd){
+    public User(String username, String password){
         this.username = username;
-        this.userPwd = userPwd;
+        this.password = password;
     }
 
-    public User(String username, String userPwd, String email, String firstName, String lastName, boolean isBusiness) {
+    public User(String username, String password, String email, String firstName, String lastName, boolean isBusiness) {
         this.username = username;
-        this.userPwd = userPwd;
+        this.password = password;
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
         this.isBusiness = isBusiness;
     }
 
-    public User(String email, String username, String userPwd, Boolean isBusiness){
+    public User(String email, String username, String password, Boolean isBusiness){
         this.email = email;
         this.username = username;
-        this.userPwd = userPwd;
+        this.password = password;
         this.isBusiness = isBusiness;
     }
 

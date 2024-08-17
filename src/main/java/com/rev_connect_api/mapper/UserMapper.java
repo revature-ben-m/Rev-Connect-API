@@ -14,7 +14,7 @@ import com.rev_connect_api.models.User;
 @Mapper(componentModel = "spring")
 public interface UserMapper {
 
-    @Mapping(target = "userPwd", source = "password")
+    @Mapping(target = "password", source = "password")
     @Mapping(target = "roles", expression = "java(mapRoles(registrationDTO.getRoles()))")
     @Mapping(target = "userId", ignore = true) // Ignored because it's auto-generated
     @Mapping(target = "createdAt", ignore = true) // Handled by @PrePersist
