@@ -2,6 +2,7 @@ package com.rev_connect_api.services;
 
 import java.util.List;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.rev_connect_api.models.User;
@@ -10,11 +11,18 @@ import com.rev_connect_api.repositories.UserRepository;
 @Service
 public class UserService {
     private UserRepository userRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
+
+    public UserService(BCryptPasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
+    }
 
     public User registerUser(User user){
         String username=user.getUsername();
         String emailId=user.getEmail();
         List<User> checkDuplicates=getUserDetails(username,emailId);
+        String hashedPassword = passwordEncoder.encode(user.getUserPwd());
+        user.setUserPwd(hashedPassword);
 
         if(checkDuplicates.stream().anyMatch(userDetails->emailId.equals(userDetails.getEmail())))
             throw new IllegalArgumentException("Email already exists");
@@ -23,6 +31,14 @@ public class UserService {
             throw new IllegalArgumentException("Username already exists");
 
         return userRepository.saveAndFlush(user);
+    }
+
+    public boolean authenticateUser(String username, String plainPassword) {
+        User user = userRepository.findByUsername(username);
+        if(user != null) {
+            return passwordEncoder.matches(plainPassword, user.getUserPwd());
+        }
+        return false;
     }
 
      public List<User> getUserDetails(String userName,String email){
