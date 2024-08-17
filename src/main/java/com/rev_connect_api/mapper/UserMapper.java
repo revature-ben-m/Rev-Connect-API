@@ -19,6 +19,7 @@ public interface UserMapper {
     // map UserRegistrationDTO to User entity
     @Mapping(target = "password", source = "password")
     @Mapping(target = "roles", expression = "java(mapRoles(registrationDTO.getRoles()))")
+    @Mapping(target = "grantedAuthorities", ignore = true)
     @Mapping(target = "userId", ignore = true) // Ignored because it's auto-generated
     @Mapping(target = "createdAt", ignore = true) // Handled by @PrePersist
     @Mapping(target = "updatedAt", ignore = true) // Handled by @PreUpdate
@@ -31,6 +32,7 @@ public interface UserMapper {
     // map fields from UserUpdateDTO to existing User entity
     @Mapping(target = "password", source = "password")
     @Mapping(target = "roles", expression = "java(mapRoles(dto.getRoles()))")
+    @Mapping(target = "grantedAuthorities", ignore = true)
     @Mapping(target = "userId", ignore = true) // Ignored because it's auto-generated
     @Mapping(target = "createdAt", ignore = true) // Handled by @PrePersist
     @Mapping(target = "updatedAt", ignore = true) // Handled by @PreUpdate

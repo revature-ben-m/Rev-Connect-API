@@ -5,7 +5,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -17,9 +17,9 @@ import com.rev_connect_api.repositories.UserRepository;
 @Service
 public class UserService {
     private UserRepository userRepository;
-    private final BCryptPasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
@@ -45,6 +45,10 @@ public class UserService {
 
         if(checkDuplicates.stream().anyMatch(userDetails->username.equals(userDetails.getUsername())))
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Username already exists");
+
+        if(user.getRoles().isEmpty()) {
+            user.setRoles(Set.of(Role.ROLE_USER));
+        }
 
         // hashing password then persisting hashed password to the database
         String hashedPassword = passwordEncoder.encode(user.getPassword());

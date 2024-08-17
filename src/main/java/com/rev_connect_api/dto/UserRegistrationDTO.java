@@ -1,5 +1,6 @@
 package com.rev_connect_api.dto;
 
+import java.time.LocalDateTime;
 import java.util.Set;
 
 import jakarta.validation.constraints.Email;
@@ -27,8 +28,12 @@ public class UserRegistrationDTO {
 
     @NotEmpty(message = "Last name is required")
     private String lastName;
+    
+    private Boolean isBusiness = false;
 
-    private Boolean isBusiness;
+    private LocalDateTime createdAt = LocalDateTime.now();
+
+    private LocalDateTime updatedAt = LocalDateTime.now();
 
     private Set<String> roles; // List of roles as strings (e.g., "ROLE_USER", "ROLE_ADMIN")
 }

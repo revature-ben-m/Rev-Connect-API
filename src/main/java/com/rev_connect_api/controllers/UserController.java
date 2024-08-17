@@ -41,7 +41,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserResponseDTO> getUserById(@RequestParam Long id) {
+    public ResponseEntity<UserResponseDTO> getUserById(@PathVariable Long id) {
         User user = userService.findUserById(id);
         return ResponseEntity.ok(mapToDTO(user));
     }
@@ -75,7 +75,10 @@ public class UserController {
         user.setEmail((registrationDTO.getEmail()));
         user.setFirstName(registrationDTO.getFirstName());
         user.setLastName(registrationDTO.getLastName());
+        user.setPassword(registrationDTO.getPassword());
         user.setIsBusiness(registrationDTO.getIsBusiness());
+        user.setCreatedAt(registrationDTO.getCreatedAt());
+        user.setUpdatedAt(registrationDTO.getUpdatedAt());
 
         return user;
     }

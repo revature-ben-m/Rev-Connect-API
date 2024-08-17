@@ -1,10 +1,14 @@
 package com.rev_connect_api.security;
 
 import java.util.Date;
+import java.util.List;
+import java.util.Set;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import javax.crypto.SecretKey;
 
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import io.jsonwebtoken.Claims;
@@ -20,16 +24,14 @@ public class JwtUtil {
     public SecretKey getSecretKey() {
         return SECRET_KEY;
     }
-    
-    public String generateToken(String username) {
+
+    public String generateToken(String username, Set<String> roles) {
         return Jwts.builder()
-            .header()
-                .keyId("aKeyId")        // optionally, set a Key ID in the header
-                .and()
-            .subject(username)              // set the subject claim to the username
+            .subject(username)              // add username as a claim
+            .claim("roles", roles)     // add roles as a claim
             .issuedAt(new Date())           // set the issue date to the current time
-                                            // set expiration time to 24 hours
-            .expiration(new Date(System.currentTimeMillis() + 1000  * 60 * 60 * 24))
+                                            // set expiration time to 10 hours
+            .expiration(new Date(System.currentTimeMillis() + 1000  * 60 * 60 * 10))
             .signWith(SECRET_KEY)           // sign the jwt with the specified key and H256 algorithm
             .compact();                     // compact the jwt to a url-safe string
     }
@@ -92,7 +94,22 @@ public class JwtUtil {
      * @return True if the token is valid, otherwise false.
      */
     public Boolean validateToken(String token, String username) {
-        final String extractedUsername = extractUsername(token);
-        return (extractedUsername.equals(username) && !isTokenExpired(token));
+        String extractedUsername = extractUsername(token);
+        return (username.equals(extractedUsername) && !isTokenExpired(token));
+    }
+
+    public Set<SimpleGrantedAuthority> extractRoles(String token) {
+        Claims claims = Jwts.parser()
+            .verifyWith(SECRET_KEY)
+            .build()
+            .parseSignedClaims(token)
+            .getPayload();
+
+        @SuppressWarnings("unchecked")
+        List<String> roles = (List<String>) claims.get("roles");
+
+        return roles.stream()
+            .map(SimpleGrantedAuthority::new)
+            .collect(Collectors.toSet());
     }
 }

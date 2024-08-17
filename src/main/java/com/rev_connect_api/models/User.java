@@ -4,9 +4,12 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -56,6 +59,14 @@ public class User {
     @Column(name = "role", nullable = false)
     private Set<Role> roles = new HashSet<>();
 
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
@@ -66,12 +77,19 @@ public class User {
         updatedAt = LocalDateTime.now();
     }
 
+    public Set<SimpleGrantedAuthority> getGrantedAuthorities() {
+        return roles.stream()
+            .map((role) -> new SimpleGrantedAuthority(role.name()))
+            .collect(Collectors.toSet());
+    }
+
     public User(Long userId, String username, String password){
         this.userId = userId;
         this.username = username;
         this.password = password;
     }
 
+    @Autowired
     public User(String username, String password){
         this.username = username;
         this.password = password;
