@@ -4,7 +4,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.rev_connect_api.dto.LoginRequestDTO;
-import com.rev_connect_api.dto.UserRegistrationDTO;
 import com.rev_connect_api.services.UserService;
 
 
@@ -18,12 +17,6 @@ public class AuthController {
 
     public AuthController(UserService userService) {
         this.userService = userService;
-    }
-
-    @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody UserRegistrationDTO registrationDTO) {
-        //TODO: process POST request
-        return null;
     }
 
     @PostMapping("/login")
