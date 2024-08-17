@@ -1,5 +1,9 @@
 package com.rev_connect_api.controllers;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -7,10 +11,10 @@ import com.rev_connect_api.dto.UserRegistrationDTO;
 import com.rev_connect_api.dto.UserResponseDTO;
 import com.rev_connect_api.dto.UserUpdateDTO;
 import com.rev_connect_api.models.User;
-import com.rev_connect_api.services.PostService;
 import com.rev_connect_api.services.UserService;
 
 import jakarta.validation.Valid;
+
 
 
 
@@ -21,7 +25,7 @@ public class UserController {
     
     private final UserService userService;
  
-    public UserController(UserService userService, PostService postService){
+    public UserController(UserService userService){
         this.userService = userService;
     }
 
@@ -30,11 +34,10 @@ public class UserController {
         // handle registrattion logic in UserService
         User user = userService.registerUser(mapToEntity(registrationDTO));
         UserResponseDTO responseDTO = mapToDTO(user);
-
         // TODO: send a verification email
         // emailService.sendVerficiationEmail(user);
 
-        return ResponseEntity.ok(responseDTO);
+        return new ResponseEntity<>(responseDTO, HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
@@ -54,22 +57,40 @@ public class UserController {
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/")
+    public ResponseEntity<List<UserResponseDTO>> getAllUsers() {
+        List<User> users = userService.getAllUsers();
+        List<UserResponseDTO> responseDTOs = users.stream().map(this::mapToDTO)
+            .collect(Collectors.toList());
+      return ResponseEntity.ok(responseDTOs); 
+    }
+    
    
     // utility methods for mapping
     private User mapToEntity(@Valid UserRegistrationDTO registrationDTO) {
         // map UserRegistrationDTO to User entity
-        return new User();
+        User user = new User();
+        user.setUsername(registrationDTO.getUsername());
+        user.setEmail((registrationDTO.getEmail()));
+        user.setFirstName(registrationDTO.getFirstName());
+        user.setLastName(registrationDTO.getLastName());
+        user.setIsBusiness(registrationDTO.getIsBusiness());
+
+        return user;
     }
 
     private UserResponseDTO mapToDTO(User user) {
         // map user entity to UserResponstDTO
-        return new UserResponseDTO();
+        UserResponseDTO responseDTO = new UserResponseDTO();
+        responseDTO.setUserId(user.getUserId());
+        responseDTO.setUsername(user.getUsername());
+        responseDTO.setEmail(user.getEmail());
+        responseDTO.setFirstName(user.getFirstName());
+        responseDTO.setLastName(user.getLastName());
+        responseDTO.setFullName(user.getFirstName() + " " + user.getLastName());
+        responseDTO.setIsBusiness(user.getIsBusiness());
+
+        return responseDTO;
     }
-
-
-    
-
-    
-    
-    
 }

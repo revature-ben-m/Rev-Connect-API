@@ -4,8 +4,10 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.rev_connect_api.dto.UserUpdateDTO;
 import com.rev_connect_api.models.Role;
@@ -17,48 +19,43 @@ public class UserService {
     private UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
 
-    public UserService(BCryptPasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
     // find a user by username
     public User findUserByUsername(String username) {
-        return userRepository.findByUsername(username);
+        return userRepository.findByUsername(username)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
     }
 
     // find users by username or password
     public List<User> getUserDetails(String userName,String email){
-         List<User> users = userRepository.findByUsernameOrEmail(userName, email);
-         return users;
+         return userRepository.findByUsernameOrEmail(userName, email);
     }
 
     public User registerUser(User user){
-        String username=user.getUsername();
-        String emailId=user.getEmail();
+        String username = user.getUsername();
+        String emailId = user.getEmail();
         List<User> checkDuplicates=getUserDetails(username,emailId);
+
+        if(checkDuplicates.stream().anyMatch(userDetails->emailId.equals(userDetails.getEmail())))
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Email already exists");
+
+        if(checkDuplicates.stream().anyMatch(userDetails->username.equals(userDetails.getUsername())))
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Username already exists");
+
         // hashing password then persisting hashed password to the database
         String hashedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(hashedPassword);
 
-        if(checkDuplicates.stream().anyMatch(userDetails->emailId.equals(userDetails.getEmail())))
-            throw new IllegalArgumentException("Email already exists");
-
-        if(checkDuplicates.stream().anyMatch(userDetails->username.equals(userDetails.getUsername())))
-            throw new IllegalArgumentException("Username already exists");
-
         return userRepository.saveAndFlush(user);
     }
 
-    public boolean authenticateUser(String username, String plainPassword) {
-        User user = userRepository.findByUsername(username);
-        if(user != null) {
-            return passwordEncoder.matches(plainPassword, user.getPassword());
-        }
-        return false;
-    }
-
-    public User updateUser(Long userId, UserUpdateDTO updateDTO) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found"));
+    public User updateUser(Long id, UserUpdateDTO updateDTO) {
+        User user = userRepository.findById(id)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
 
         if (updateDTO.getUsername() != null) user.setUsername(updateDTO.getUsername());
         if (updateDTO.getEmail() != null) user.setEmail(updateDTO.getEmail());
@@ -80,8 +77,8 @@ public class UserService {
         return roles.stream().map(Role::valueOf).collect(Collectors.toSet());
     }
 
-    public void deleteUser(Long userId) {
-        userRepository.deleteById(userId);
+    public void deleteUser(Long id) {
+        userRepository.deleteById(id);
     }
 
     public List<User> getAllUsers() {
@@ -89,8 +86,7 @@ public class UserService {
     }
 
     public User findUserById(Long id) {
-        User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("User not found"));
-
-        return user;
+       return userRepository.findById(id)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
     }
 }
