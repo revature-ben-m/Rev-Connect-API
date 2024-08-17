@@ -60,9 +60,4 @@ public class ConnectionRequestController {
         return new ResponseEntity<>(connections, HttpStatus.OK);
     }
 
-    @GetMapping("/all")
-    public ResponseEntity<List<ConnectionRequest>> findAllConnections() {
-        List<ConnectionRequest> connections = connectionRequestService.findAllConnections();
-        return new ResponseEntity<>(connections, HttpStatus.OK);
-    }
 }

@@ -3,6 +3,8 @@ package com.rev_connect_api.entity;
 import jakarta.persistence.*;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "system_users")
 public class User {
@@ -22,9 +24,11 @@ public class User {
     private String password;
 
     @OneToMany(mappedBy = "requester")
+    @JsonIgnore
     private List<ConnectionRequest> sentRequests;
 
     @OneToMany(mappedBy = "recipient")
+    @JsonIgnore
     private List<ConnectionRequest> receivedRequests;
 
     // Getters and Setters

@@ -105,8 +105,4 @@ public class ConnectionRequestService {
         logger.info("Fetching all connections for user {}", userId);
         return connectionRequestRepository.findConnectionsByUserId(userId);
     }
-    public List<ConnectionRequest> findAllConnections() {
-        logger.info("Fetching all connections");
-        return connectionRequestRepository.findAllConnections();
-    }
 }

@@ -45,10 +45,14 @@ CREATE TABLE connection_requests (
 INSERT INTO connection_requests (requester_id, recipient_id, status) VALUES
 (1, 2, 'PENDING'),       -- anjineyulu215 requested a connection with asif650
 (3, 4, 'ACCEPTED'),      -- benjamin346 requested a connection with testuser4, and it was accepted
-(5, 6, 'DECLINED'),      -- gautam746 requested a connection with matt392, but it was declined
+(5, 6, 'REJECTED'),      -- gautam746 requested a connection with matt392, but it was declined
 (7, 8, 'PENDING'),       -- mohamed019 requested a connection with mohan863
 (9, 10, 'PENDING'),      -- natnael035 requested a connection with olufifunmi957
 (11, 12, 'ACCEPTED'),    -- rachana153 requested a connection with trevor689, and it was accepted
 (13, 14, 'PENDING'),     -- yonas905 requested a connection with nickolas.jurczak
-(15, 16, 'DECLINED');    -- phone329 requested a connection with sarangi604, but it was declined
+(15, 16, 'REJECTED'),    -- phone329 requested a connection with sarangi604, but it was declined
+(1, 3, 'PENDING'),       -- anjineyulu215 requested a connection with benjamin346
+(1, 2, 'ACCEPTED');      -- anjineyulu215 requested a connection with asif650
+
+
 
