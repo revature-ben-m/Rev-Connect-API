@@ -58,8 +58,8 @@ public class HomeController {
             return new ResponseEntity<>("请登录后再使用", HttpStatus.UNAUTHORIZED);
         }
 
-        //如果有token   校验一下 过期时间
-        //fanhui用户信息
+        //check token expire time
+        //return user infomation
         UserDTO userDTO = new UserDTO();
         return new ResponseEntity<>(userDTO, HttpStatus.OK);
     }
