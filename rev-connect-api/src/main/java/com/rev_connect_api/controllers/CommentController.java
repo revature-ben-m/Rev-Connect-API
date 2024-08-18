@@ -30,11 +30,11 @@ public class CommentController {
         return new ResponseEntity<>(responses, HttpStatus.OK);
     }
 
+
     @PostMapping("/comments")
     @CrossOrigin(origins = "*")
     public ResponseEntity<Comment> createComment(@RequestBody Comment comment) {
         try {
-            System.out.println(comment);
             commentService.createComment(comment);
             return ResponseEntity.ok().body(comment);
         } catch (Exception e) {

@@ -1,5 +1,7 @@
 package com.rev_connect_api.controllers;
 
+import com.rev_connect_api.dto.CommentResponse;
+import com.rev_connect_api.models.Comment;
 import com.rev_connect_api.models.CommentLikes;
 import com.rev_connect_api.services.CommentLikesService;
 import com.rev_connect_api.services.CommentService;
@@ -20,7 +22,7 @@ public class CommentLikesController {
 
     @PostMapping("/comment/{commentId}/like/{userId}")
     @CrossOrigin(origins = "*")
-    public ResponseEntity<Void> likeComment(@PathVariable long userId, @PathVariable long commentId) {
+    public ResponseEntity<CommentResponse> likeComment(@PathVariable long userId, @PathVariable long commentId) {
         if (commentService.doesCommentExist(commentId)) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss a");
             LocalDateTime now = LocalDateTime.now();
@@ -28,7 +30,13 @@ public class CommentLikesController {
 
             CommentLikes like = new CommentLikes(userId, commentId, dateTimeString);
             commentLikesService.like(like);
-            return new ResponseEntity<>(HttpStatus.OK);
+
+            Comment updatedComment = commentService.getCommentById(commentId);
+            long likesCount = commentLikesService.countLikesForComment(commentId);
+
+            CommentResponse commentResponse = new CommentResponse(updatedComment, likesCount);
+
+            return new ResponseEntity<>(commentResponse, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

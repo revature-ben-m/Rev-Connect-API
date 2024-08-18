@@ -18,15 +18,21 @@ public class CommentService {
   @Autowired
   private CommentLikesRepository commentLikesRepository;
 
-  public void createComment(Comment comment) {
+  public Comment createComment(Comment comment) {
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss a");
     LocalDateTime now = LocalDateTime.now();
     String dateTimeString = now.format(formatter);
     comment.setTimePosted(dateTimeString);
-    commentRepository.save(comment);
+    Comment savedComment = commentRepository.save(comment);
+    System.out.println(savedComment);
+    return savedComment;
   }
   public List<Comment> getCommentForPost(long userId, long postId){
     return commentRepository.findByUserIdAndPostId(userId,postId);
+  }
+
+  public Comment getCommentById(long commentId) {
+    return commentRepository.findById(commentId).get();
   }
 
   public boolean doesCommentExist(long commentId) {
