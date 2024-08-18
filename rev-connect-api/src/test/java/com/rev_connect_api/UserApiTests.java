@@ -7,6 +7,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import static org.mockito.Mockito.when;
 import org.mockito.MockitoAnnotations;
+import org.springframework.http.ResponseEntity;
 
 import com.rev_connect_api.controllers.HomeController;
 import com.rev_connect_api.models.User;
@@ -33,7 +34,7 @@ public class UserApiTests {
         // Mocking the behavior of userService.getUser to return null when user is not found
         when(userService.getUser(userId)).thenReturn(null);
 
-        String result = homeController.login(userId, password);
+        ResponseEntity<?> result = homeController.login(userId, password);
         assertThat(result).isEqualTo("User not found");
     }
 
@@ -46,7 +47,7 @@ public class UserApiTests {
 
         // Mocking the behavior of userService.getUser to return a valid user with a different password
         when(userService.getUser(userId)).thenReturn(user);
-        String result = homeController.login(userId, password);
+        ResponseEntity<?> result = homeController.login(userId, password);
 
         // Assert
         assertThat(result).isEqualTo("Invalid credentials");
@@ -59,7 +60,7 @@ public class UserApiTests {
         User user = new User(userId, "Test", "Test", "Test@revature.net", password, true);
 
         when(userService.getUser(userId)).thenReturn(user);
-        String result = homeController.login(userId, password);
+        ResponseEntity<?> result = homeController.login(userId, password);
 
         assertThat(result).isEqualTo(user.toString());
     }
