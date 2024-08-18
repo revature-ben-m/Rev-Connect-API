@@ -35,8 +35,10 @@ public class HomeController {
 		userService.register(newUser);
  
 		User registeredUser = userService.getUser(userId);
-		if(registeredUser != null) return registeredUser.toString();
-		else	return "User not Found!";
+		if(registeredUser != null) 
+            return registeredUser.toString();
+		else	
+            return "User not Found!";
 	}
  
 	@PostMapping(value = "/login")
@@ -55,10 +57,13 @@ public class HomeController {
  
 	// ----------------------------forgot password link---------------------------
 	@PostMapping("/forgot-password")
-    public String forgotPass(@RequestParam String email){
+    public ResponseEntity<String> forgotPass(@RequestParam String email) {
+        User user = userService.getUserByEmail(email);
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        }
         String response = userService.forgotPass(email);
- 
-        return response;
+        return ResponseEntity.ok(response);
     }
  
     @PutMapping("/reset-password")

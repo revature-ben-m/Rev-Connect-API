@@ -59,23 +59,24 @@ public class UserService {
     }
 
     // Handle forgot password request
-    public String forgotPass(String email) {
-        // Find the user by email
-        Optional<User> userOptional = Optional.ofNullable(userRepository.findByuserEmail(email));
-
-        if (userOptional.isEmpty()) {
-            return "Invalid email id.";
-        }
-
-        // Generate reset token
-        String resetToken = generateResetToken(email);
-        String resetLink = "http://localhost:8080/reset-password?token=" + resetToken;
-
-        // Send reset link to the provided email address
-        emailService.sendEmail(email, "Password Reset Request", "Click the link to reset your password: " + resetLink);
-
-        return "Password reset link has been sent to your email.";
+public String forgotPass(String email) {
+    // Find the user by email
+    Optional<User> userOptional = Optional.ofNullable(userRepository.findByuserEmail(email));
+ 
+    if (userOptional.isEmpty()) {
+        return "Invalid email id.";
     }
+ 
+    // Generate reset token
+    String resetToken = generateResetToken(email);
+    // Construct the frontend reset link including the token
+    String resetLink = "http://localhost:5173/reset-password?token=" + resetToken;
+ 
+    // Send reset link to the provided email address
+    emailService.sendEmail(email, "Password Reset Request", "Click the link to reset your password: " + resetLink);
+ 
+    return resetLink; // Optionally return the reset link for logging or other purposes
+}
 
     // Handle password reset request
     public String resetPass(String token, String newPassword) {
