@@ -1,5 +1,7 @@
 package com.rev_connect_api.models;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import com.fasterxml.jackson.annotation.JsonIgnore; // Keep this if @JsonIgnore is used
+import java.time.LocalDateTime; // Keep this if you need LocalDateTime in your code
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -33,13 +35,12 @@ public class User {
 
 	@Column(name = "isBusiness")
 	private Boolean isBusiness;
+
+	// Default constructor
+	public User() {}
 	
-
-
-
-	public User(){}
-	
-	public User(String userId, String firstName, String lastName,String userEmail,String password,Boolean isBusiness ) {
+	// Parameterized constructor
+	public User(String userId, String firstName, String lastName, String userEmail, String password, Boolean isBusiness) {
 		this.userId = userId;
 		this.firstName = firstName;
 		this.lastName = lastName;
@@ -48,6 +49,7 @@ public class User {
 		this.isBusiness = isBusiness;
 	}
 
+	// Getters and Setters
 	public String getUserId() {
 		return userId;
 	}
@@ -88,13 +90,12 @@ public class User {
 		this.password = password;
 	}
 
+	public Long getId() {
+		return id;
+	}
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public Long getId() {
-		return id;
 	}
 
 	public Boolean getBusiness() {
@@ -105,19 +106,20 @@ public class User {
 		isBusiness = business;
 	}
 
+	@Override
+	public String toString() {
+		return "User{" +
+			"id=" + id +
+			", userId='" + userId + '\'' +
+			", firstName='" + firstName + '\'' +
+			", lastName='" + lastName + '\'' +
+			", userEmail='" + userEmail + '\'' +
+			", isBusiness=" + isBusiness +
+			'}';
+	}
+
 	public User orElse(Object object) {
 		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException("Unimplemented method 'orElse'");
 	}
-	@Override
-    public String toString() {
-        return "User{" +
-                "id='" + id + '\'' +
-                ", userid='" + userId + '\'' +
-                ", email='" + userEmail + '\'' +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", isBusiness=" + isBusiness +
-                '}';
-    }
 }
