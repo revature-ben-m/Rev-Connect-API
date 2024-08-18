@@ -52,7 +52,9 @@ INSERT INTO connection_requests (requester_id, recipient_id, status) VALUES
 (13, 14, 'PENDING'),     -- yonas905 requested a connection with nickolas.jurczak
 (15, 16, 'REJECTED'),    -- phone329 requested a connection with sarangi604, but it was declined
 (1, 3, 'PENDING'),       -- anjineyulu215 requested a connection with benjamin346
-(1, 2, 'ACCEPTED');      -- anjineyulu215 requested a connection with asif650
+(3, 2, 'ACCEPTED'),      -- anjineyulu215 requested a connection with asif650
+(3, 6, 'ACCEPTED');      -- benjamin346 requested a connection with matt392, and it was accepted
+
 
 
 

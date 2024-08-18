@@ -1,8 +1,8 @@
 package com.rev_connect_api.services;
 
 import com.rev_connect_api.entity.ConnectionRequest;
-import com.rev_connect_api.entity.User;
 import com.rev_connect_api.entity.RequestStatus;
+import com.rev_connect_api.entity.User;
 import com.rev_connect_api.repositories.ConnectionRequestRepository;
 import com.rev_connect_api.repositories.UserRepository;
 import org.slf4j.Logger;
@@ -20,13 +20,18 @@ public class ConnectionRequestService {
     private final ConnectionRequestRepository connectionRequestRepository;
     private final UserRepository userRepository;
 
-    public ConnectionRequestService(ConnectionRequestRepository connectionRequestRepository, UserRepository userRepository) {
+    public ConnectionRequestService(ConnectionRequestRepository connectionRequestRepository,
+            UserRepository userRepository) {
         this.connectionRequestRepository = connectionRequestRepository;
         this.userRepository = userRepository;
     }
 
     public ConnectionRequest sendRequest(Long requesterId, Long recipientId) {
         logger.info("Attempting to send connection request from user {} to user {}", requesterId, recipientId);
+
+        if (requesterId.equals(recipientId)) {
+            throw new IllegalArgumentException("You cannot send a connection request to yourself.");
+        }
 
         Optional<User> requester = userRepository.findById(requesterId);
         Optional<User> recipient = userRepository.findById(recipientId);
@@ -41,15 +46,17 @@ public class ConnectionRequestService {
             throw new IllegalArgumentException("Recipient not found");
         }
 
+        if (hasPendingRequest(requesterId, recipientId)) {
+            logger.error("A connection request already exists between user {} and user {}", requesterId, recipientId);
+            throw new IllegalArgumentException("A connection request already exists.");
+        }
+
         ConnectionRequest request = new ConnectionRequest();
         request.setRequester(requester.get());
         request.setRecipient(recipient.get());
         request.setStatus(RequestStatus.PENDING);
 
-        ConnectionRequest savedRequest = connectionRequestRepository.save(request);
-        logger.info("Connection request from user {} to user {} has been successfully sent", requesterId, recipientId);
-
-        return savedRequest;
+        return connectionRequestRepository.save(request);
     }
 
     public List<ConnectionRequest> getPendingRequestsForUser(Long userId) {
@@ -70,8 +77,6 @@ public class ConnectionRequestService {
 
         request.setStatus(RequestStatus.ACCEPTED);
         connectionRequestRepository.save(request);
-
-        logger.info("Connection request with ID {} has been accepted", requestId);
     }
 
     public void rejectRequest(Long requestId) {
@@ -87,13 +92,20 @@ public class ConnectionRequestService {
 
         request.setStatus(RequestStatus.REJECTED);
         connectionRequestRepository.save(request);
-
-        logger.info("Connection request with ID {} has been rejected", requestId);
     }
 
-    public List<ConnectionRequest> getAllConnections() {
-        logger.info("Fetching all connection requests");
-        return connectionRequestRepository.findAll();
+    public void removeConnection(Long requestId) {
+        logger.info("Removing connection request with ID {}", requestId);
+
+        ConnectionRequest request = connectionRequestRepository.findById(requestId)
+                .orElseThrow(() -> new IllegalArgumentException("Request not found"));
+
+        if (request.getStatus() != RequestStatus.ACCEPTED) {
+            logger.warn("Only accepted connections can be removed. Request ID: {}", requestId);
+            throw new IllegalStateException("Only accepted connections can be removed");
+        }
+
+        connectionRequestRepository.delete(request);
     }
 
     public List<ConnectionRequest> getAcceptedConnectionsForUser(Long userId) {
@@ -104,5 +116,10 @@ public class ConnectionRequestService {
     public List<ConnectionRequest> findConnectionsByUserId(Long userId) {
         logger.info("Fetching all connections for user {}", userId);
         return connectionRequestRepository.findConnectionsByUserId(userId);
+    }
+
+    public boolean hasPendingRequest(Long requesterId, Long recipientId) {
+        return connectionRequestRepository.existsByRequesterAccountIdAndRecipientAccountIdAndStatus(requesterId,
+                recipientId, RequestStatus.PENDING);
     }
 }

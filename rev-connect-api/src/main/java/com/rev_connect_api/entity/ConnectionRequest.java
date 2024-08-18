@@ -1,9 +1,7 @@
 package com.rev_connect_api.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.CreationTimestamp;
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
-
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
@@ -11,19 +9,19 @@ import java.time.LocalDateTime;
 @Table(name = "connection_requests")
 public class ConnectionRequest {
 
-     @Id
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "connection_id")
     private Long connectionId;
 
     @ManyToOne
     @JoinColumn(name = "requester_id", nullable = false)
-    @JsonBackReference // Prevents infinite recursion
+    @JsonIgnoreProperties({"sentRequests", "receivedRequests", "password"}) // Ignore unnecessary fields
     private User requester;
 
     @ManyToOne
     @JoinColumn(name = "recipient_id", nullable = false)
-    @JsonBackReference // Prevents infinite recursion
+    @JsonIgnoreProperties({"sentRequests", "receivedRequests", "password"}) // Ignore unnecessary fields
     private User recipient;
 
     @Enumerated(EnumType.STRING)
@@ -35,7 +33,6 @@ public class ConnectionRequest {
     private LocalDateTime createdAt;
 
     // Getters and Setters
-
     public Long getConnectionId() {
         return connectionId;
     }

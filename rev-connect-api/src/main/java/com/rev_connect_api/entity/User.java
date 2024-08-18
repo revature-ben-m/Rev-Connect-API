@@ -1,9 +1,9 @@
 package com.rev_connect_api.entity;
 
-import jakarta.persistence.*;
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
+
+import java.util.List;
 
 @Entity
 @Table(name = "system_users")
@@ -30,8 +30,6 @@ public class User {
     @OneToMany(mappedBy = "recipient")
     @JsonIgnore
     private List<ConnectionRequest> receivedRequests;
-
-    // Getters and Setters
 
     public Long getAccountId() {
         return accountId;
