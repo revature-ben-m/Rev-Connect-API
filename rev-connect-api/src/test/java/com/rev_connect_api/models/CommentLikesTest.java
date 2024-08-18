@@ -1,6 +1,5 @@
-package com.rev_connect_api;
+package com.rev_connect_api.models;
 
-import com.rev_connect_api.models.CommentLikes;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

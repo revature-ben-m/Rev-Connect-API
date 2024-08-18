@@ -1,7 +1,6 @@
-package com.rev_connect_api;
+package com.rev_connect_api.models;
 
 
-import com.rev_connect_api.models.Comment;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
