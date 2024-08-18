@@ -31,6 +31,7 @@ CREATE TABLE post (
 );
 
 -- Insert users
+-- passwords are hashed from "hashed_password"
 INSERT INTO users (username, user_password, email, first_name, last_name, is_business, created_at, updated_at)
 VALUES
 ('testuser1', '$2a$10$PUYTs0ypfVJDNHkheYxqz.1vXx2LlH2pUPub9ipwW0t5ygo9gzQXO', 'test1@mail.com', 'test', 'tester', false, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),

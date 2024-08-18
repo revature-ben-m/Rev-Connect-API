@@ -28,7 +28,7 @@ class JwtUtilTest {
     @Test
     void testGeneratToken() {
         String username = "john_snow";
-        String token = jwtUtil.generateToken(username);
+        String token = jwtUtil.generateToken(username, null);
 
         // parse the gerneated token to verify the claims
         Jws<Claims> claimJws = Jwts.parser()
@@ -41,7 +41,7 @@ class JwtUtilTest {
     @Test
     void testExtractUsername() {
         String username = "testUser";
-        String token = jwtUtil.generateToken(username);
+        String token = jwtUtil.generateToken(username, null);
 
         // Extract the username from the token and assert that it matches the expected value
         String extractedUsername = jwtUtil.extractUsername(token);
@@ -51,7 +51,7 @@ class JwtUtilTest {
     @Test
     void testExtractExpiration() {
         String username = "testUser";
-        String token = jwtUtil.generateToken(username);
+        String token = jwtUtil.generateToken(username, null);
 
         // Extract the expiration date from the token and assert that it is after the current time
         Date expiration = jwtUtil.extractExpiration(token);
@@ -61,7 +61,7 @@ class JwtUtilTest {
     @Test
     void testValidateToken() {
         String username = "testUser";
-        String token = jwtUtil.generateToken(username);
+        String token = jwtUtil.generateToken(username, null);
 
         // Validate the token by comparing the username and checking expiration
         assertTrue(jwtUtil.validateToken(token, username));
@@ -70,7 +70,7 @@ class JwtUtilTest {
     @Test
     void testIsTokenExpired() {
         String username = "testUser";
-        String token = jwtUtil.generateToken(username);
+        String token = jwtUtil.generateToken(username, null);
 
         // Ensure that the token is not expired immediately after generation
         assertTrue(!jwtUtil.isTokenExpired(token));
