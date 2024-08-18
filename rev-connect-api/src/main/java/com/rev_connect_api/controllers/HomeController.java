@@ -1,6 +1,8 @@
 package com.rev_connect_api.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -39,16 +41,17 @@ public class HomeController {
 		else	return "User not Found!";
 	}
 	@PostMapping(value = "/login")
-    public String login(@RequestParam String userId, @RequestParam String password) {
-        User user = userService.getUser(userId);
-        if (user == null) {
-            return "User not found";
-        }
+	public ResponseEntity<?> login(@RequestParam String userId, @RequestParam String password) {
+		User user = userService.getUser(userId);
+		if (user == null) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+		}
 
-        if (user.getPassword().equals(password)) {
-            return user.toString();
-        } else {
-            return "Invalid credentials";
-        }
-    }
+		if (user.getPassword().equals(password)) {
+			return ResponseEntity.ok(user);
+		} else {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
+		}
+}
+
 }

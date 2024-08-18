@@ -1,4 +1,6 @@
 package com.rev_connect_api.models;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -25,6 +27,7 @@ public class User {
 	@Column(name = "userEmail")
 	private String userEmail;
 
+	@JsonIgnore
 	@Column(name = "userPwd")
 	private String password;
 
@@ -106,4 +109,15 @@ public class User {
 		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException("Unimplemented method 'orElse'");
 	}
+	@Override
+    public String toString() {
+        return "User{" +
+                "id='" + id + '\'' +
+                ", userid='" + userId + '\'' +
+                ", email='" + userEmail + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", isBusiness=" + isBusiness +
+                '}';
+    }
 }
