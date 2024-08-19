@@ -1,6 +1,9 @@
 package com.rev_connect_api.models;
 
 import jakarta.persistence.*;
+import org.springframework.cglib.core.Local;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name="CommentLikes")
@@ -18,11 +21,11 @@ public class CommentLikes {
     private long commentId;
 
     @Column(name = "timePosted")
-    private String timePosted;
+    private LocalDateTime timePosted;
 
     public CommentLikes() {}
 
-    public CommentLikes( long userId, long commentId, String timePosted) {
+    public CommentLikes( long userId, long commentId, LocalDateTime timePosted) {
         this.userId = userId;
         this.commentId = commentId;
         this.timePosted = timePosted;
@@ -52,11 +55,11 @@ public class CommentLikes {
         this.commentId = commentId;
     }
 
-    public String getTimePosted() {
+    public LocalDateTime getTimePosted() {
         return timePosted;
     }
 
-    public void setTimePosted(String timePosted) {
+    public void setTimePosted(LocalDateTime timePosted) {
         this.timePosted = timePosted;
     }
 

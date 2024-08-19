@@ -2,9 +2,13 @@ package com.rev_connect_api.models;
 
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class CommentLikesTest {
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss a");
 
     @Test
     public void testCommentLikesGettersAndSetters() {
@@ -14,22 +18,21 @@ public class CommentLikesTest {
         commentLikes.setCommentLikeId(1L);
         commentLikes.setUserId(100L);
         commentLikes.setCommentId(10L);
-        commentLikes.setTimePosted("2024-08-15 10:00:00 AM");
-
+        commentLikes.setTimePosted(LocalDateTime.now());
 
         assertEquals(1L, commentLikes.getCommentLikeId());
         assertEquals(100L, commentLikes.getUserId());
         assertEquals(10L, commentLikes.getCommentId());
 
-        assertEquals("2024-08-15 10:00:00 AM", commentLikes.getTimePosted());
+        assertEquals(LocalDateTime.now().format(FORMATTER), commentLikes.getTimePosted().format(FORMATTER));
     }
 
     @Test
     public void testCommentLikesConstructor() {
-        CommentLikes commentLikes = new CommentLikes(100L, 10L, "2024-08-15 10:00:00 AM");
+        CommentLikes commentLikes = new CommentLikes(100L, 10L, LocalDateTime.now());
 
         assertEquals(100L, commentLikes.getUserId());
         assertEquals(10L, commentLikes.getCommentId());
-        assertEquals("2024-08-15 10:00:00 AM", commentLikes.getTimePosted());
+        assertEquals(LocalDateTime.now().format(FORMATTER), commentLikes.getTimePosted().format(FORMATTER));
     }
 }

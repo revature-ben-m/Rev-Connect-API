@@ -19,7 +19,7 @@ public class CommentService {
   private CommentLikesRepository commentLikesRepository;
 
   public Comment createComment(Comment comment) {
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss a");
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss a");
     LocalDateTime now = LocalDateTime.now();
     String dateTimeString = now.format(formatter);
     comment.setTimePosted(dateTimeString);

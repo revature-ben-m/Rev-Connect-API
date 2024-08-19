@@ -24,11 +24,11 @@ public class CommentLikesController {
     @CrossOrigin(origins = "*")
     public ResponseEntity<CommentResponse> likeComment(@PathVariable long userId, @PathVariable long commentId) {
         if (commentService.doesCommentExist(commentId)) {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss a");
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss a");
             LocalDateTime now = LocalDateTime.now();
-            String dateTimeString = now.format(formatter);
+//            String dateTimeString = now.format(formatter);
 
-            CommentLikes like = new CommentLikes(userId, commentId, dateTimeString);
+            CommentLikes like = new CommentLikes(userId, commentId, now);
             commentLikesService.like(like);
 
             Comment updatedComment = commentService.getCommentById(commentId);
