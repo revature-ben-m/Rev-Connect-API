@@ -1,4 +1,7 @@
 package com.rev_connect_api.models;
+import org.springframework.boot.autoconfigure.info.ProjectInfoProperties.Build;
+import org.springframework.context.annotation.Profile;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -12,27 +15,30 @@ public class User {
 	@Column(name = "username")
 	private String username;
 
-	@Column(name = "FirstName")
+	@Column(name = "first_name")
 	private String firstName;
 
-	@Column(name = "LastName")
+	@Column(name = "last_name")
 	private String lastName;
 
-	@Column(name = "userEmail")
+	@Column(name = "email")
 	private String userEmail;
 
-	@Column(name = "userPwd")
+	@Column(name = "password")
 	private String password;
 
-	@Column(name = "isBusiness")
+	@Column(name = "is_business")
 	private Boolean isBusiness;
+
+	@OneToOne(mappedBy = "user")
+    private BusinessProfile businessProfile;
 
 
 
 
 	public User(){}
-	
-	public User(String username, String firstName, String lastName,String userEmail,String password,Boolean isBusiness ) {
+
+	public User(String username, String firstName, String lastName,String userEmail,String password,Boolean isBusiness) {
 		this.username = username;
 		this.firstName = firstName;
 		this.lastName = lastName;
@@ -41,11 +47,33 @@ public class User {
 		this.isBusiness = isBusiness;
 	}
 
+	public User(long id, String username, String firstName, String lastName,String userEmail,String password,Boolean isBusiness) {
+		this.id = id;
+		this.username = username;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.userEmail = userEmail;
+		this.password = password;
+		this.isBusiness = isBusiness;
+	}
+
+	public User(Long id, String username, String firstName, String lastName, String userEmail, String password,
+			Boolean isBusiness, BusinessProfile businessProfile) {
+		this.id = id;
+		this.username = username;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.userEmail = userEmail;
+		this.password = password;
+		this.isBusiness = isBusiness;
+		this.businessProfile = businessProfile;
+	}
+
 	public String getUsername() {
 		return username;
 	}
 
-	public void setUsername(String userId) {
+	public void setUsername(String username) {
 		this.username = username;
 	}
 
@@ -96,6 +124,14 @@ public class User {
 
 	public void setBusiness(Boolean business) {
 		isBusiness = business;
+	}
+
+	public BusinessProfile getBusinessProfile() {
+		return businessProfile;
+	}
+
+	public void setProfile(BusinessProfile businessProfile) {
+		this.businessProfile = businessProfile;
 	}
 
 	@Override

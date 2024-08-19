@@ -13,7 +13,15 @@ public class BusinessProfileService {
     private BusinessProfileRepository businessProfileRepository;
 
     public BusinessProfile findByUserId (long userId) {
-        BusinessProfile findBusinessProfile = businessProfileRepository.findBusinessProfileByUserId(userId);
+        BusinessProfile findBusinessProfile = businessProfileRepository.findByUserId(userId);
+        if (findBusinessProfile != null) {
+            return findBusinessProfile;
+        }
+        return null;
+    }
+
+    public Map<String, Object> findAllProfileInfoByUserId (long userId) {
+        Map<String, Object> findBusinessProfile = businessProfileRepository.findAllProfileInfoByUserId(userId);
         if (findBusinessProfile != null) {
             return findBusinessProfile;
         }
@@ -37,7 +45,7 @@ public class BusinessProfileService {
         if (updatedBioText.length() > 500) {
             throw new BioTextTooLongException("Exceeding 500 character limit");
         }
-        BusinessProfile findBusinessProfile = businessProfileRepository.findBusinessProfileByUserId(userId);
+        BusinessProfile findBusinessProfile = businessProfileRepository.findByUserId(userId);
         if (findBusinessProfile != null) {
             findBusinessProfile.setBioText(updatedBioText);
             businessProfileRepository.save(findBusinessProfile);

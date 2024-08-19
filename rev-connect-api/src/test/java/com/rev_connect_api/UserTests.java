@@ -4,9 +4,11 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 import org.junit.jupiter.api.Test;
 
+import com.rev_connect_api.models.BusinessProfile;
 import com.rev_connect_api.models.User;
 
 public class UserTests {
+
 
     private User underTest = new User(
             "codybonham",

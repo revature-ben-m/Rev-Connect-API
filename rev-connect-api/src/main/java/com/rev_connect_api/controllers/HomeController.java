@@ -43,7 +43,7 @@ public class HomeController {
 		User registeredUser = userService.getUser(username);
 		if(registeredUser != null) {
             if (registeredUser.getBusiness()) {
-                businessProfileService.createBusinessProfile(new BusinessProfile(registeredUser.getId(), ""));
+                businessProfileService.createBusinessProfile(new BusinessProfile(registeredUser, ""));
             }
             return registeredUser.toString();
         } else{

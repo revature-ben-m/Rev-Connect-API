@@ -18,12 +18,12 @@ public class ProfileController {
 
     @GetMapping("/profiles/business/{userId}")
     @CrossOrigin(origins = "*")
-    public ResponseEntity<BusinessProfile> getBusinessProfileByUserId(@PathVariable long userId) {
-        BusinessProfile resultBusinessProfile = businessProfileService.findByUserId(userId);
-        if (resultBusinessProfile != null) {
+    public ResponseEntity<Map<String, Object>> getBusinessProfileByUserId(@PathVariable long userId) {
+        Map<String, Object> resultBusinessProfile = businessProfileService.findAllProfileInfoByUserId(userId);
+        if (!resultBusinessProfile.isEmpty()) {
             return new ResponseEntity<>(resultBusinessProfile, HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
