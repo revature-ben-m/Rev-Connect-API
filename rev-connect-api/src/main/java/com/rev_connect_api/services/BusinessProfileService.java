@@ -1,6 +1,7 @@
 package com.rev_connect_api.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import com.rev_connect_api.repositories.BusinessProfileRepository;
 import com.rev_connect_api.exceptions.BioTextTooLongException;
@@ -40,7 +41,7 @@ public class BusinessProfileService {
         return profile;
     }
 
-    public BusinessProfile updateBioText(BusinessProfile businessProfile, long userId) {
+    public Map<String, Object> updateBioText(BusinessProfile businessProfile, long userId) {
         String updatedBioText = businessProfile.getBioText();
         if (updatedBioText.length() > 500) {
             throw new BioTextTooLongException("Exceeding 500 character limit");
@@ -49,7 +50,7 @@ public class BusinessProfileService {
         if (findBusinessProfile != null) {
             findBusinessProfile.setBioText(updatedBioText);
             businessProfileRepository.save(findBusinessProfile);
-            return findBusinessProfile;
+            return businessProfileRepository.findAllProfileInfoByUserId(userId);
         }
         return null;
     }

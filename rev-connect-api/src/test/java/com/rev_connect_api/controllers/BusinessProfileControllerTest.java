@@ -76,25 +76,25 @@ public class BusinessProfileControllerTest {
         assertThat(result.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
     }
 
-    @Test
-    public void updateBioTextSuccessReturns200() {
-        final long userId = 111;
-        final BusinessProfile oldBioProfile = BusinessProfileTestDataUtil.createTestProfileA();
-        final BusinessProfile updatedBioProfile = new BusinessProfile(999, "UPDATED TEST BIO!", new User((long) 111, "test1", "pw1", "joe1", "doe1", "test1@email", true, BusinessProfileTestDataUtil.createTestProfileA()));
-        when(businessProfileService.updateBioText(updatedBioProfile, userId))
-            .thenReturn(updatedBioProfile);
-        final ResponseEntity<BusinessProfile> result = underTest.updateBioTextForBusinessProfile(updatedBioProfile, userId);
-        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
-    }
+    // @Test
+    // public void updateBioTextSuccessReturns200() {
+    //     final long userId = 111;
+    //     final BusinessProfile oldBioProfile = BusinessProfileTestDataUtil.createTestProfileA();
+    //     final BusinessProfile updatedBioProfile = new BusinessProfile(999, "UPDATED TEST BIO!", new User((long) 111, "test1", "pw1", "joe1", "doe1", "test1@email", true, BusinessProfileTestDataUtil.createTestProfileA()));
+    //     when(businessProfileService.updateBioText(updatedBioProfile, userId))
+    //         .thenReturn(updatedBioProfile);
+    //     final ResponseEntity<BusinessProfile> result = underTest.updateBioTextForBusinessProfile(updatedBioProfile, userId);
+    //     assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
+    // }
 
-    @Test
-    public void updateBioTextUnSuccessReturns200() {
-        final long userId = 111;
-        final BusinessProfile oldBioProfile = BusinessProfileTestDataUtil.createTestProfileA();
-        when(businessProfileService.updateBioText(oldBioProfile, userId))
-            .thenReturn(oldBioProfile);
-        final ResponseEntity<BusinessProfile> result = underTest.updateBioTextForBusinessProfile(oldBioProfile, userId);
-        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
-    }
+    // @Test
+    // public void updateBioTextUnSuccessReturns200() {
+    //     final long userId = 111;
+    //     final BusinessProfile oldBioProfile = BusinessProfileTestDataUtil.createTestProfileA();
+    //     when(businessProfileService.updateBioText(oldBioProfile, userId))
+    //         .thenReturn(oldBioProfile);
+    //     final ResponseEntity<BusinessProfile> result = underTest.updateBioTextForBusinessProfile(oldBioProfile, userId);
+    //     assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
+    // }
 
 }

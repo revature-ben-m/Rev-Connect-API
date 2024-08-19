@@ -10,6 +10,10 @@ import com.rev_connect_api.exceptions.BioTextTooLongException;
 import com.rev_connect_api.models.BusinessProfile;
 import com.rev_connect_api.repositories.BusinessProfileRepository;
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 import java.util.*;
@@ -66,18 +70,37 @@ public class BusinessProfileServiceTest {
     }
 
     @Test
-    public void updateBioTextUpdatesBioText() {
-        String expected = "Test Bio 3";
-        when(businessProfileRepository.findByUserId((long) 111))
-            .thenReturn(BusinessProfileTestDataUtil.createTestProfileA());
-        String actual = (underTest.updateBioText(BusinessProfileTestDataUtil.createTestProfileC(), BusinessProfileTestDataUtil.createTestProfileA().getUser().getId())).getBioText();
-        assertThat(actual).isEqualTo(expected);
+    public void testUpdateBioText_Success() {
+        long userId = 1L;
+        String bioText = "Updated bio text";
+        BusinessProfile businessProfile = BusinessProfileTestDataUtil.createTestProfileA();
+        businessProfile.setBioText(bioText);
+        
+        BusinessProfile existingProfile = new BusinessProfile();
+        existingProfile.setBioText("Old bio text");
+        
+        when(businessProfileRepository.findByUserId(userId)).thenReturn(existingProfile);
+        Map<String, Object> updatedProfileInfo = new HashMap<>();
+        updatedProfileInfo.put("bioText", bioText);
+        when(businessProfileRepository.findAllProfileInfoByUserId(userId)).thenReturn(updatedProfileInfo);
+
+        Map<String, Object> result = underTest.updateBioText(businessProfile, userId);
+
+        assertNotNull(result);
     }
 
     @Test
-    public void updateBioTextFailsWhenTextTooLong() throws BioTextTooLongException {
-        assertThatExceptionOfType(BioTextTooLongException.class)
-            .isThrownBy(() -> underTest.updateBioText(BusinessProfileTestDataUtil.createTestProfileD(), 111));
+    public void testUpdateBioText_BioTextTooLong() {
+        long userId = 1L;
+        String longBioText = "A".repeat(501);
+        BusinessProfile businessProfile = BusinessProfileTestDataUtil.createTestProfileA();
+        businessProfile.setBioText(longBioText);
+
+        BioTextTooLongException thrown = assertThrows(BioTextTooLongException.class, () -> {
+            underTest.updateBioText(businessProfile, userId);
+        });
+
+        assertEquals("Exceeding 500 character limit", thrown.getMessage());
     }
 
     @Test

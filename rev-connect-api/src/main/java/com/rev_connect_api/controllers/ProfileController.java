@@ -45,12 +45,12 @@ public class ProfileController {
 
     @PatchMapping("/profiles/business/{userId}")
     @CrossOrigin(origins = "*")
-    public ResponseEntity<BusinessProfile> updateBioTextForBusinessProfile (
+    public ResponseEntity<Map<String, Object>> updateBioTextForBusinessProfile (
             @RequestBody BusinessProfile businessProfile,
             @PathVariable long userId
             ) {
-        BusinessProfile confirmUpdate = businessProfileService.updateBioText(businessProfile, userId);
-        if (confirmUpdate != null) {
+        Map<String, Object> confirmUpdate = businessProfileService.updateBioText(businessProfile, userId);
+        if (!confirmUpdate.isEmpty()) {
             return new ResponseEntity<>(confirmUpdate, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
