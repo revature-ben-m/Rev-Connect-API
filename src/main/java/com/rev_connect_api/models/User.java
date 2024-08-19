@@ -63,6 +63,10 @@ public class User {
         return roles;
     }
 
+    public long getId() {
+        return userId;
+    }
+
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
