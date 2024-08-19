@@ -26,7 +26,7 @@ public interface UserMapper {
     User toEntity(UserRegistrationDTO registrationDTO);
 
     // map User entity to UserResponseeDTO
-    @Mapping(target = "fullName", expression = "java(user.getFirstName*() + ' ' + user.getLastName())")
+    @Mapping(target = "fullName", expression = "java(user.getFirstName() + ' ' + user.getLastName())")
     UserResponseDTO toDTO(User user);
 
     // map fields from UserUpdateDTO to existing User entity
