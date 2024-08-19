@@ -20,7 +20,7 @@ import static org.hamcrest.Matchers.is;
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
-public class UserControllerTests {
+public class UserControllerIntegrationTests {
 
     @Autowired
     private MockMvc mockMvc;
