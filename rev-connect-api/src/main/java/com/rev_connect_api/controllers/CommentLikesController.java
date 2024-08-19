@@ -38,7 +38,7 @@ public class CommentLikesController {
 
             return new ResponseEntity<>(commentResponse, HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
