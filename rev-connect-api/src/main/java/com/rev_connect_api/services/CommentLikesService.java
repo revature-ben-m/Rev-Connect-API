@@ -13,22 +13,25 @@ public class CommentLikesService {
     @Autowired
     private CommentLikesRepository commentLikesRepository;
 
-
-    public void like(CommentLikes like) {
-        // Check if the user already liked the comment or post
-        Optional<CommentLikes> existingLike = commentLikesRepository.findByUserIdAndCommentId(
-                like.getUserId(), like.getCommentId());
-        if (!existingLike.isPresent()) {
-            commentLikesRepository.save(like);
-        }
+//    public List<CommentLikes> getLikesForComment(long commentId){
+//        return commentLikesRepository.findByCommentLikesId(commentId);
+//    }
+public void like(CommentLikes like) {
+    // Check if the user already liked the comment or post
+    Optional<CommentLikes> existingLike = commentLikesRepository.findByUserIdAndCommentId(
+            like.getUserId(), like.getCommentId());
+    if (!existingLike.isPresent()) {
+        commentLikesRepository.save(like);
+    }else{
+        commentLikesRepository.delete(existingLike.get());
     }
+}
 
-    public void unlike(long userId, Long commentId) {
-        Optional<CommentLikes> existingLike = commentLikesRepository.findByUserIdAndCommentId(
-                userId, commentId);
-        existingLike.ifPresent(commentLikesRepository::delete);
-    }
-
+//    public void unlike(long userId, long commentId) {
+//        Optional<CommentLikes> existingLike = commentLikesRepository.findByUserIdAndCommentId(
+//                userId, commentId);
+//        existingLike.ifPresent(commentLikesRepository::delete);
+//    }
     public long countLikesForComment(long commentId) {
         return commentLikesRepository.countByCommentId(commentId);
     }

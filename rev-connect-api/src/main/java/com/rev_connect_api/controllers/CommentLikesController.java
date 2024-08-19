@@ -42,14 +42,23 @@ public class CommentLikesController {
         }
     }
 
-    @PostMapping("/comment/{commentId}/unlike/{userId}")
-    @CrossOrigin(origins = "*")
-    public ResponseEntity<Void> unlikeComment(@PathVariable long userId, @PathVariable long commentId) {
-        if (commentService.doesCommentExist(commentId)) {
-            commentLikesService.unlike(userId, commentId);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
+//    @PostMapping("/comment/{commentId}/unlike/{userId}")
+//    @CrossOrigin(origins = "*")
+//    public ResponseEntity<CommentResponse> unlikeComment(@PathVariable long userId, @PathVariable long commentId) {
+//        if (commentService.doesCommentExist(commentId)) {
+//            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss a");
+//            LocalDateTime now = LocalDateTime.now();
+//            String dateTimeString = now.format(formatter);
+//            CommentLikes unlike = new CommentLikes(userId, commentId, dateTimeString);
+//            commentLikesService.unlike(userId, commentId);
+//            Comment updatedComment = commentService.getCommentById(commentId);
+//            long likesCount = commentLikesService.countLikesForComment(commentId);
+//
+//            CommentResponse commentResponse = new CommentResponse(updatedComment, likesCount);
+//
+//            return new ResponseEntity<>(commentResponse, HttpStatus.OK);
+//        } else {
+//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//        }
+//    }
 }
