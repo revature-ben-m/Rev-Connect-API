@@ -21,6 +21,13 @@ CREATE TABLE user_roles (
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
 
+-- CREATE TABLE personal_profile (
+--     id BIGINT AUTO_INCREMENT PRIMARY KEY
+--     user_id BIGINT NOT NULL,
+--     bio VARCHAR(255),
+--     FOREIGN KEY(user_id) REFERENCES users(user_id) ON DELETE CASCADE
+-- );
+
 -- CREATE TABLE post (
 --     post_id BIGINT AUTO_INCREMENT PRIMARY KEY,
 --     posted_by BIGINT,
@@ -48,6 +55,10 @@ VALUES
 (3, 'ROLE_USER'),
 (4, 'ROLE_USER');
 
+INSERT INTO personal_profile (user_id, bio)
+VALUES
+(1, 'TestBio!');
+
 -- -- Insert posts
 -- INSERT INTO post (posted_by, post_text, created_at, updated_at)
 -- VALUES
@@ -55,3 +66,5 @@ VALUES
 -- (1, 'This is the second test post.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
 -- (2, 'Another post for testing.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
 -- (1, 'Yet another test post.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+

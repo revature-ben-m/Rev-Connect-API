@@ -27,10 +27,10 @@ public class ProfileService {
     this.profileRepository = profileRepository;
   }
 
-  public PersonalProfile retrieveProfile(long uId) throws InvalidUserException {
-    Optional<PersonalProfile> optionalProfile = profileRepository.findByUser_UId(uId);
+  public PersonalProfile retrieveProfile(long user_id) throws InvalidUserException {
+    Optional<PersonalProfile> optionalProfile = profileRepository.findByUser_UserId(user_id);
     if(!optionalProfile.isPresent()) {
-      throw new InvalidUserException("User " + uId + " was not found.");
+      throw new InvalidUserException("User " + user_id + " was not found.");
     }
     return optionalProfile.get();
   }
@@ -49,9 +49,9 @@ public class ProfileService {
       throw new InvalidProfileException("lastName", "Last name must not be empty.");
     }
 
-    Optional<PersonalProfile> optionalProfile = profileRepository.findByUser_UId(newProfile.getUser().getId());
+    Optional<PersonalProfile> optionalProfile = profileRepository.findByUser_UserId(newProfile.getUser().getUserId());
     if(!optionalProfile.isPresent()) {
-      throw new InvalidUserException("User " + newProfile.getUser().getId() + " was not found.");
+      throw new InvalidUserException("User " + newProfile.getUser().getUserId() + " was not found.");
     }
 
     PersonalProfile profile = optionalProfile.get();

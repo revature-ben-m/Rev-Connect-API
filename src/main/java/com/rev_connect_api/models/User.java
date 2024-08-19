@@ -63,10 +63,6 @@ public class User {
         return roles;
     }
 
-    public long getId() {
-        return userId;
-    }
-
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
@@ -97,6 +93,10 @@ public class User {
     public User(String username, String password){
         this.username = username;
         this.password = password;
+    }
+
+    public User(long userId) {
+        this.userId = userId;
     }
 
     public User(String username, String password, String email, String firstName, String lastName, boolean isBusiness) {

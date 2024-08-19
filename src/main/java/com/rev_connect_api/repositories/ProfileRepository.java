@@ -11,6 +11,7 @@ import com.rev_connect_api.models.User;
 @Repository
 public interface ProfileRepository extends JpaRepository<PersonalProfile, Long> {
   Optional<PersonalProfile> findByUser(User user);
-  Optional<PersonalProfile> findByUser_UId(Long userId);
+  Optional<PersonalProfile> findByUser_UserId(Long userId);
+  Optional<PersonalProfile> findByUser_Username(String username);
     
 }
