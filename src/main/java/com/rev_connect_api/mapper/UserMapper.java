@@ -16,36 +16,35 @@ import com.rev_connect_api.models.User;
 @Mapper(componentModel = "spring")
 public interface UserMapper {
 
-    // map UserRegistrationDTO to User entity
-    @Mapping(target = "password", source = "password")
+    // Map UserRegistrationDTO to User entity
+    @Mapping(target = "userId", ignore = true) // Ignored because it's auto-generated
+    @Mapping(target = "createdAt", ignore = true) // Handled by @PrePersist
+    @Mapping(target = "updatedAt", ignore = true) // Handled by @PreUpdate
     @Mapping(target = "roles", expression = "java(mapRoles(registrationDTO.getRoles()))")
     @Mapping(target = "grantedAuthorities", ignore = true)
-    @Mapping(target = "userId", ignore = true) // Ignored because it's auto-generated
-    @Mapping(target = "createdAt", ignore = true) // Handled by @PrePersist
-    @Mapping(target = "updatedAt", ignore = true) // Handled by @PreUpdate
     User toEntity(UserRegistrationDTO registrationDTO);
 
-    // map User entity to UserResponseeDTO
+    // Map User entity to UserResponseDTO
     @Mapping(target = "fullName", expression = "java(user.getFirstName() + ' ' + user.getLastName())")
+    @Mapping(target = "userId", source = "userId")
+    @Mapping(target = "username", source = "username")
+    @Mapping(target = "email", source = "email")
+    @Mapping(target = "isBusiness", source = "isBusiness")
     UserResponseDTO toDTO(User user);
 
-    // map fields from UserUpdateDTO to existing User entity
-    @Mapping(target = "password", source = "password")
-    @Mapping(target = "roles", expression = "java(mapRoles(dto.getRoles()))")
-    @Mapping(target = "grantedAuthorities", ignore = true)
+    // Map fields from UserUpdateDTO to existing User entity
     @Mapping(target = "userId", ignore = true) // Ignored because it's auto-generated
     @Mapping(target = "createdAt", ignore = true) // Handled by @PrePersist
     @Mapping(target = "updatedAt", ignore = true) // Handled by @PreUpdate
+    @Mapping(target = "roles", expression = "java(mapRoles(dto.getRoles()))")
+    @Mapping(target = "grantedAuthorities", ignore = true)
     void updateUserFromDTO(UserUpdateDTO dto, @MappingTarget User user);
     
-    // concert a Set of role strings to a Set of Role enums
-    // this method helps in mapping roles from DTOs to the entity
+    // Convert a Set of role strings to a Set of Role enums
     default Set<Role> mapRoles(Set<String> roles) {
-        if(roles == null || roles.isEmpty()) {
-            return Set.of(Role.ROLE_USER); // default role ROLE_USER if no roles are provided
+        if (roles == null || roles.isEmpty()) {
+            return Set.of(Role.ROLE_USER); // Default role ROLE_USER if no roles are provided
         }
         return roles.stream().map(Role::valueOf).collect(Collectors.toSet());
     }
-
-    //void updateUserFromDTO(UserUpdateDTO dto, @MappingTarget User user);
 }
