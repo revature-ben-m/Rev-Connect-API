@@ -1,22 +1,33 @@
 package com.rev_connect_api;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import static org.mockito.Mockito.when;
 import org.mockito.MockitoAnnotations;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import com.rev_connect_api.controllers.HomeController;
 import com.rev_connect_api.models.User;
+import com.rev_connect_api.repositories.UserRepository;
+import com.rev_connect_api.services.EmailService;
 import com.rev_connect_api.services.UserService;
 
+
+
 public class UserApiTests {
+    @Mock
+    private UserRepository userRepository;
 
     @Mock
     private UserService userService;
+
+    @Mock
+    private EmailService emailService;
 
     @InjectMocks
     private HomeController homeController;
@@ -35,8 +46,14 @@ public class UserApiTests {
         when(userService.getUser(userId)).thenReturn(null);
 
         ResponseEntity<?> result = homeController.login(userId, password);
-        assertThat(result).isEqualTo("User not found");
+
+        // Assert that the status is 404 NOT_FOUND
+        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+
+        // Assert that the body contains the expected error message
+        assertThat(result.getBody()).isEqualTo("User not found");
     }
+
 
     @Test
     public void testLoginInvalidCredentials() {
@@ -49,8 +66,11 @@ public class UserApiTests {
         when(userService.getUser(userId)).thenReturn(user);
         ResponseEntity<?> result = homeController.login(userId, password);
 
-        // Assert
-        assertThat(result).isEqualTo("Invalid credentials");
+        // Assert that the status is 401 UNAUTHORIZED
+        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+
+        // Assert that the body contains the expected error message
+        assertThat(result.getBody()).isEqualTo("Invalid credentials");
     }
 
     @Test
@@ -61,7 +81,24 @@ public class UserApiTests {
 
         when(userService.getUser(userId)).thenReturn(user);
         ResponseEntity<?> result = homeController.login(userId, password);
-
-        assertThat(result).isEqualTo(user.toString());
+        // Assert that the status is 200 OK
+        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
+        // Assert that the body contains the expected user object
+        assertThat(result.getBody()).isEqualTo(user);
     }
+
+    @Test
+    public void testForgotPass_InvalidEmail() {
+        // Arrange
+        String email = "invalid@example.com";
+        when(userRepository.findByuserEmail(email)).thenReturn(null);
+
+        // Act
+        String result = userService.forgotPass(email);
+
+        // Assert
+        assertEquals(null, result);
+    }
+
+
 }

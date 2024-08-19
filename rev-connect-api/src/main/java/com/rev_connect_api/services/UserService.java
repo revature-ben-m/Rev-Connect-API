@@ -1,9 +1,7 @@
 package com.rev_connect_api.services;
 
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.util.Optional;
 import java.util.Date;
+import java.util.Optional;
 
 import javax.crypto.SecretKey;
 
@@ -70,11 +68,12 @@ public class UserService {
         // Generate reset token
         String resetToken = generateResetToken(email);
         String resetLink = "http://localhost:8080/reset-password?token=" + resetToken;
+		String clickHere = "http://localhost:5173/reset-password";
 
         // Send reset link to the provided email address
-        emailService.sendEmail(email, "Password Reset Request", "Click the link to reset your password: " + resetLink);
+        emailService.sendEmail(email, "Password Reset Request", "Click the link to reset your password: " + clickHere);
 
-        return "Password reset link has been sent to your email.";
+        return resetLink;
     }
 
     // Handle password reset request
