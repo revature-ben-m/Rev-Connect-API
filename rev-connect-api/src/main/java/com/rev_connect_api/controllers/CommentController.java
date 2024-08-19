@@ -7,14 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import java.util.logging.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 public class CommentController {
-
+    private static final Logger logger = Logger.getLogger(CommentController.class.getName());
     @Autowired
     private CommentService commentService;
 
@@ -38,7 +38,8 @@ public class CommentController {
             commentService.createComment(comment);
             return ResponseEntity.ok().body(comment);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.severe("An error occurred, could not create comment.");
+            logger.severe(e.toString());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
