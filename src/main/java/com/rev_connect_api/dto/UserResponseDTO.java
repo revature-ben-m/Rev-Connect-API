@@ -1,5 +1,9 @@
 package com.rev_connect_api.dto;
 
+import java.util.Set;
+
+import com.rev_connect_api.models.Role;
+
 import lombok.Data;
 
 @Data
@@ -12,5 +16,7 @@ public class UserResponseDTO {
     private String lastName;
     private String fullName;
     private Boolean isBusiness;
+   
+    private Set<Role> roles;
     
 }
