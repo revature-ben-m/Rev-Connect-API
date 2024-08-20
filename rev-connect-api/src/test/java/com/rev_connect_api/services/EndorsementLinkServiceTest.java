@@ -44,7 +44,7 @@ class EndorsementLinkServiceTest {
         String linkText = "LinkedIn Profile";
 
         BusinessProfile businessProfile = new BusinessProfile();
-        when(businessProfileRepository.findBusinessProfileByUserId(userId)).thenReturn(businessProfile);
+        when(businessProfileRepository.findByUserId(userId)).thenReturn(businessProfile);
 
         EndorsementLink endorsementLink = new EndorsementLink(userId, link, linkText);
         endorsementLink.setId(1L);
@@ -57,7 +57,7 @@ class EndorsementLinkServiceTest {
         assertEquals(link, result.getLink());
         assertEquals(linkText, result.getLinkText());
 
-        verify(businessProfileRepository, times(1)).findBusinessProfileByUserId(userId);
+        verify(businessProfileRepository, times(1)).findByUserId(userId);
         verify(endorsementLinkRepository, times(1)).save(any(EndorsementLink.class));
     }
 
@@ -66,7 +66,7 @@ class EndorsementLinkServiceTest {
         Long userId = 1L;
 
         BusinessProfile businessProfile = new BusinessProfile();
-        when(businessProfileRepository.findBusinessProfileByUserId(userId)).thenReturn(businessProfile);
+        when(businessProfileRepository.findByUserId(userId)).thenReturn(businessProfile);
 
         List<EndorsementLink> list = new ArrayList<>();
         list.add(new EndorsementLink(userId, "https://example.com", "LinkedIn"));
@@ -84,7 +84,7 @@ class EndorsementLinkServiceTest {
         Long userId = 1L;
 
         BusinessProfile businessProfile = new BusinessProfile();
-        when(businessProfileRepository.findBusinessProfileByUserId(userId)).thenReturn(businessProfile);
+        when(businessProfileRepository.findByUserId(userId)).thenReturn(businessProfile);
 
         EndorsementLink endorsementLink  = new EndorsementLink(userId, "https://example.com", "linkedin");
         endorsementLink.setId(1L);

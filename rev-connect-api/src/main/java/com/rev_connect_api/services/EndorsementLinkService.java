@@ -48,7 +48,7 @@ public class EndorsementLinkService {
      * @param businessUserId The user id of the user to check
      */
     private void userExists(Long businessUserId){
-        BusinessProfile businessProfile = businessProfileRepository.findBusinessProfileByUserId(businessUserId);
+        BusinessProfile businessProfile = businessProfileRepository.findByUserId(businessUserId);
 
         if (businessProfile == null) {
             throw new IllegalArgumentException("User does not have a business profile: " + businessUserId);
