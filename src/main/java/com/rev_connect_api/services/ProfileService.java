@@ -36,17 +36,34 @@ public class ProfileService {
   }
 
   public PersonalProfile updateProfile(PersonalProfile newProfile) throws InvalidProfileException, InvalidUserException {
-    boolean invalidFirstName = newProfile.getUser().getFirstName() == "" || newProfile.getUser().getFirstName() == null;
-    boolean invalidLastName = newProfile.getUser().getLastName() == "" || newProfile.getUser().getLastName() == null;
+    boolean firstNameEmpty = newProfile.getUser().getFirstName() == "" || newProfile.getUser().getFirstName() == null;
+    boolean lastNameEmpty = newProfile.getUser().getLastName() == "" || newProfile.getUser().getLastName() == null;
+    boolean firstNameTooLong = newProfile.getUser().getFirstName().length() > 50;
+    boolean lastNameTooLong = newProfile.getUser().getLastName().length() > 50;
+    boolean bioTooLong = newProfile.getBio().length() > 50;
 
-    if (invalidFirstName)
+    if (firstNameEmpty)
     {
       throw new InvalidProfileException("firstName", "First name must not be empty.");
     }
 
-    if (invalidLastName)
+    if (lastNameEmpty)
     {
       throw new InvalidProfileException("lastName", "Last name must not be empty.");
+    }
+
+    if (firstNameTooLong)
+    {
+      throw new InvalidProfileException("firstName", "First name is too long.");
+    }
+
+    if (lastNameTooLong)
+    {
+      throw new InvalidProfileException("lastName", "Last name is too long.");
+    }
+
+    if(bioTooLong) {
+      throw new InvalidProfileException("bio", "Bio is too long.");
     }
 
     Optional<PersonalProfile> optionalProfile = profileRepository.findByUser_Username(newProfile.getUser().getUsername());

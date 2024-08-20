@@ -147,7 +147,7 @@ public class NameAndBioTest {
     }
 
     @Test
-    public void respondToUpdateProfileInvalidFirstName() throws JsonMappingException, JsonProcessingException {
+    public void respondToUpdateProfileEmptyFirstName() throws JsonMappingException, JsonProcessingException {
         User newUser = new User();
         newUser.setFirstName("");
         newUser.setLastName("Doe");
@@ -168,12 +168,11 @@ public class NameAndBioTest {
     }
     
     @Test
-    public void respondToUpdateProfileInvalidLastName() throws JsonMappingException, JsonProcessingException {
+    public void respondToUpdateProfileEmptyLastName() throws JsonMappingException, JsonProcessingException {
         User newUser = new User(testUser.getUserId());
         newUser.setFirstName("John");
         newUser.setLastName("");
         PersonalProfile newProfile = new PersonalProfile(newUser, "Example bio!");
-
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -190,7 +189,70 @@ public class NameAndBioTest {
     }
 
     @Test
-    public void processUpdateProfileInvalidName() {
+    public void respondToUpdateProfileTooLongFirstName() throws JsonMappingException, JsonProcessingException {
+        User newUser = new User(testUser.getUserId());
+        newUser.setFirstName("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+        newUser.setLastName("Doe");
+        PersonalProfile newProfile = new PersonalProfile(newUser, "Example bio!");
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("Authorization", "Bearer " + token);
+
+        HttpEntity<PersonalProfile> requestEntity = new HttpEntity<>(newProfile, headers);
+        ResponseEntity<String> response = testRestTemplate.exchange(serviceLocation, HttpMethod.PUT, requestEntity, String.class);
+
+        int statusCode = response.getStatusCode().value();
+        Assertions.assertEquals(400, statusCode, "Expected status code 400. Actual result was " + statusCode);
+
+        FieldErrorResponse resp = mapper.readValue(response.getBody().toString(), FieldErrorResponse.class);
+        Assertions.assertEquals(resp, new FieldErrorResponse("firstName", "First name is too long."), "Expected first name field error.");
+    }
+
+    @Test
+    public void respondToUpdateProfileTooLongLastName() throws JsonMappingException, JsonProcessingException {
+        User newUser = new User(testUser.getUserId());
+        newUser.setFirstName("John");
+        newUser.setLastName("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+        PersonalProfile newProfile = new PersonalProfile(newUser, "Example bio!");
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("Authorization", "Bearer " + token);
+
+        HttpEntity<PersonalProfile> requestEntity = new HttpEntity<>(newProfile, headers);
+        ResponseEntity<String> response = testRestTemplate.exchange(serviceLocation, HttpMethod.PUT, requestEntity, String.class);
+
+        int statusCode = response.getStatusCode().value();
+        Assertions.assertEquals(400, statusCode, "Expected status code 400. Actual result was " + statusCode);
+
+        FieldErrorResponse resp = mapper.readValue(response.getBody().toString(), FieldErrorResponse.class);
+        Assertions.assertEquals(resp, new FieldErrorResponse("lastName", "Last name is too long."), "Expected last name field error.");
+    }
+
+    @Test
+    public void respondToUpdateProfileTooLongBio() throws JsonMappingException, JsonProcessingException {
+        User newUser = new User(testUser.getUserId());
+        newUser.setFirstName("John");
+        newUser.setLastName("Doe");
+        PersonalProfile newProfile = new PersonalProfile(newUser, "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("Authorization", "Bearer " + token);
+
+        HttpEntity<PersonalProfile> requestEntity = new HttpEntity<>(newProfile, headers);
+        ResponseEntity<String> response = testRestTemplate.exchange(serviceLocation, HttpMethod.PUT, requestEntity, String.class);
+
+        int statusCode = response.getStatusCode().value();
+        Assertions.assertEquals(400, statusCode, "Expected status code 400. Actual result was " + statusCode);
+
+        FieldErrorResponse resp = mapper.readValue(response.getBody().toString(), FieldErrorResponse.class);
+        Assertions.assertEquals(resp, new FieldErrorResponse("bio", "Bio is too long."), "Expected bio field error.");
+    }
+
+    @Test
+    public void processUpdateProfileInvalidProfile() {
         User newUser = new User(testUser.getUserId());
         newUser.setFirstName("");
         newUser.setLastName("Doe");
