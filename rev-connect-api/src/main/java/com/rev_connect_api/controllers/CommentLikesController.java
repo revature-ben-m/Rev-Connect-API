@@ -27,7 +27,6 @@ public class CommentLikesController {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss a");
             LocalDateTime now = LocalDateTime.now();
 //            String dateTimeString = now.format(formatter);
-
             CommentLikes like = new CommentLikes(userId, commentId, now);
             commentLikesService.like(like);
 
