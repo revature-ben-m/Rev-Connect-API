@@ -10,8 +10,9 @@ public class BusinessProfile {
     @Id @GeneratedValue(strategy=GenerationType.AUTO)
 	private long id;
 
-    @Column(name = "user_id", unique = true, nullable = false)
-    private long userId;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User user;
 
     @Column(name = "bio_text", columnDefinition = "VARCHAR(MAX)")
     private String bioText;
@@ -19,14 +20,14 @@ public class BusinessProfile {
     public BusinessProfile() {
     }
 
-    public BusinessProfile(long userId, String bioText) {
-        this.userId = userId;
+    public BusinessProfile(User user, String bioText) {
+        this.user = user;
         this.bioText = bioText;
     }
 
-    public BusinessProfile(long id, long userId, String bioText) {
+    public BusinessProfile(long id, String bioText, User user) {
         this.id = id;
-        this.userId = userId;
+        this.user = user;
         this.bioText = bioText;
     }
 
@@ -38,12 +39,12 @@ public class BusinessProfile {
         this.id = id;
     }
 
-    public long getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserId(long userId) {
-        this.userId = userId;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public String getBioText() {
@@ -54,15 +55,12 @@ public class BusinessProfile {
         this.bioText = bioText;
     }
 
-    
-
-
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
         result = prime * result + (int) (id ^ (id >>> 32));
-        result = prime * result + (int) (userId ^ (userId >>> 32));
+        result = prime * result + ((user == null) ? 0 : user.hashCode());
         result = prime * result + ((bioText == null) ? 0 : bioText.hashCode());
         return result;
     }
@@ -78,7 +76,10 @@ public class BusinessProfile {
         BusinessProfile other = (BusinessProfile) obj;
         if (id != other.id)
             return false;
-        if (userId != other.userId)
+        if (user == null) {
+            if (other.user != null)
+                return false;
+        } else if (!user.equals(other.user))
             return false;
         if (bioText == null) {
             if (other.bioText != null)
@@ -90,11 +91,8 @@ public class BusinessProfile {
 
     @Override
     public String toString() {
-        return "BusinessProfile{" +
-            "id=" + id + 
-            ", userId=" + userId + 
-            ", bioText='" + bioText + '\'' +
-            "}";
+        return "BusinessProfile [id=" + id + ", user=" + user + ", bioText=" + bioText + "]";
     }
+   
 
 }
