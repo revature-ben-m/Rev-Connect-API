@@ -4,6 +4,9 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
+## Attachments
+/rev-connect-api/src/test/java/com/rev_connect_api/**
+
 ### STS ###
 .apt_generated
 .classpath
