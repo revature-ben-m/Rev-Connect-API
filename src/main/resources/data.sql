@@ -1,5 +1,6 @@
 drop table if exists user_roles;
 drop table if exists users cascade;
+drop table if exists personal_profiles;
 -- drop table if exists post;
 
 CREATE TABLE users (
@@ -21,12 +22,12 @@ CREATE TABLE user_roles (
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
 
--- CREATE TABLE personal_profile (
---     id BIGINT AUTO_INCREMENT PRIMARY KEY
---     user_id BIGINT NOT NULL,
---     bio VARCHAR(255),
---     FOREIGN KEY(user_id) REFERENCES users(user_id) ON DELETE CASCADE
--- );
+CREATE TABLE personal_profiles (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    user_id BIGINT UNIQUE,
+    bio VARCHAR(255),
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+);
 
 -- CREATE TABLE post (
 --     post_id BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -55,9 +56,12 @@ VALUES
 (3, 'ROLE_USER'),
 (4, 'ROLE_USER');
 
-INSERT INTO personal_profile (user_id, bio)
+INSERT INTO personal_profiles (user_id, bio)
 VALUES
-(1, 'TestBio!');
+(1, 'TestBio1!'),
+(2, 'TestBio2!'),
+(3, 'TestBio3!'),
+(4, 'TestBio4!');
 
 -- -- Insert posts
 -- INSERT INTO post (posted_by, post_text, created_at, updated_at)

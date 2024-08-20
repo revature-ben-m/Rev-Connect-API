@@ -28,9 +28,9 @@ public class SecurityConfig {
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(authorize -> authorize
-                .requestMatchers("/auth/login", "/users/register","/api/profile/**").permitAll() // allow login and register to everyone 
-                .requestMatchers("/users/**", "/posts/**", "/comments/**", "/likes/**").hasAnyRole("USER", "ADMIN") // USER or ADMIN roles can access /users/**
-                .anyRequest().anonymous()) // all other requests require authentication
+                .requestMatchers("/auth/login", "/users/register", "/h2-console/**").permitAll() // allow login and register to everyone 
+                .requestMatchers("/users/**", "/posts/**", "/comments/**", "/likes/**", "/profile/?*").hasAnyRole("USER", "ADMIN") // USER or ADMIN roles can access /users/**
+                .anyRequest().authenticated()) // all other requests require authentication
                 .sessionManagement(session -> session
                     .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtAuthenticationFilter,UsernamePasswordAuthenticationFilter.class)

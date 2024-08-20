@@ -3,6 +3,7 @@ package com.rev_connect_api.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,7 +20,7 @@ import com.rev_connect_api.services.ProfileService;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:5173")
-@RequestMapping("/api/profile")
+@RequestMapping("/profile")
 public class ProfileController {
   @Autowired
   ProfileService profileService;
@@ -38,6 +39,7 @@ public class ProfileController {
   @PutMapping()
   public ResponseEntity<Object> updateProfile(@RequestBody PersonalProfile profile) {
     PersonalProfile result;
+    profile.getUser().setUsername((String)SecurityContextHolder.getContext().getAuthentication().getPrincipal());
     try {
       result = profileService.updateProfile(profile);
       return ResponseEntity.status(HttpStatusCode.valueOf(200)).body(result);

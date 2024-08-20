@@ -49,7 +49,7 @@ public class ProfileService {
       throw new InvalidProfileException("lastName", "Last name must not be empty.");
     }
 
-    Optional<PersonalProfile> optionalProfile = profileRepository.findByUser_UserId(newProfile.getUser().getUserId());
+    Optional<PersonalProfile> optionalProfile = profileRepository.findByUser_Username(newProfile.getUser().getUsername());
     if(!optionalProfile.isPresent()) {
       throw new InvalidUserException("User " + newProfile.getUser().getUserId() + " was not found.");
     }
