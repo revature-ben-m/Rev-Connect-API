@@ -68,21 +68,6 @@ public class NameAndBioTest {
     }
 
     @Test
-    public void myTest() {
-        System.out.println("Running myTest");
-        Assertions.assertEquals(1, userRepository.count());
-        Assertions.assertEquals(1, userRepository.count());
-        testUser = new User("Username2", "$2a$10$PUYTs0ypfVJDNHkheYxqz.1vXx2LlH2pUPub9ipwW0t5ygo9gzQXO","test2@email.com", "Test", "User", false);
-        PersonalProfile testProfile = new PersonalProfile(testUser, testBio);
-        userRepository.save(testUser);
-        profileRepository.save(testProfile);
-        Assertions.assertEquals(2, userRepository.count());
-        Assertions.assertEquals(2, profileRepository.count());
-
-        System.out.println(userRepository.findAll());
-    }
-
-    @Test
     public void respondToRetrieveProfile() throws JsonMappingException, JsonProcessingException  {
         
 
