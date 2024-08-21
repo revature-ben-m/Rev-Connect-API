@@ -48,9 +48,25 @@ public class NameAndBioTest {
     private String serviceLocation;
     private ObjectMapper mapper;
     
-    private User testUser;
-    private String testBio;
+    private final User initialUser, validUser, userNoFirstName, userNoLastName, userFirstNameTooLong, userLastNameTooLong;
+    private final PersonalProfile initialProfile, validProfile, profileEmptyFirstName, profileEmptyLastName, profileFirstNameTooLong, profileLastNameTooLong, profileBioTooLong;
     private String token;
+
+    public NameAndBioTest() {
+        initialUser = new User("user", "","", "Test", "User", false);
+        validUser = new User("user", "","", "John", "Doe", false);
+        userNoFirstName = new User("user", "","", "", "Doe", false);
+        userNoLastName = new User("user", "","", "John", "", false);
+        userFirstNameTooLong = new User("user", "","", "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", "Doe", false);
+        userLastNameTooLong = new User("user", "","", "John", "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", false);
+        initialProfile = new PersonalProfile(initialUser, "Initial bio");
+        validProfile = new PersonalProfile(validUser, "Valid bio");
+        profileEmptyFirstName = new PersonalProfile(userNoFirstName, "Valid bio");
+        profileEmptyLastName = new PersonalProfile(userNoLastName, "Valid bio");
+        profileFirstNameTooLong = new PersonalProfile(userFirstNameTooLong, "Valid bio");
+        profileLastNameTooLong = new PersonalProfile(userLastNameTooLong, "Valid bio");
+        profileBioTooLong = new PersonalProfile(validUser, "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+    }
 
     @BeforeEach
     public void beforeEach() {
@@ -60,13 +76,10 @@ public class NameAndBioTest {
         userRepository.deleteAll();
         profileRepository.deleteAll();
 
-        testUser = new User("Username", "$2a$10$PUYTs0ypfVJDNHkheYxqz.1vXx2LlH2pUPub9ipwW0t5ygo9gzQXO","test@email.com", "Test", "User", false);
-        userRepository.save(testUser);
-        testBio = "Test bio!";
-        PersonalProfile testProfile = new PersonalProfile(testUser, testBio);
-        profileRepository.save(testProfile);
+        userRepository.save(initialUser);
+        profileRepository.save(initialProfile);
 
-        token = jwtUtil.generateToken(testUser.getUsername(), Set.of("ROLE_USER"));
+        token = jwtUtil.generateToken(initialUser.getUsername(), Set.of("ROLE_USER"));
     }
 
     @Test
@@ -78,30 +91,24 @@ public class NameAndBioTest {
         headers.set("Authorization", "Bearer " + token);
 
         HttpEntity<PersonalProfile> requestEntity = new HttpEntity<>(null, headers);
-        ResponseEntity<String> response = testRestTemplate.exchange(serviceLocation + "/" + testUser.getUserId(), HttpMethod.GET, requestEntity,String.class);
+        ResponseEntity<String> response = testRestTemplate.exchange(serviceLocation + "/" + initialUser.getUserId(), HttpMethod.GET, requestEntity,String.class);
 
         HttpStatusCode statusCode = response.getStatusCode();
         Assertions.assertEquals(HttpStatus.OK, statusCode, "Expected status code 200. Actual result was " + statusCode.value());
 
-        PersonalProfile actualResult = mapper.readValue(response.getBody().toString(), PersonalProfile.class);
+        PersonalProfile profile = mapper.readValue(response.getBody().toString(), PersonalProfile.class);
 
-        Assertions.assertEquals(testBio, actualResult.getBio(), "Expected: " + testBio + "\nActual: " + actualResult.getBio());
-        Assertions.assertEquals(testUser, actualResult.getUser(), "Expected: " + testUser + "\nActual: " + actualResult.getUser());
+        Assertions.assertEquals(initialProfile.getBio(), profile.getBio(), "Expected: " + initialProfile.getBio() + "\nActual: " + profile.getBio());
+        Assertions.assertEquals(initialUser, profile.getUser(), "Expected: " + initialUser + "\nActual: " + profile.getUser());
     }
 
     @Test
     public void respondToUpdateProfileSuccessful() throws JsonMappingException, JsonProcessingException {
-        
-        User newUser = new User();
-        newUser.setFirstName("John");
-        newUser.setLastName("Doe");
-        PersonalProfile newProfile = new PersonalProfile(newUser, "Example bio!");
-
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.set("Authorization", "Bearer " + token);
 
-        HttpEntity<PersonalProfile> requestEntity = new HttpEntity<>(newProfile, headers);
+        HttpEntity<PersonalProfile> requestEntity = new HttpEntity<>(validProfile, headers);
         ResponseEntity<String> response = testRestTemplate.exchange(serviceLocation, HttpMethod.PUT, requestEntity,String.class);
 
         HttpStatusCode statusCode = response.getStatusCode();
@@ -109,42 +116,32 @@ public class NameAndBioTest {
     
         PersonalProfile profile = mapper.readValue(response.getBody().toString(), PersonalProfile.class);
         
-        Assertions.assertEquals("Doe, John", UserUtils.getFullName(profile.getUser()), "Expected: Doe, John\nActual result was " + UserUtils.getFullName(profile.getUser()));
-        Assertions.assertEquals("Example bio!", profile.getBio(), "Expected: Example bio!\nActual result was " + profile.getBio());
+        Assertions.assertEquals(UserUtils.getFullName(validProfile.getUser()), UserUtils.getFullName(profile.getUser()), "Expected: "+ UserUtils.getFullName(validProfile.getUser()) + "\nActual result was " + UserUtils.getFullName(profile.getUser()));
+        Assertions.assertEquals(validProfile.getBio(), profile.getBio(), "Expected: "+ validProfile.getBio() + "\nActual result was " + profile.getBio());
     }
 
     @Test
     public void processUpdateProfileSuccessful() {
-        User newUser = new User();
-        newUser.setFirstName("John");
-        newUser.setLastName("Doe");
-        PersonalProfile newProfile = new PersonalProfile(newUser, "Example bio!");
-
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.set("Authorization", "Bearer " + token);
         
-        HttpEntity<PersonalProfile> requestEntity = new HttpEntity<>(newProfile, headers);
+        HttpEntity<PersonalProfile> requestEntity = new HttpEntity<>(validProfile, headers);
         testRestTemplate.exchange(serviceLocation, HttpMethod.PUT, requestEntity, String.class);
         
-        PersonalProfile profile = profileRepository.findByUser_UserId(testUser.getUserId()).get();
+        PersonalProfile profile = profileRepository.findByUser_UserId(initialUser.getUserId()).get();
 
-        Assertions.assertEquals("Example bio!", profile.getBio(), "Expected: Example bio!\nActual result was " + profile.getBio());
-        Assertions.assertEquals("Doe, John", UserUtils.getFullName(profile.getUser()), "Expected: Doe, John\nActual result was " + UserUtils.getFullName(profile.getUser()));
+        Assertions.assertEquals(UserUtils.getFullName(validProfile.getUser()), UserUtils.getFullName(profile.getUser()), "Expected: "+ UserUtils.getFullName(validProfile.getUser()) + "\nActual result was " + UserUtils.getFullName(profile.getUser()));
+        Assertions.assertEquals(validProfile.getBio(), profile.getBio(), "Expected: "+ validProfile.getBio() + "\nActual result was " + profile.getBio());
     }
 
     @Test
     public void respondToUpdateProfileEmptyFirstName() throws JsonMappingException, JsonProcessingException {
-        User newUser = new User();
-        newUser.setFirstName("");
-        newUser.setLastName("Doe");
-        PersonalProfile newProfile = new PersonalProfile(newUser, "Example bio!");
-
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.set("Authorization", "Bearer " + token);
 
-        HttpEntity<PersonalProfile> requestEntity = new HttpEntity<>(newProfile, headers);
+        HttpEntity<PersonalProfile> requestEntity = new HttpEntity<>(profileEmptyFirstName, headers);
         ResponseEntity<String> response = testRestTemplate.exchange(serviceLocation, HttpMethod.PUT, requestEntity, String.class);
 
         HttpStatusCode statusCode = response.getStatusCode();
@@ -156,16 +153,11 @@ public class NameAndBioTest {
     
     @Test
     public void respondToUpdateProfileEmptyLastName() throws JsonMappingException, JsonProcessingException {
-        User newUser = new User(testUser.getUserId());
-        newUser.setFirstName("John");
-        newUser.setLastName("");
-        PersonalProfile newProfile = new PersonalProfile(newUser, "Example bio!");
-
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.set("Authorization", "Bearer " + token);
 
-        HttpEntity<PersonalProfile> requestEntity = new HttpEntity<>(newProfile, headers);
+        HttpEntity<PersonalProfile> requestEntity = new HttpEntity<>(profileEmptyLastName, headers);
         ResponseEntity<String> response = testRestTemplate.exchange(serviceLocation, HttpMethod.PUT, requestEntity, String.class);
 
         HttpStatusCode statusCode = response.getStatusCode();
@@ -176,17 +168,12 @@ public class NameAndBioTest {
     }
 
     @Test
-    public void respondToUpdateProfileTooLongFirstName() throws JsonMappingException, JsonProcessingException {
-        User newUser = new User(testUser.getUserId());
-        newUser.setFirstName("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-        newUser.setLastName("Doe");
-        PersonalProfile newProfile = new PersonalProfile(newUser, "Example bio!");
-
+    public void respondToUpdateProfileFirstNameTooLong() throws JsonMappingException, JsonProcessingException {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.set("Authorization", "Bearer " + token);
 
-        HttpEntity<PersonalProfile> requestEntity = new HttpEntity<>(newProfile, headers);
+        HttpEntity<PersonalProfile> requestEntity = new HttpEntity<>(profileFirstNameTooLong, headers);
         ResponseEntity<String> response = testRestTemplate.exchange(serviceLocation, HttpMethod.PUT, requestEntity, String.class);
 
         HttpStatusCode statusCode = response.getStatusCode();
@@ -197,17 +184,12 @@ public class NameAndBioTest {
     }
 
     @Test
-    public void respondToUpdateProfileTooLongLastName() throws JsonMappingException, JsonProcessingException {
-        User newUser = new User(testUser.getUserId());
-        newUser.setFirstName("John");
-        newUser.setLastName("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-        PersonalProfile newProfile = new PersonalProfile(newUser, "Example bio!");
-
+    public void respondToUpdateProfileLastNameTooLong() throws JsonMappingException, JsonProcessingException {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.set("Authorization", "Bearer " + token);
 
-        HttpEntity<PersonalProfile> requestEntity = new HttpEntity<>(newProfile, headers);
+        HttpEntity<PersonalProfile> requestEntity = new HttpEntity<>(profileLastNameTooLong, headers);
         ResponseEntity<String> response = testRestTemplate.exchange(serviceLocation, HttpMethod.PUT, requestEntity, String.class);
 
         HttpStatusCode statusCode = response.getStatusCode();
@@ -218,17 +200,12 @@ public class NameAndBioTest {
     }
 
     @Test
-    public void respondToUpdateProfileTooLongBio() throws JsonMappingException, JsonProcessingException {
-        User newUser = new User(testUser.getUserId());
-        newUser.setFirstName("John");
-        newUser.setLastName("Doe");
-        PersonalProfile newProfile = new PersonalProfile(newUser, "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-
+    public void respondToUpdateProfileBioTooLong() throws JsonMappingException, JsonProcessingException {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.set("Authorization", "Bearer " + token);
 
-        HttpEntity<PersonalProfile> requestEntity = new HttpEntity<>(newProfile, headers);
+        HttpEntity<PersonalProfile> requestEntity = new HttpEntity<>(profileBioTooLong, headers);
         ResponseEntity<String> response = testRestTemplate.exchange(serviceLocation, HttpMethod.PUT, requestEntity, String.class);
 
         HttpStatusCode statusCode = response.getStatusCode();
@@ -240,20 +217,15 @@ public class NameAndBioTest {
 
     @Test
     public void processUpdateProfileInvalidProfile() {
-        User newUser = new User(testUser.getUserId());
-        newUser.setFirstName("");
-        newUser.setLastName("Doe");
-        PersonalProfile newProfile = new PersonalProfile(newUser, "Example bio!");
-
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.set("Authorization", "Bearer " + token);
 
-        HttpEntity<PersonalProfile> requestEntity = new HttpEntity<>(newProfile, headers);
+        HttpEntity<PersonalProfile> requestEntity = new HttpEntity<>(profileBioTooLong, headers);
         testRestTemplate.exchange(serviceLocation, HttpMethod.PUT, requestEntity, String.class);
 
-        PersonalProfile actualProfile = profileRepository.findByUser_UserId(testUser.getUserId()).get();
-        Assertions.assertEquals(testBio, actualProfile.getBio(), "Expected: " + testBio + "\nActual result was " + actualProfile.getBio());
-        Assertions.assertEquals(UserUtils.getFullName(testUser), UserUtils.getFullName(actualProfile.getUser()), "Expected: " + UserUtils.getFullName(testUser) + "\nActual result was " + UserUtils.getFullName(actualProfile.getUser()));
+        PersonalProfile actualProfile = profileRepository.findByUser_UserId(initialUser.getUserId()).get();
+        Assertions.assertEquals(initialProfile.getBio(), actualProfile.getBio(), "Expected: " + initialProfile.getBio() + "\nActual result was " + actualProfile.getBio());
+        Assertions.assertEquals(UserUtils.getFullName(initialUser), UserUtils.getFullName(actualProfile.getUser()), "Expected: " + UserUtils.getFullName(initialUser) + "\nActual result was " + UserUtils.getFullName(actualProfile.getUser()));
     }
 }
