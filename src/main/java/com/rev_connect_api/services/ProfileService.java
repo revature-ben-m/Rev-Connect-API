@@ -9,21 +9,17 @@ import com.rev_connect_api.exceptions.InvalidProfileException;
 import com.rev_connect_api.exceptions.InvalidUserException;
 import com.rev_connect_api.models.PersonalProfile;
 import com.rev_connect_api.repositories.ProfileRepository;
-import com.rev_connect_api.repositories.UserRepository;
 
 @Service
 public class ProfileService {
-  @Autowired
-  UserRepository userRepository;
-  @Autowired
-  ProfileRepository profileRepository;
+  private ProfileRepository profileRepository;
   
   public ProfileService() {
 
   }
 
-  public ProfileService(UserRepository userRepository, ProfileRepository profileRepository) {
-    this.userRepository = userRepository;
+  @Autowired
+  public ProfileService(ProfileRepository profileRepository) {
     this.profileRepository = profileRepository;
   }
 

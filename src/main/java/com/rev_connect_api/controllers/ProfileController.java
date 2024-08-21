@@ -22,8 +22,12 @@ import com.rev_connect_api.services.ProfileService;
 @CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping("/profile")
 public class ProfileController {
+  private ProfileService profileService;
+
   @Autowired
-  ProfileService profileService;
+  public ProfileController(ProfileService profileService) {
+    this.profileService = profileService;
+  }
 
   @GetMapping("/{user_id}")
   public ResponseEntity<PersonalProfile> retrieveProfile(@PathVariable Long user_id) { 
