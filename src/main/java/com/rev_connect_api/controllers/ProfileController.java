@@ -1,7 +1,7 @@
 package com.rev_connect_api.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatusCode;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -34,9 +34,9 @@ public class ProfileController {
     PersonalProfile result;
     try {
       result = profileService.retrieveProfile(user_id);
-      return ResponseEntity.status(HttpStatusCode.valueOf(200)).body(result);
+      return ResponseEntity.status(HttpStatus.OK).body(result);
     } catch (InvalidUserException e) {
-      return ResponseEntity.status(HttpStatusCode.valueOf(404)).body(null);
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
   }
 
@@ -46,11 +46,11 @@ public class ProfileController {
     profile.getUser().setUsername((String)SecurityContextHolder.getContext().getAuthentication().getPrincipal());
     try {
       result = profileService.updateProfile(profile);
-      return ResponseEntity.status(HttpStatusCode.valueOf(200)).body(result);
+      return ResponseEntity.status(HttpStatus.OK).body(result);
     } catch (InvalidProfileException e) {
-      return ResponseEntity.status(HttpStatusCode.valueOf(400)).body(new FieldErrorResponse(e.getField(), e.getMessage()));
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new FieldErrorResponse(e.getField(), e.getMessage()));
     } catch (InvalidUserException e) {
-      return ResponseEntity.status(HttpStatusCode.valueOf(404)).body(e.getMessage());
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
   }
 }

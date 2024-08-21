@@ -7,6 +7,8 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
@@ -78,8 +80,8 @@ public class NameAndBioTest {
         HttpEntity<PersonalProfile> requestEntity = new HttpEntity<>(null, headers);
         ResponseEntity<String> response = testRestTemplate.exchange(serviceLocation + "/" + testUser.getUserId(), HttpMethod.GET, requestEntity,String.class);
 
-        int statusCode = response.getStatusCode().value();
-        Assertions.assertEquals(200, statusCode, "Expected status code 200. Actual result was " + statusCode);
+        HttpStatusCode statusCode = response.getStatusCode();
+        Assertions.assertEquals(HttpStatus.OK, statusCode, "Expected status code 200. Actual result was " + statusCode.value());
 
         PersonalProfile actualResult = mapper.readValue(response.getBody().toString(), PersonalProfile.class);
 
@@ -102,8 +104,8 @@ public class NameAndBioTest {
         HttpEntity<PersonalProfile> requestEntity = new HttpEntity<>(newProfile, headers);
         ResponseEntity<String> response = testRestTemplate.exchange(serviceLocation, HttpMethod.PUT, requestEntity,String.class);
 
-        int statusCode = response.getStatusCode().value();
-        Assertions.assertEquals(200, statusCode, "Expected status code 200. Actual result was " + statusCode);
+        HttpStatusCode statusCode = response.getStatusCode();
+        Assertions.assertEquals(HttpStatus.OK, statusCode, "Expected status code 200. Actual result was " + statusCode.value());
     
         PersonalProfile profile = mapper.readValue(response.getBody().toString(), PersonalProfile.class);
         
@@ -145,8 +147,8 @@ public class NameAndBioTest {
         HttpEntity<PersonalProfile> requestEntity = new HttpEntity<>(newProfile, headers);
         ResponseEntity<String> response = testRestTemplate.exchange(serviceLocation, HttpMethod.PUT, requestEntity, String.class);
 
-        int statusCode = response.getStatusCode().value();
-        Assertions.assertEquals(400, statusCode, "Expected status code 400. Actual result was " + statusCode);
+        HttpStatusCode statusCode = response.getStatusCode();
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST, statusCode, "Expected status code 400. Actual result was " + statusCode.value());
     
         FieldErrorResponse resp = mapper.readValue(response.getBody().toString(), FieldErrorResponse.class);
         Assertions.assertEquals(resp, new FieldErrorResponse("firstName", "First name must not be empty."), "Expected first name field error.");
@@ -166,8 +168,8 @@ public class NameAndBioTest {
         HttpEntity<PersonalProfile> requestEntity = new HttpEntity<>(newProfile, headers);
         ResponseEntity<String> response = testRestTemplate.exchange(serviceLocation, HttpMethod.PUT, requestEntity, String.class);
 
-        int statusCode = response.getStatusCode().value();
-        Assertions.assertEquals(400, statusCode, "Expected status code 400. Actual result was " + statusCode);
+        HttpStatusCode statusCode = response.getStatusCode();
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST, statusCode, "Expected status code 400. Actual result was " + statusCode.value());
 
         FieldErrorResponse resp = mapper.readValue(response.getBody().toString(), FieldErrorResponse.class);
         Assertions.assertEquals(resp, new FieldErrorResponse("lastName", "Last name must not be empty."), "Expected last name field error.");
@@ -187,8 +189,8 @@ public class NameAndBioTest {
         HttpEntity<PersonalProfile> requestEntity = new HttpEntity<>(newProfile, headers);
         ResponseEntity<String> response = testRestTemplate.exchange(serviceLocation, HttpMethod.PUT, requestEntity, String.class);
 
-        int statusCode = response.getStatusCode().value();
-        Assertions.assertEquals(400, statusCode, "Expected status code 400. Actual result was " + statusCode);
+        HttpStatusCode statusCode = response.getStatusCode();
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST, statusCode, "Expected status code 400. Actual result was " + statusCode.value());
 
         FieldErrorResponse resp = mapper.readValue(response.getBody().toString(), FieldErrorResponse.class);
         Assertions.assertEquals(resp, new FieldErrorResponse("firstName", "First name is too long."), "Expected first name field error.");
@@ -208,8 +210,8 @@ public class NameAndBioTest {
         HttpEntity<PersonalProfile> requestEntity = new HttpEntity<>(newProfile, headers);
         ResponseEntity<String> response = testRestTemplate.exchange(serviceLocation, HttpMethod.PUT, requestEntity, String.class);
 
-        int statusCode = response.getStatusCode().value();
-        Assertions.assertEquals(400, statusCode, "Expected status code 400. Actual result was " + statusCode);
+        HttpStatusCode statusCode = response.getStatusCode();
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST, statusCode, "Expected status code 400. Actual result was " + statusCode.value());
 
         FieldErrorResponse resp = mapper.readValue(response.getBody().toString(), FieldErrorResponse.class);
         Assertions.assertEquals(resp, new FieldErrorResponse("lastName", "Last name is too long."), "Expected last name field error.");
@@ -229,8 +231,8 @@ public class NameAndBioTest {
         HttpEntity<PersonalProfile> requestEntity = new HttpEntity<>(newProfile, headers);
         ResponseEntity<String> response = testRestTemplate.exchange(serviceLocation, HttpMethod.PUT, requestEntity, String.class);
 
-        int statusCode = response.getStatusCode().value();
-        Assertions.assertEquals(400, statusCode, "Expected status code 400. Actual result was " + statusCode);
+        HttpStatusCode statusCode = response.getStatusCode();
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST, statusCode, "Expected status code 400. Actual result was " + statusCode.value());
 
         FieldErrorResponse resp = mapper.readValue(response.getBody().toString(), FieldErrorResponse.class);
         Assertions.assertEquals(resp, new FieldErrorResponse("bio", "Bio is too long."), "Expected bio field error.");
