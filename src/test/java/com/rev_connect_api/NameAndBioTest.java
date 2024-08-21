@@ -1,4 +1,5 @@
 package com.rev_connect_api;
+import org.springframework.test.context.jdbc.Sql;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -12,6 +13,7 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
+import java.time.LocalDateTime;
 import java.util.Set;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -19,18 +21,17 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rev_connect_api.models.FieldErrorResponse;
 import com.rev_connect_api.models.PersonalProfile;
+import com.rev_connect_api.models.Role;
 import com.rev_connect_api.models.User;
 import com.rev_connect_api.repositories.ProfileRepository;
-import com.rev_connect_api.repositories.UserRepository;
 import com.rev_connect_api.security.JwtUtil;
 import com.rev_connect_api.utils.UserUtils;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@Sql("/profileTestInit.sql")
 public class NameAndBioTest {
     @Autowired
     TestRestTemplate testRestTemplate;
-    @Autowired
-    UserRepository userRepository;
     @Autowired
     ProfileRepository profileRepository;
     @Autowired
@@ -51,8 +52,7 @@ public class NameAndBioTest {
 
     public NameAndBioTest() {
         //User prior to client request
-        initialUser = new User("user", "","", "Test", "User", false);
-        
+        initialUser = new User(1L,"user", "","", "Test", "User", false,LocalDateTime.now(),LocalDateTime.now(),Set.of(Role.ROLE_USER));
         //Valid change to initialUser
         validUser = new User("user", "","", "John", "Doe", false);
         
@@ -82,17 +82,13 @@ public class NameAndBioTest {
         serviceLocation = "http://localhost:" + port + "/api/profile";
         mapper = new ObjectMapper();
         mapper.findAndRegisterModules();
-        userRepository.deleteAll();
-        profileRepository.deleteAll();
-
-        userRepository.save(initialUser);
-        profileRepository.save(initialProfile);
 
         token = jwtUtil.generateToken(initialUser.getUsername(), Set.of("ROLE_USER"));
     }
 
     @Test
     public void retrieveProfile() throws JsonMappingException, JsonProcessingException  {
+        
         //Generate HTTP request
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -100,7 +96,7 @@ public class NameAndBioTest {
         HttpEntity<PersonalProfile> requestEntity = new HttpEntity<>(null, headers);
 
         //Send HTTP request
-        ResponseEntity<String> response = testRestTemplate.exchange(serviceLocation + "/" + initialUser.getUserId(), HttpMethod.GET, requestEntity,String.class);
+        ResponseEntity<String> response = testRestTemplate.exchange(serviceLocation + "/" + initialProfile.getId(), HttpMethod.GET, requestEntity,String.class);
         
         //Verify response status code
         HttpStatusCode statusCode = response.getStatusCode();

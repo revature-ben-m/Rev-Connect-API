@@ -11,6 +11,8 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -78,6 +80,7 @@ public class User {
         updatedAt = LocalDateTime.now();
     }
 
+    @JsonIgnore
     public Set<SimpleGrantedAuthority> getGrantedAuthorities() {
         return roles.stream()
             .map((role) -> new SimpleGrantedAuthority(role.name()))
