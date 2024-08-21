@@ -32,27 +32,28 @@ public class ProfileService {
   }
 
   public PersonalProfile updateProfile(PersonalProfile newProfile) throws InvalidProfileException, InvalidUserException {
-    boolean firstNameEmpty = newProfile.getUser().getFirstName() == "" || newProfile.getUser().getFirstName() == null;
-    boolean lastNameEmpty = newProfile.getUser().getLastName() == "" || newProfile.getUser().getLastName() == null;
+    // Validate profile fields
+    boolean firstNameEmpty = "".equals(newProfile.getUser().getFirstName());
     boolean firstNameTooLong = newProfile.getUser().getFirstName().length() > 50;
+    
+    boolean lastNameEmpty = "".equals(newProfile.getUser().getLastName());
     boolean lastNameTooLong = newProfile.getUser().getLastName().length() > 50;
-    boolean bioTooLong = newProfile.getBio().length() > 50;
+
+    boolean bioTooLong = newProfile.getBio().length() > 255;
 
     if (firstNameEmpty)
     {
       throw new InvalidProfileException("firstName", "First name must not be empty.");
+    }
+    if (firstNameTooLong)
+    {
+      throw new InvalidProfileException("firstName", "First name is too long.");
     }
 
     if (lastNameEmpty)
     {
       throw new InvalidProfileException("lastName", "Last name must not be empty.");
     }
-
-    if (firstNameTooLong)
-    {
-      throw new InvalidProfileException("firstName", "First name is too long.");
-    }
-
     if (lastNameTooLong)
     {
       throw new InvalidProfileException("lastName", "Last name is too long.");
@@ -62,12 +63,15 @@ public class ProfileService {
       throw new InvalidProfileException("bio", "Bio is too long.");
     }
 
+    // Retrieve profile from repository
     Optional<PersonalProfile> optionalProfile = profileRepository.findByUser_Username(newProfile.getUser().getUsername());
     if(!optionalProfile.isPresent()) {
       throw new InvalidUserException("User " + newProfile.getUser().getUserId() + " was not found.");
     }
 
     PersonalProfile profile = optionalProfile.get();
+
+    // Update profile repository
     profile.getUser().setFirstName(newProfile.getUser().getFirstName());
     profile.getUser().setLastName(newProfile.getUser().getLastName());
     profile.setBio(newProfile.getBio());
