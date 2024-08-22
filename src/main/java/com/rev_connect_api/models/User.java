@@ -87,21 +87,6 @@ public class User {
             .collect(Collectors.toSet());
     }
 
-    public User(Long userId, String username, String password){
-        this.userId = userId;
-        this.username = username;
-        this.password = password;
-    }
-
-    @Autowired
-    public User(String username, String password){
-        this.username = username;
-        this.password = password;
-    }
-
-    public User(long userId) {
-        this.userId = userId;
-    }
 
     public User(String username, String password, String email, String firstName, String lastName, boolean isBusiness) {
         this.username = username;
@@ -109,13 +94,6 @@ public class User {
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.isBusiness = isBusiness;
-    }
-
-    public User(String email, String username, String password, Boolean isBusiness){
-        this.email = email;
-        this.username = username;
-        this.password = password;
         this.isBusiness = isBusiness;
     }
 
