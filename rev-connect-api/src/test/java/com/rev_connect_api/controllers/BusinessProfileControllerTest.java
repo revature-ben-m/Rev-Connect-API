@@ -1,6 +1,8 @@
 package com.rev_connect_api.controllers;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.mockito.Mockito.*;
 
 import java.util.*;
@@ -22,7 +24,7 @@ import com.rev_connect_api.services.BusinessProfileService;
 public class BusinessProfileControllerTest {
     
     @Mock private BusinessProfileService businessProfileService;
-    @InjectMocks public ProfileController underTest;
+    @InjectMocks public BusinessProfileController underTest;
     
     @Test
     public void getAllBusinessProfilesReturns200() {
@@ -76,25 +78,35 @@ public class BusinessProfileControllerTest {
         assertThat(result.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
     }
 
-    // @Test
-    // public void updateBioTextSuccessReturns200() {
-    //     final long userId = 111;
-    //     final BusinessProfile oldBioProfile = BusinessProfileTestDataUtil.createTestProfileA();
-    //     final BusinessProfile updatedBioProfile = new BusinessProfile(999, "UPDATED TEST BIO!", new User((long) 111, "test1", "pw1", "joe1", "doe1", "test1@email", true, BusinessProfileTestDataUtil.createTestProfileA()));
-    //     when(businessProfileService.updateBioText(updatedBioProfile, userId))
-    //         .thenReturn(updatedBioProfile);
-    //     final ResponseEntity<BusinessProfile> result = underTest.updateBioTextForBusinessProfile(updatedBioProfile, userId);
-    //     assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
-    // }
+    @Test
+    public void updateBioTextSuccessReturns200() {
+        final long userId = 111;
+        final BusinessProfile oldBioProfile = BusinessProfileTestDataUtil.createTestProfileA();
+        final Map<String,Object> expectedMap = new HashMap<>();
+        expectedMap.put("BIO_TEXT", "UPDATED BIO TEXT!");
+        expectedMap.put("EMAIL", "test1@email");
+        expectedMap.put("FIRSTNAME", "joe1");
+        expectedMap.put("IS_BUSINESS", true);
+        expectedMap.put("LASTNAME", "doe1");
+        expectedMap.put("PROFILE_ID", 999);
+        expectedMap.put("USERNAME", "test1");
+        expectedMap.put("USER_ID", 111);
+        final BusinessProfile updatedBioProfile = new BusinessProfile(999, "UPDATED TEST BIO!", new User((long) 111, "test1", "pw1", "joe1", "doe1", "test1@email", true, BusinessProfileTestDataUtil.createTestProfileA()));
+        when(businessProfileService.updateBioText(updatedBioProfile, userId))
+            .thenReturn(expectedMap);
+        final ResponseEntity<Map<String,Object>> result = underTest.updateBioTextForBusinessProfile(updatedBioProfile, userId);
+        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
 
-    // @Test
-    // public void updateBioTextUnSuccessReturns200() {
-    //     final long userId = 111;
-    //     final BusinessProfile oldBioProfile = BusinessProfileTestDataUtil.createTestProfileA();
-    //     when(businessProfileService.updateBioText(oldBioProfile, userId))
-    //         .thenReturn(oldBioProfile);
-    //     final ResponseEntity<BusinessProfile> result = underTest.updateBioTextForBusinessProfile(oldBioProfile, userId);
-    //     assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
-    // }
+    @Test
+    public void updateBioTextUnSuccessfulReturns409() {
+        final long userId = 111;
+        final BusinessProfile oldBioProfile = BusinessProfileTestDataUtil.createTestProfileA();
+        final BusinessProfile updatedBioProfile = new BusinessProfile(999, "UPDATED TEST BIO!", new User((long) 111, "test1", "pw1", "joe1", "doe1", "test1@email", true, BusinessProfileTestDataUtil.createTestProfileA()));
+        when(businessProfileService.updateBioText(updatedBioProfile, userId))
+            .thenReturn(null);
+        final ResponseEntity<Map<String,Object>> result = underTest.updateBioTextForBusinessProfile(updatedBioProfile, userId);
+        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    }
 
 }

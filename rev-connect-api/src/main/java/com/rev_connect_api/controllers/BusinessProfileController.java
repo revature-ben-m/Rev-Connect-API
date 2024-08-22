@@ -11,12 +11,13 @@ import org.springframework.http.ResponseEntity;
 
 @RestController
 @CrossOrigin(origins = "*")
-public class ProfileController {
+@RequestMapping("/profile/business")
+public class BusinessProfileController {
 
     @Autowired
     private BusinessProfileService businessProfileService;
 
-    @GetMapping("/profiles/business/{userId}")
+    @GetMapping("/{userId}")
     @CrossOrigin(origins = "*")
     public ResponseEntity<Map<String, Object>> getBusinessProfileByUserId(@PathVariable long userId) {
         Map<String, Object> resultBusinessProfile = businessProfileService.findAllProfileInfoByUserId(userId);
@@ -27,13 +28,13 @@ public class ProfileController {
         }
     }
 
-    @GetMapping("/profiles/business")
+    @GetMapping("/")
     @CrossOrigin(origins = "*")
     public ResponseEntity<List<BusinessProfile>> getBusinessProfiles() {
         return new ResponseEntity<>(businessProfileService.findAllBusinessProfiles(), HttpStatus.OK);
     }
 
-    @PostMapping("/profiles/business")
+    @PostMapping("/")
     @CrossOrigin(origins = "*")
     public ResponseEntity<BusinessProfile> createNewBusinessProfile(@RequestBody BusinessProfile businessProfile) {
         BusinessProfile confirmCreate = businessProfileService.createBusinessProfile(businessProfile);
@@ -43,14 +44,14 @@ public class ProfileController {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-    @PatchMapping("/profiles/business/{userId}")
+    @PatchMapping("/{userId}")
     @CrossOrigin(origins = "*")
     public ResponseEntity<Map<String, Object>> updateBioTextForBusinessProfile (
             @RequestBody BusinessProfile businessProfile,
             @PathVariable long userId
             ) {
         Map<String, Object> confirmUpdate = businessProfileService.updateBioText(businessProfile, userId);
-        if (!confirmUpdate.isEmpty()) {
+        if (confirmUpdate != null && confirmUpdate.isEmpty()) {
             return new ResponseEntity<>(confirmUpdate, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
