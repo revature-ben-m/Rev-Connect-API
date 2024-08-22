@@ -34,6 +34,11 @@ public class EndorsementLinkControllerTest {
   @Autowired
   private ObjectMapper objectMapper;
 
+  /**
+   * This test is for the createEndorsementLink method in the EndorsementLinkController class which creates a new endorsement link.
+   * It tests that the method returns a 200 status code and the endorsement link object with the correct link and linkText.
+   * @throws Exception if the test fails
+   */
   @Test
   public void testCreateEndorsementLink() throws Exception {
     EndorsementLink endorsementLink = new EndorsementLink(1L, "https://example.com", "LinkedIn Profile");
@@ -48,6 +53,11 @@ public class EndorsementLinkControllerTest {
         .andExpect(jsonPath("$.linkText").value("LinkedIn Profile"));
   }
 
+  /**
+   * This test is for the getEndorsementLinksByUserId method in the EndorsementLinkController class which retrieves all endorsement links for a user.
+   * It tests that the method returns a 200 status code and the endorsement link object with the correct link and linkText.
+   * @throws Exception if the test fails
+   */
   @Test
   public void testGetEndorsementLinksByUserId() throws Exception {
     Long userId = 1L;
@@ -63,6 +73,11 @@ public class EndorsementLinkControllerTest {
         .andExpect(jsonPath("$[0].linkText").value("LinkedIn Profile"));
   }
 
+  /**
+   * This test is for the updateEndorsementLink method in the EndorsementLinkController class which updates an endorsement link.
+   * It tests that the method returns a 200 status code and the endorsement link object with the correct link and linkText.
+   * @throws Exception if the test fails
+   */
   @Test
   public void testUpdateEndorsementLink() throws Exception {
     EndorsementLink endorsementLink = new EndorsementLink(1L, "https://example.com", "LinkedIn Profile");
@@ -82,6 +97,11 @@ public class EndorsementLinkControllerTest {
         .andExpect(jsonPath("$.linkText").value("Updated Profile"));
   }
 
+  /**
+   * This test is for the deleteEndorsementLink method in the EndorsementLinkController class which deletes an endorsement link.
+   * It tests that the method returns a 204 status code.
+   * @throws Exception if the test fails
+   */
   @Test
   public void testDeleteEndorsementLink() throws Exception {
     Long endorsementLinkId = 1L;

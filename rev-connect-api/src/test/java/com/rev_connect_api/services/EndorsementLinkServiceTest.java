@@ -29,14 +29,23 @@ class EndorsementLinkServiceTest {
     @Mock
     private BusinessProfileRepository businessProfileRepository;
 
+    /**
+     * We are testing the EndorsementLinkService class, so we need to inject the mocks into the service.
+     */
     @InjectMocks
     private EndorsementLinkService endorsementLinkService;
 
+    /**
+     * This method is run before each test to set up the mocks.
+     */
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
     }
 
+    /**
+     * This test is for the creation of an endorsement link object. It tests that the object is created with the correct user, link, and linkText.
+     */
     @Test
     public void testCreateEndorsementLink() {
         Long userId = 1L;
@@ -61,6 +70,9 @@ class EndorsementLinkServiceTest {
         verify(endorsementLinkRepository, times(1)).save(any(EndorsementLink.class));
     }
 
+    /**
+     * This test is for the retrieval of all endorsement links for a user. It tests that the method returns a list of endorsement links.
+     */
     @Test
     void getAllEndorsementLinksByUserTest() {
         Long userId = 1L;
@@ -79,6 +91,9 @@ class EndorsementLinkServiceTest {
         assertEquals(2, result.size());
     }
 
+    /**
+     * This test is for the retrieval of an endorsement link by its ID. It tests that the method returns the correct endorsement link.
+     */
     @Test
     void updateEndorsementLinkTest() {
         Long userId = 1L;
@@ -99,6 +114,9 @@ class EndorsementLinkServiceTest {
         assertEquals("updated link", updated.getLinkText());      
     }
 
+    /**
+     * This test is for the deletion of an endorsement link by its ID. It tests that the method deletes the correct endorsement link.
+     */
     @Test
     void deleteEndorsementLinkTest() {
         EndorsementLink endorsementLink  = new EndorsementLink(1L, "https://example.com", "linkedin");
