@@ -63,6 +63,13 @@ public class PostController {
         return ResponseEntity.ok(posts);
     }
 
+    @GetMapping("/media/{postId}")
+    public ResponseEntity<List<Media>> getMediaByPostId(@PathVariable BigInteger postId) {
+    List<Media> mediaList =  mediaService.getMediaByPostId(postId);
+    return ResponseEntity.ok(mediaList);
+    }
+
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Boolean> DeletePostById(@PathVariable BigInteger id) {
         boolean deleted = postService.deletePostById(id);
