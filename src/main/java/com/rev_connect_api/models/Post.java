@@ -1,12 +1,18 @@
 package com.rev_connect_api.models;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.math.BigInteger;
 import java.sql.Timestamp;
 
+@Data
 @Entity
 @Table(name = "posts")
+@NoArgsConstructor
+@AllArgsConstructor
 public class Post {
 
     @Id
@@ -17,56 +23,6 @@ public class Post {
     private Timestamp updatedAt;
     private String title;
     private String content;
-
-    public Post() {}
-
-    public BigInteger getPostId() {
-        return postId;
-    }
-
-    public BigInteger getUserId() {
-        return userId;
-    }
-
-    public Timestamp getCreatedAt() {
-        return createdAt;
-    }
-
-    public Timestamp getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setPostId(BigInteger postId) {
-        this.postId = postId;
-    }
-
-    public void setUserId(BigInteger userId) {
-        this.userId = userId;
-    }
-
-    public void setCreatedAt(Timestamp createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public void setUpdatedAt(Timestamp updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
 
     private Post(Builder builder) {
         postId = builder.postId;
@@ -80,7 +36,6 @@ public class Post {
     public static Builder builder() {
         return new Builder();
     }
-
 
     public static final class Builder {
         private BigInteger postId;

@@ -2,11 +2,18 @@ package com.rev_connect_api.models;
 
 import com.rev_connect_api.enums.MediaType;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.math.BigInteger;
 import java.sql.Timestamp;
 
+@Data
 @Entity
+@Table
+@NoArgsConstructor
+@AllArgsConstructor
 public class Media {
 
     @Id
@@ -18,8 +25,6 @@ public class Media {
     private MediaType mediaType;
     private Timestamp createdAt;
 
-    public Media() {}
-
     private Media(Builder builder) {
         setMediaId(builder.mediaId);
         setPostId(builder.postId);
@@ -30,46 +35,6 @@ public class Media {
 
     public static Builder builder() {
         return new Builder();
-    }
-
-    public BigInteger getMediaId() {
-        return mediaId;
-    }
-
-    public void setMediaId(BigInteger mediaId) {
-        this.mediaId = mediaId;
-    }
-
-    public BigInteger getPostId() {
-        return postId;
-    }
-
-    public void setPostId(BigInteger postId) {
-        this.postId = postId;
-    }
-
-    public String getMediaUrl() {
-        return mediaUrl;
-    }
-
-    public void setMediaUrl(String mediaUrl) {
-        this.mediaUrl = mediaUrl;
-    }
-
-    public MediaType getMediaType() {
-        return mediaType;
-    }
-
-    public void setMediaType(MediaType mediaType) {
-        this.mediaType = mediaType;
-    }
-
-    public Timestamp getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Timestamp createdAt) {
-        this.createdAt = createdAt;
     }
 
     public static final class Builder {

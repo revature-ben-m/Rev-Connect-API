@@ -50,12 +50,8 @@ public class SecurityConfig {
         return http.getSharedObject(AuthenticationManager.class);
     }
 
-//    @Bean
-//    WebSecurityCustomizer webSecurityCustomizer() {
-//        return (web) -> web.ignoring().requestMatchers("/resources/**");
-//    }
-
-    
-
-
+    @Bean
+    WebSecurityCustomizer webSecurityCustomizer() {
+        return (web) -> web.ignoring().requestMatchers("/resources/**");
+    }
 }

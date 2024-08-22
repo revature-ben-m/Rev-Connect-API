@@ -76,7 +76,6 @@ public class MediaService {
     return true;
     }
 
-
     // Saves attachments locally, should probably switch out implementation in production
     private String saveFile(MultipartFile file) throws IOException {
         String fileName = UUID.randomUUID().toString() + "-" + file.getOriginalFilename();
