@@ -24,6 +24,9 @@ public class BusinessProfileServiceTest {
     @Mock private BusinessProfileRepository businessProfileRepository;
     @InjectMocks private BusinessProfileService underTest;
     
+    /**
+     * Test for successfully finding a profile by user id
+     */
     @Test
     public void findByUserIdFound() {
         final BusinessProfile expected = BusinessProfileTestDataUtil.createTestProfileA();
@@ -35,6 +38,9 @@ public class BusinessProfileServiceTest {
         assertThat(result).isNotNull().hasToString(expected.toString());
     }
 
+    /**
+     * Test for profile not existing for a user id
+     */
     @Test
     public void findByUserIdNotFound() {
         final BusinessProfile expected = null;
@@ -46,6 +52,9 @@ public class BusinessProfileServiceTest {
         assertThat(result).isEqualTo(expected);
     }
 
+    /**
+     * Test that getting all profiles successfully returns a list
+     */
     @Test
     public void findAllBusinessProfilesReturnsAListWhenPresent() {
         final List<BusinessProfile> profileList = 
@@ -59,6 +68,9 @@ public class BusinessProfileServiceTest {
             .isNotEmpty();
     }
 
+    /**
+     * Test that getting all profiles when there are none returns an empty list
+     */
     @Test
     public void findAllBusinessProfilesReturnsEmptyListIfNone() {
         final List<BusinessProfile> profileList = 
@@ -69,6 +81,9 @@ public class BusinessProfileServiceTest {
             .isEmpty();
     }
 
+    /**
+     * Testing successful updating of bio text of a business profile
+     */
     @Test
     public void testUpdateBioText_Success() {
         long userId = 1L;
@@ -89,6 +104,9 @@ public class BusinessProfileServiceTest {
         assertNotNull(result);
     }
 
+    /**
+     * Testing error is thrown when bio text to update is too long
+     */
     @Test
     public void testUpdateBioText_BioTextTooLong() {
         long userId = 1L;
@@ -102,7 +120,10 @@ public class BusinessProfileServiceTest {
 
         assertEquals("Exceeding 500 character limit", thrown.getMessage());
     }
-
+    
+    /**
+     * Testing getting all profile information for a given user successfully
+     */
     @Test
     public void findFullProfileByUserIdFound() {
         final Map<String, Object> myMap = new HashMap<>();
@@ -121,6 +142,9 @@ public class BusinessProfileServiceTest {
         assertThat(result).isNotEmpty().hasFieldOrProperty("EMAIL").hasFieldOrProperty("LASTNAME").hasFieldOrPropertyWithValue("USER_ID", 112);
     }
 
+    /**
+     * Testing if no profile information can be found, returning null
+     */
     @Test
     public void findFullProfileByUserIdNotFound() {
         final Map<String, Object> myMap = new HashMap<>();

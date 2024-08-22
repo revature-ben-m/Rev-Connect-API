@@ -9,6 +9,11 @@ import java.util.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+
+/**
+ * Controller class for handling business profile operations.
+ * Provides endpoints for all profile retrival, retrival by user ID, profile creation, and updating profile bio.
+ */
 @RestController
 @CrossOrigin(origins = "*")
 @RequestMapping("/profile/business")
@@ -17,6 +22,11 @@ public class BusinessProfileController {
     @Autowired
     private BusinessProfileService businessProfileService;
 
+    /**
+    * Endpoint for getting all profile data associated with an a account
+    * @param userId - Id of the user whose profile information you are retrieving
+    * @return map of all properties for a profile and OK code, or NOT_FOUND error code.
+    */
     @GetMapping("/{userId}")
     @CrossOrigin(origins = "*")
     public ResponseEntity<Map<String, Object>> getBusinessProfileByUserId(@PathVariable long userId) {
@@ -28,12 +38,21 @@ public class BusinessProfileController {
         }
     }
 
+    /**
+    * Endpoint for getting all business profiles
+    * @return List of business profiles, OK status even if list is empty
+    */
     @GetMapping("/")
     @CrossOrigin(origins = "*")
     public ResponseEntity<List<BusinessProfile>> getBusinessProfiles() {
         return new ResponseEntity<>(businessProfileService.findAllBusinessProfiles(), HttpStatus.OK);
     }
 
+    /**
+    * Endpoint for creating a new business profile.
+    * @param businessProfile - a business profile object to persist
+    * @return The business profile that was persisted with code OK, or BAD_REQUEST error code.
+    */
     @PostMapping("/")
     @CrossOrigin(origins = "*")
     public ResponseEntity<BusinessProfile> createNewBusinessProfile(@RequestBody BusinessProfile businessProfile) {
@@ -44,6 +63,12 @@ public class BusinessProfileController {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
+    /**
+    * Endpoint for updating a Business Profile Bio
+    * @param businessProfile - Business Profile whose bio is to be changed
+    * @param userId - Id of the user whose profile businessProfile is/user_id of the profile
+    * @return The business profile that was persisted with code OK, or BAD_REQUEST error code.
+    */
     @PatchMapping("/{userId}")
     @CrossOrigin(origins = "*")
     public ResponseEntity<Map<String, Object>> updateBioTextForBusinessProfile (

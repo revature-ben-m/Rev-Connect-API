@@ -17,20 +17,30 @@ public class BusinessProfile {
     @Column(name = "bio_text", columnDefinition = "VARCHAR(MAX)")
     private String bioText;
 
+    /**
+     * Basic No Args Constructor
+     */
     public BusinessProfile() {
     }
 
+    /**
+     * Basic No Id Constructor
+     */
     public BusinessProfile(User user, String bioText) {
         this.user = user;
         this.bioText = bioText;
     }
 
+    /**
+     * All Args Constructor
+     */
     public BusinessProfile(long id, String bioText, User user) {
         this.id = id;
         this.user = user;
         this.bioText = bioText;
     }
 
+    // Generated Getters and Setters
     public long getId() {
         return id;
     }
@@ -55,6 +65,7 @@ public class BusinessProfile {
         this.bioText = bioText;
     }
 
+    // Generated
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -65,6 +76,7 @@ public class BusinessProfile {
         return result;
     }
 
+    // Generated
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
@@ -89,6 +101,7 @@ public class BusinessProfile {
         return true;
     }
 
+    // Generated
     @Override
     public String toString() {
         return "BusinessProfile [id=" + id + ", user=" + user + ", bioText=" + bioText + "]";

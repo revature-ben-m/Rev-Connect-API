@@ -3,6 +3,9 @@ package com.rev_connect_api;
 import com.rev_connect_api.models.BusinessProfile;
 import com.rev_connect_api.models.User;
 
+/**
+ * Basic test data used for tests
+ */
 public final class BusinessProfileTestDataUtil {
     public static User createTestUser1() {
         return new User((long) 111, "test1", "pw1", "joe1", "doe1", "test1@email", true);
