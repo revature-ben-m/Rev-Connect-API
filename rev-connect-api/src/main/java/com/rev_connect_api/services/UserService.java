@@ -5,18 +5,18 @@ import com.rev_connect_api.utils.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-<<<<<<< Updated upstream
-import com.rev_connect_api.entity.User;
-import com.rev_connect_api.repositories.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
+import java.util.Map;
+import java.util.UUID;
 
 @Service
 public class UserService {
     @Autowired
     private UserRepository userRepository;
 //
+   @Autowired
+   private EmailService emailService;
+
+    private static final String SECRET_KEY = "fujbgbgibuaeigbgbeigbiebgiebgrgr";
 
     public User  login( User user) throws Exception{
 //        User dbuser= userRepository.findByUsername(user.getUsername());
@@ -27,28 +27,7 @@ public class UserService {
         ///ddd
         return dbuser ;
       }
-=======
-import java.util.Map;
-import java.util.UUID;
 
-@Service
-public class UserService {
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private EmailService emailService;
-
-    private static final String SECRET_KEY = "fujbgbgibuaeigbgbeigbiebgiebgrgr";
-
-    public User login(User user) throws Exception {
-        User dbUser = userRepository.findByUsernameOrEmail(user.getUsername(), user.getUsername());
-        if (dbUser == null || !user.getPassword().equals(dbUser.getPassword())) {
-            throw new IllegalArgumentException("Invalid username or password");
-        }
-        return dbUser;
-    }
 
     public User findByEmail(String email) {
         return userRepository.findByEmail(email);
@@ -80,15 +59,14 @@ public class UserService {
         String subject = "Password Reset Request";
         String body = "Dear User,\n\n" +
                 "Link to reset your password:\n" +
-                resetLink + "\n\n" +
-                "If you did not request this, please ignore this email.";
+                resetLink;
         emailService.sendEmail(userEmail, subject, body);
     }
 
     public String forgotPass(String email) {
         User user = findByEmail(email);
         if (user == null) {
-            return "Invalid email id.";
+            return "Invalid email.";
         }
 
         String resetToken = createPasswordResetToken(user);
@@ -109,5 +87,5 @@ public class UserService {
             return "Password update unsuccessful.";
         }
     }
->>>>>>> Stashed changes
+
 }

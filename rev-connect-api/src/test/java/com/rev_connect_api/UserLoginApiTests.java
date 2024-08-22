@@ -6,6 +6,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import com.rev_connect_api.models.UserDTO;
+
 import com.rev_connect_api.controllers.HomeController;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
@@ -31,24 +33,29 @@ public class UserLoginApiTests {
     @Test
     public void testLoginIsSuccessful() throws Exception {
 
-        User User1 = new User();
-        User1.setUsername("Ram");
-        User1.setPassword("Ram123");
+        User loginRequest = new User();
+        loginRequest.setUsername("Ram");
+        loginRequest.setPassword("Ram123");
 
         User authUser = new User();
         authUser.setUsername("Ram");
         authUser.setPassword("Ram123");
 
-        when(mockUserService.login(User1)).thenReturn(authUser);
+        // Create UserDTO for response
+        UserDTO userDTO = new UserDTO();
+        userDTO.setUsername(authUser.getUsername());
+        userDTO.setEmail("email@example.com");
+        userDTO.setAccountId(1);
+        userDTO.setToken("token");
 
-
-        ResponseEntity<Object> response = homeControllerUnderTest.login(authUser);
+        when(mockUserService.login(loginRequest)).thenReturn(authUser);
+        ResponseEntity<Object> response = homeControllerUnderTest.login(loginRequest);
 
         // Assert
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        User returnedUser = (User) response.getBody();
-        assertEquals("Ram", returnedUser.getUsername());
-        assertEquals(null, returnedUser.getPassword()); // Password should be nullified
+        UserDTO returnedUserDTO = (UserDTO) response.getBody();
+        assertEquals("Ram", returnedUserDTO.getUsername());
+        assertEquals(null, authUser.getPassword());
     }
 
     // Tests that login fails with an invalid password

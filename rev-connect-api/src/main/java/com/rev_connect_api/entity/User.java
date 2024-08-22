@@ -26,6 +26,7 @@ public class User {
      * A default, no-args constructor, as well as correctly formatted getters and setters, are needed for
      * Jackson Objectmapper to work.
      */
+    private String resetToken;
     public User(){
 //gggddd
     }
@@ -102,11 +103,18 @@ public class User {
     public void setEmail(String email) {
         this.email = email;
     }
+    public String getResetToken() {
+        return resetToken;
+    }
+
+    public void setResetToken(String resetToken) {
+        this.resetToken = resetToken;
+    }
 
     /**
      * Overriding the default equals() method adds functionality to tell when two objects are identical, allowing
      * Assert.assertEquals and List.contains to function.
-     * @param o the other object.
+     * @param 0 the other object.
      * @return true if o is equal to this object.
      */
 	@Override

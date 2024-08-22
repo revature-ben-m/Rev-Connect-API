@@ -1,23 +1,6 @@
 package com.rev_connect_api.controllers;
 
 import com.rev_connect_api.entity.User;
-<<<<<<< Updated upstream
-import com.rev_connect_api.services.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-@RestController
-@RequestMapping("/home")
-public class HomeController {
-    //ddd
-    @Autowired
-    private UserService userService;
-    
-=======
 import com.rev_connect_api.models.UserDTO;
 import com.rev_connect_api.services.UserService;
 import com.rev_connect_api.services.EmailService;
@@ -43,16 +26,14 @@ public class HomeController {
     private EmailService emailService;
 
 
->>>>>>> Stashed changes
-    // http://l27.0.0.1:8080/home/login
+    // http://127.0.0.1:8080/home/login
     @PostMapping("/login")
     public ResponseEntity<Object> login(@RequestBody User user) {
         try {
-<<<<<<< Updated upstream
-            User loginAccount = userService.login(user);
-            loginAccount.setPassword(null);
-            return new ResponseEntity<>(loginAccount, HttpStatus.OK);
-=======
+
+          //  User loginAccount = userService.login(user);
+            //loginAccount.setPassword(null);
+          //  return new ResponseEntity<>(loginAccount, HttpStatus.OK);
             //loginAccount check from database
             User loginAccount = userService.login(user);
             loginAccount.setPassword(null);
@@ -75,14 +56,14 @@ public class HomeController {
 
             //send to front
             return new ResponseEntity<>(userDTO, HttpStatus.OK);
->>>>>>> Stashed changes
+
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
         }
     }
 
-<<<<<<< Updated upstream
-=======
+
+
     @GetMapping("/getUserInfo")
     public ResponseEntity<Object> getUserInfo(HttpServletRequest request) {
         String token = request.getHeader("token");
@@ -100,7 +81,7 @@ public class HomeController {
     public ResponseEntity<Object> forgotPassword(@RequestBody Map<String, String> request) {
         String email = request.get("email");
         String response = userService.forgotPass(email);
-        if ("Invalid email id.".equals(response)) {
+        if ("Invalid email.".equals(response)) {
             return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(response, HttpStatus.OK);
@@ -117,9 +98,6 @@ public class HomeController {
         }
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
-
->>>>>>> Stashed changes
-
 }
 
 
