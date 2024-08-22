@@ -1,136 +1,119 @@
 package com.rev_connect_api.models;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 @Entity
-@Table(name = "users")
+@Table(name="users")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class User {
-
-    @Column(name = "id")
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer userId;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq")
+    @SequenceGenerator(name = "user_seq", sequenceName = "user_sequence", allocationSize = 1)
+    @Column(name = "user_id")
+    private Long userId;
 
-    @Column(unique = true)
+    @Column(name = "username", unique = true, nullable = false)
     private String username;
 
-    private String userPwd;
-    
-    @Column(unique = true)
+    @Column(name = "user_password", nullable = false)
+    private String password;
+
+    @Column(name = "email", unique = true, nullable = false)
     private String email;
 
+    @Column(name = "first_name", nullable = false)
     private String firstName;
 
+    @Column(name = "last_name", nullable = false)
     private String lastName;
 
-    boolean isBusiness;
+    @Column(name = "is_business", nullable = false)
+    private Boolean isBusiness;
 
+    @CreatedDate
+    @Column(name = "created_at", updatable = false, nullable = false)
+    private LocalDateTime createdAt;
 
-    public User() {
-        
+    @LastModifiedDate
+    @Column(name = "updated_at", updatable = true, nullable = false)
+    private LocalDateTime updatedAt;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role", nullable = false)
+    private Set<Role> roles = new HashSet<>();
+
+    public Set<Role> getRoles() {
+        return roles;
     }
 
-    public User(String username, String userPwd, String email, String firstName, String lastName, boolean isBusiness) {
-        this.username = username;
-        this.userPwd = userPwd;
-        this.email = email;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.isBusiness = isBusiness;
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
     }
 
-
-    public Integer getUserId() {
-        return userId;
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
     }
 
-
-    public void setUserId(Integer userId) {
-        this.userId = userId;
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
     }
 
-
-    public String getUsername() {
-        return username;
-    }
-
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-    
-    public String getEmail() {
-        return email;
-    }
-
-
-    public void setEmail(String email) {
-        this.email = email;
+    public Set<SimpleGrantedAuthority> getGrantedAuthorities() {
+        return roles.stream()
+            .map((role) -> new SimpleGrantedAuthority(role.name()))
+            .collect(Collectors.toSet());
     }
 
 
-    public String getFirstName() {
-        return firstName;
+    @Override
+	public boolean equals(Object obj) {
+        if(this == obj) return true;
+        if( obj == null || getClass() != obj.getClass()) return false;
+        User user = (User) obj;
+        return Objects.equals(userId, user.userId) && 
+            Objects.equals(username, user.username) && Objects.equals(email, user.email);
     }
 
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+	@Override
+    public int hashCode() {
+        return Objects.hash(userId, username, email);
     }
 
-
-    public String getLastName() {
-        return lastName;
-    }
-
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-
-    public boolean isBusiness() {
-        return isBusiness;
-    }
-
-
-    public void setBusiness(boolean isBusiness) {
-        this.isBusiness = isBusiness;
-    }
-
-    public String getUserPwd() {
-        return userPwd;
-    }
-
-    public void setUserPwd(String userPwd) {
-        this.userPwd = userPwd;
-    }
-
-@Override
-public boolean equals(Object obj) {
-    if (this == obj) return true;
-    if (obj == null || getClass() != obj.getClass()) return false;
-
-    User other = (User) obj;
-
-    return isBusiness == other.isBusiness &&
-           (userId != null ? userId.equals(other.userId) : other.userId == null) &&
-           (username != null ? username.equals(other.username) : other.username == null) &&
-           (userPwd != null ? userPwd.equals(other.userPwd) : other.userPwd == null) &&
-           (email != null ? email.equals(other.email) : other.email == null) &&
-           (firstName != null ? firstName.equals(other.firstName) : other.firstName == null) &&
-           (lastName != null ? lastName.equals(other.lastName) : other.lastName == null);
-}
-    
+    /**
+     * Overriding the default toString() method allows for easy debugging.
+     * @return a String representation of this class.
+     */
     @Override
     public String toString() {
-        return "User [userId=" + userId + ", username=" + username + ", userPwd=" + userPwd + ", email=" + email
-                + ", firstName=" + firstName + ", lastName=" + lastName + ", isBusiness=" + isBusiness + "]";
+        return "User{" +
+                "userId=" + userId +
+                ", username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", isBusiness=" + isBusiness +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                ", roles=" + roles +
+                '}';
     }
-
 }
