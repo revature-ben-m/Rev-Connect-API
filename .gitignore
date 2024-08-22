@@ -5,6 +5,9 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
+# Ignore attachments
+/rev-connect-api/src/main/resources/public/attachments/**
+
 ### STS ###
 .apt_generated
 .classpath

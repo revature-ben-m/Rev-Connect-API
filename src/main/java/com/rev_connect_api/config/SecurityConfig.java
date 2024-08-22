@@ -28,7 +28,7 @@ public class SecurityConfig {
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(authorize -> authorize
-                .requestMatchers("/auth/login", "/users/register", "/h2-console/**").permitAll() // allow login and register to everyone 
+                .requestMatchers("/auth/login", "/users/register", "/h2-console/**", "/attachments/**").permitAll() // allow login and register to everyone
                 .requestMatchers("/users/**", "/posts/**", "/comments/**", "/likes/**", "/profile/?*").hasAnyRole("USER", "ADMIN") // USER or ADMIN roles can access /users/**
                 .anyRequest().authenticated()) // all other requests require authentication
                 .sessionManagement(session -> session
@@ -50,10 +50,10 @@ public class SecurityConfig {
         return http.getSharedObject(AuthenticationManager.class);
     }
 
-    @Bean
-    WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.ignoring().requestMatchers("/resources/**");
-    }
+//    @Bean
+//    WebSecurityCustomizer webSecurityCustomizer() {
+//        return (web) -> web.ignoring().requestMatchers("/resources/**");
+//    }
 
     
 
