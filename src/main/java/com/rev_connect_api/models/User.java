@@ -11,6 +11,8 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -70,6 +72,7 @@ public class User {
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
+        updatedAt = createdAt;
     }
 
     @PreUpdate
@@ -77,12 +80,22 @@ public class User {
         updatedAt = LocalDateTime.now();
     }
 
+    @JsonIgnore
     public Set<SimpleGrantedAuthority> getGrantedAuthorities() {
         return roles.stream()
             .map((role) -> new SimpleGrantedAuthority(role.name()))
             .collect(Collectors.toSet());
     }
 
+
+    public User(String username, String password, String email, String firstName, String lastName, boolean isBusiness) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.isBusiness = isBusiness;
+    }
 
     @Override
 	public boolean equals(Object obj) {

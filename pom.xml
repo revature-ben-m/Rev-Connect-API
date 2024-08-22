@@ -65,6 +65,11 @@
 			<version>0.12.6</version>
 			<scope>runtime</scope>
 		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.datatype</groupId>
+			<artifactId>jackson-datatype-jsr310</artifactId>
+			<version>2.17.2</version>
+		</dependency>
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -93,8 +98,8 @@
 		</dependency>
 		<dependency>
 			<groupId>org.mapstruct</groupId>
-			<artifactId>mapstruct</artifactId>
-			<version>1.6.0</version> <!-- Use the latest version available -->
+      <artifactId>mapstruct</artifactId>
+			<version>1.6.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.mapstruct</groupId>
@@ -109,11 +114,11 @@
 			<scope>provided</scope>
 		</dependency>
 
-   		<dependency>
-     		<groupId>javax.xml.bind</groupId>
-     		<artifactId>jaxb-api</artifactId>
-     		<version>2.4.0-b180830.0359</version>
-   		</dependency>
+		<dependency>
+			<groupId>javax.xml.bind</groupId>
+			<artifactId>jaxb-api</artifactId>
+			<version>2.4.0-b180830.0359</version>
+		</dependency>
  </dependencies>
 
 	<build>

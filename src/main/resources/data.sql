@@ -1,5 +1,6 @@
 drop table if exists user_roles;
 drop table if exists users cascade;
+drop table if exists personal_profiles;
 -- drop table if exists post;
 
 CREATE TABLE users (
@@ -18,6 +19,13 @@ CREATE TABLE user_roles (
     user_id BIGINT NOT NULL,
     role VARCHAR(50) NOT NULL,
     PRIMARY KEY (user_id, role),
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+);
+
+CREATE TABLE personal_profiles (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    user_id BIGINT UNIQUE,
+    bio VARCHAR(255),
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
 
@@ -48,6 +56,13 @@ VALUES
 (3, 'ROLE_USER'),
 (4, 'ROLE_USER');
 
+INSERT INTO personal_profiles (user_id, bio)
+VALUES
+(1, 'TestBio1!'),
+(2, 'TestBio2!'),
+(3, 'TestBio3!'),
+(4, 'TestBio4!');
+
 -- -- Insert posts
 -- INSERT INTO post (posted_by, post_text, created_at, updated_at)
 -- VALUES
@@ -55,3 +70,5 @@ VALUES
 -- (1, 'This is the second test post.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
 -- (2, 'Another post for testing.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
 -- (1, 'Yet another test post.', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+
