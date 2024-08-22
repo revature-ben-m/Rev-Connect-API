@@ -16,8 +16,15 @@ public class UserService {
    @Autowired
    private EmailService emailService;
 
-    private static final String SECRET_KEY = "fujbgbgibuaeigbgbeigbiebgiebgrgr";
+    //private static final String SECRET_KEY = "fujbgbgibuaeigbgbeigbiebgiebgrgr";
 
+
+    /**
+     * Logs in a user by checking their username and password.
+     * @param user The user trying to log in with username and password.
+     * @return The user if login is successful.
+     * @throws Exception If username or password is incorrect.
+     */
     public User  login( User user) throws Exception{
 //        User dbuser= userRepository.findByUsername(user.getUsername());
         User dbuser= userRepository.findByUsernameOrEmail(user.getUsername(),user.getUsername());
@@ -41,6 +48,12 @@ public class UserService {
         userRepository.save(user);
     }
 
+
+    /**
+     * Creates a new password reset token for a user.
+     * @param user The user who needs a new reset token.
+     * @return The newly created reset token.
+     */
     public String createPasswordResetToken(User user) {
         String token = UUID.randomUUID().toString();
         user.setResetToken(token);
@@ -48,12 +61,22 @@ public class UserService {
         return token;
     }
 
+    /**
+     * Resets a user's password using their reset token.
+     * @param user The user whose password will be reset.
+     * @param newPassword The new password.
+     */
     public void resetPassword(User user, String newPassword) {
         user.setPassword(newPassword);
         user.setResetToken(null);
         userRepository.save(user);
     }
 
+    /**
+     * Sends an email to the user with a password reset link.
+     * @param userEmail The email address of the user.
+     * @param resetToken The token for resetting the password.
+     */
     public void sendPasswordResetEmail(String userEmail, String resetToken) {
         String resetLink = "http://localhost:8080/reset-password?token=" + resetToken;
         String subject = "Password Reset Request";
@@ -63,6 +86,11 @@ public class UserService {
         emailService.sendEmail(userEmail, subject, body);
     }
 
+    /**
+     * Handles the process when a user forgets their password.
+     * @param email The email address of the user.
+     * @return A message indicating if the email was sent successfully or not.
+     */
     public String forgotPass(String email) {
         User user = findByEmail(email);
         if (user == null) {
@@ -75,6 +103,12 @@ public class UserService {
         return "Reset link sent to your email.";
     }
 
+    /**
+     * Resets the user's password using a reset token.
+     * @param token The reset token.
+     * @param newPassword The new password.
+     * @return A message indicating if the password was updated successfully or not.
+     */
     public String resetPass(String token, String newPassword) {
         try {
             User user = findByResetToken(token);

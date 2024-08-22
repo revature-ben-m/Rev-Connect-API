@@ -7,12 +7,16 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class EmailService {
-
+    //Injecting the JavaMailSender bean to send emails
     @Autowired
     private JavaMailSender emailSender;
 
+    //The email address from which the emails will be sent, loaded from application properties
     @Value("${spring.mail.username}")
     private String fromAddress;
+
+
+     //Sends an email with the specified recipient, subject, and body.
 
     public void sendEmail(String to, String subject, String body) {
         SimpleMailMessage message = new SimpleMailMessage();

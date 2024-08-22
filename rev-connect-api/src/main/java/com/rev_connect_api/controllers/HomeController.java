@@ -31,9 +31,6 @@ public class HomeController {
     public ResponseEntity<Object> login(@RequestBody User user) {
         try {
 
-          //  User loginAccount = userService.login(user);
-            //loginAccount.setPassword(null);
-          //  return new ResponseEntity<>(loginAccount, HttpStatus.OK);
             //loginAccount check from database
             User loginAccount = userService.login(user);
             loginAccount.setPassword(null);
@@ -76,9 +73,10 @@ public class HomeController {
     }
 
 
-
+    // Endpoint to handle password reset requests
     @PostMapping("/forgotPassword")
     public ResponseEntity<Object> forgotPassword(@RequestBody Map<String, String> request) {
+        // Get the email address from the request body
         String email = request.get("email");
         String response = userService.forgotPass(email);
         if ("Invalid email.".equals(response)) {
@@ -88,12 +86,14 @@ public class HomeController {
     }
 
 
-
+    // Endpoint to handle password changes using a reset token
     @PutMapping("/resetPassword")
     public ResponseEntity<Object> resetPassword(@RequestParam String token, @RequestBody Map<String, String> passwords) {
+        // Get the new password from the request body
         String newPassword = passwords.get("newPassword");
+        // Call the service to reset the password using the token
         String response = userService.resetPass(token, newPassword);
-        if ("Invalid or expired token.".equals(response)) {
+        if ("Invalid token.".equals(response)) {
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(response, HttpStatus.OK);

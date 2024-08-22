@@ -103,12 +103,12 @@ public class User {
     public void setEmail(String email) {
         this.email = email;
     }
-    public String getResetToken() {
-        return resetToken;
-    }
 
-    public void setResetToken(String resetToken) {
-        this.resetToken = resetToken;
+    // Get the current password reset token for the user
+    public String getResetToken() { return resetToken;}
+
+    // Set a new password reset token for the user
+    public void setResetToken(String resetToken) { this.resetToken = resetToken;
     }
 
     /**

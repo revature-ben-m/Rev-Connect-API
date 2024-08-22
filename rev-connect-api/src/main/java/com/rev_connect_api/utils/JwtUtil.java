@@ -2,13 +2,6 @@ package com.rev_connect_api.utils;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtParser;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.security.Keys;
-import javax.crypto.SecretKey;
-import java.nio.charset.StandardCharsets;
-
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
@@ -64,26 +57,15 @@ public class JwtUtil {
      * @param token     Encrypted token
      * @return
      */
-    /**
-     * Token Decryption
-     *
-     * @param secretKey JWT secret key This secret key must be kept on the server side and cannot be exposed,
-     *                  otherwise the sign can be forged.
-     *                  If connecting to multiple clients, it is recommended to transform it into multiple
-     * @param token     Encrypted token
-     * @return
-     */
     public static Claims parseJWT(String secretKey, String token) {
         SecretKey key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
-
-        // Parse the token
+        // Default JwtParser
         JwtParser jwtParser = Jwts.parserBuilder()
                 .setSigningKey(key)
                 .build();
 
         return jwtParser.parseClaimsJws(token).getBody();
     }
-
 
 
 }
