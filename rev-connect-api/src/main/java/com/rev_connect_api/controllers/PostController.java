@@ -1,7 +1,9 @@
 package com.rev_connect_api.controllers;
 
 import com.rev_connect_api.dto.PostCreateRequest;
+import com.rev_connect_api.models.Media;
 import com.rev_connect_api.models.Post;
+import com.rev_connect_api.services.MediaService;
 import com.rev_connect_api.services.PostService;
 import com.rev_connect_api.util.TimestampUtil;
 import jakarta.validation.Valid;
@@ -24,10 +26,12 @@ public class PostController {
 
     private final TimestampUtil timestampUtil;
     private final PostService postService;
+    private final MediaService mediaService;
 
-    public PostController(TimestampUtil timestampUtil, PostService postService) {
+    public PostController(TimestampUtil timestampUtil, PostService postService, MediaService mediaService) {
         this.timestampUtil = timestampUtil;
         this.postService = postService;
+        this.mediaService = mediaService;
     }
 
     // Could not get ModelAttribute working, so I used this solution which is not the best
@@ -36,6 +40,7 @@ public class PostController {
                                            @RequestParam("content") String content,
                                            @RequestParam(value = "file", required = false) MultipartFile file) {
         Post post = postService.postDtoToPost(new PostCreateRequest(title, content));
+        post.setUserId(new BigInteger("1"));
         post.setCreatedAt(timestampUtil.getCurrentTimestamp());
         Post response;
         if(file != null) {
@@ -71,5 +76,11 @@ public class PostController {
         post.setPostId(id);
         post = postService.updatePost(post);
         return ResponseEntity.ok(post);
+    }
+
+    @GetMapping("/{id}/media")
+    public ResponseEntity<Media> GetMediaByPostId(@PathVariable BigInteger id) {
+        Media media = mediaService.getMediaByPostId(id);
+        return ResponseEntity.ok(media);
     }
 }
