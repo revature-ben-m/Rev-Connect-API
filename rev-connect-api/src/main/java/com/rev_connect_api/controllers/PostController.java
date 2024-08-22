@@ -38,10 +38,16 @@ public class PostController {
     @PostMapping
     public ResponseEntity<Post> CreatePost(@RequestParam("title") String title,
                                            @RequestParam("content") String content,
-                                           @RequestParam(value = "file", required = false) MultipartFile file) {
-        Post post = postService.postDtoToPost(new PostCreateRequest(title, content));
+                                           @RequestParam(value = "file", required = false) MultipartFile file,
+                                           @RequestParam(value = "isPinned") Boolean isPinned)  /*still have to set default value to false */ { 
+        Post post = postService.postDtoToPost(new PostCreateRequest(title, content, isPinned));
         post.setUserId(new BigInteger("1"));
         post.setCreatedAt(timestampUtil.getCurrentTimestamp());
+        if(isPinned == true) {
+            post.setPinnedAt(timestampUtil.getCurrentTimestamp());
+        } else {
+            post.setPinnedAt(null);
+        }
         Post response;
         if(file != null) {
             response = postService.savePost(post, file);

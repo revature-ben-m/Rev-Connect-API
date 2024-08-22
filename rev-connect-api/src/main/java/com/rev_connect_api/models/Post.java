@@ -15,8 +15,10 @@ public class Post {
     private BigInteger userId;
     private Timestamp createdAt;
     private Timestamp updatedAt;
+    private Timestamp pinnedAt;
     private String title;
     private String content;
+    private Boolean isPinned; // still have to set default value to false
 
     public Post() {}
 
@@ -36,12 +38,20 @@ public class Post {
         return updatedAt;
     }
 
+    public Timestamp getPinnedAt() {
+        return pinnedAt;
+    }
+
     public String getTitle() {
         return title;
     }
 
     public String getContent() {
         return content;
+    }
+
+    public boolean getIsPinned() {
+        return isPinned;
     }
 
     public void setPostId(BigInteger postId) {
@@ -60,12 +70,20 @@ public class Post {
         this.updatedAt = updatedAt;
     }
 
+    public void setPinnedAt(Timestamp pinnedAt) {
+        this.pinnedAt = pinnedAt;
+    }
+
     public void setTitle(String title) {
         this.title = title;
     }
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public void setIsPinned(Boolean isPinned) {
+        this.isPinned = isPinned;
     }
 
     private Post(Builder builder) {
@@ -75,6 +93,10 @@ public class Post {
         updatedAt = builder.updatedAt;
         title = builder.title;
         content = builder.content;
+        isPinned = builder.isPinned;
+        pinnedAt = builder.pinnedAt;
+
+        
     }
 
     public static Builder builder() {
@@ -89,6 +111,8 @@ public class Post {
         private Timestamp updatedAt;
         private String title;
         private String content;
+        private boolean isPinned;
+        private Timestamp pinnedAt; 
 
         private Builder() {
         }
@@ -113,6 +137,11 @@ public class Post {
             return this;
         }
 
+        public Builder pinnedAt(Timestamp val) {
+            pinnedAt = val;
+            return this;
+        }
+
         public Builder title(String val) {
             title = val;
             return this;
@@ -122,6 +151,12 @@ public class Post {
             content = val;
             return this;
         }
+        
+        public Builder isPinned(Boolean val) {
+            isPinned = val;
+            return this;
+        }
+        
 
         public Post build() {
             return new Post(this);

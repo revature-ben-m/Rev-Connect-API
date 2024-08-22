@@ -45,8 +45,8 @@ public class PostControllerTest {
         final BigInteger id = new BigInteger("1");
 
         // Create post
-        PostCreateRequest postRequest = new PostCreateRequest("title", "content");
-        ResponseEntity<Post> response = postController.CreatePost(postRequest.getTitle(), postRequest.getContent(), null);
+        PostCreateRequest postRequest = new PostCreateRequest("title", "content", false);
+        ResponseEntity<Post> response = postController.CreatePost(postRequest.getTitle(), postRequest.getContent(), null, false);
         Post postResponse = response.getBody();
 
         // Verifies that the controller returns a post entity similar to the post request
@@ -67,8 +67,8 @@ public class PostControllerTest {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        PostCreateRequest postRequest = new PostCreateRequest("title", "content");
-        ResponseEntity<Post> response = postController.CreatePost(postRequest.getTitle(), postRequest.getContent(), file);
+        PostCreateRequest postRequest = new PostCreateRequest("title", "content", false);
+        ResponseEntity<Post> response = postController.CreatePost(postRequest.getTitle(), postRequest.getContent(), file, false);
         Post postResponse = response.getBody();
     
         // Gets the media by post id and sees if it exists
@@ -99,8 +99,8 @@ public class PostControllerTest {
         final BigInteger id = new BigInteger("1");
 
         // Creates a post
-        PostCreateRequest postRequest = new PostCreateRequest("title", "content");
-        postController.CreatePost(postRequest.getTitle(), postRequest.getContent(), null);
+        PostCreateRequest postRequest = new PostCreateRequest("title", "content", false);
+        postController.CreatePost(postRequest.getTitle(), postRequest.getContent(), null, false);
 
         // Delete a post, controller should return true if successfully deleted
         ResponseEntity<Boolean> response = postController.DeletePostById(id);
@@ -120,8 +120,8 @@ public class PostControllerTest {
         String content = "content test";
 
         // Create post
-        PostCreateRequest postRequest = new PostCreateRequest(title, content);
-        postController.CreatePost(title, content, null);
+        PostCreateRequest postRequest = new PostCreateRequest(title, content, false);
+        postController.CreatePost(title, content, null, false);
 
         // Fetches that post for comparison to ensure the get request is working
         ResponseEntity<Post> response = postController.GetPostById(id);
@@ -132,7 +132,7 @@ public class PostControllerTest {
         // Creates the request to update the previous post
         title = "updated title";
         content = "updated content";
-        postRequest = new PostCreateRequest(title, content);
+        postRequest = new PostCreateRequest(title, content, false);
 
         response = postController.UpdatePostById(postRequest, postResponse.getPostId());
         postResponse = response.getBody();
@@ -153,8 +153,8 @@ public class PostControllerTest {
         final String content = "some contents";
 
         for(int i = 0; i < initialPostCount; i++) {
-            PostCreateRequest postRequest = new PostCreateRequest(title, content);
-            postController.CreatePost(title, content, null);
+            PostCreateRequest postRequest = new PostCreateRequest(title, content, false);
+            postController.CreatePost(title, content, null, false);
         }
 
         ResponseEntity<List<Post>> postsResponse = postController.GetRecentPosts(0);
@@ -175,8 +175,8 @@ public class PostControllerTest {
 
         // After the first posts creation, create more posts by remainderPostCount, then fetch the next page (1) and verify that it is equal to remainderPostCount
         for(int i = 0; i < remainderPostCount; i++) {
-            PostCreateRequest postRequest = new PostCreateRequest(title, content);
-            postController.CreatePost(postRequest.getTitle(), postRequest.getContent(), null);
+            PostCreateRequest postRequest = new PostCreateRequest(title, content, false);
+            postController.CreatePost(postRequest.getTitle(), postRequest.getContent(), null, false);
         }
         // Gets the next page, should verify if pagination is working
         postsResponse = postController.GetRecentPosts(1);

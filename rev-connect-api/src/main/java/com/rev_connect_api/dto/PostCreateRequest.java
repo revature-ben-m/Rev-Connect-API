@@ -14,12 +14,14 @@ public class PostCreateRequest {
     private String title;
     @NotEmpty(message = "content is blank")
     private String content;
+    private Boolean isPinned;
 
     public PostCreateRequest() {}
 
-    public PostCreateRequest(String title, String content) {
+    public PostCreateRequest(String title, String content, Boolean isPinned) {
         this.title = title;
         this.content = content;
+        this.isPinned = isPinned;
     }
 
     public String getTitle() {
@@ -28,5 +30,9 @@ public class PostCreateRequest {
 
     public String getContent() {
         return content;
+    }
+
+    public Boolean getIsPinned() {
+        return isPinned;
     }
 }
