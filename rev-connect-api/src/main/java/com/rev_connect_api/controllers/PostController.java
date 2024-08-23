@@ -87,11 +87,6 @@ public class PostController {
                                                @PathVariable BigInteger id) {
         Post post = postService.postDtoToPost(postCreateRequest);
         post.setPostId(id);
-        if(post.getIsPinned() == true) {
-            post.setPinnedAt(timestampUtil.getCurrentTimestamp());
-        } else {
-            post.setPinnedAt(null);
-        }
         post = postService.updatePost(post);
         return ResponseEntity.ok(post);
     }

@@ -79,7 +79,12 @@ public class PostService {
         fetchedPost.setUpdatedAt(timestampUtil.getCurrentTimestamp());
         fetchedPost.setTitle(post.getTitle());
         fetchedPost.setContent(post.getContent());
-
+        fetchedPost.setIsPinned(post.getIsPinned());
+        if(post.getIsPinned() == true) {
+            post.setPinnedAt(timestampUtil.getCurrentTimestamp());
+        } else {
+            post.setPinnedAt(null);
+        }
         Post response = savePost(fetchedPost);
         return response;
     }
@@ -92,6 +97,7 @@ public class PostService {
         return Post.builder()
                 .title(postCreateRequest.getTitle())
                 .content(postCreateRequest.getContent())
+                .isPinned(postCreateRequest.getIsPinned())
                 .build();
     }
 }
