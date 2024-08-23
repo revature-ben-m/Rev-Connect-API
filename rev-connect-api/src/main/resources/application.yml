@@ -6,15 +6,3 @@
 #    driver-class-name: com.mysql.jdbc.Driver
 
 
-spring:
-  mail:
-    host: smtp.example.com
-    port: 587
-    username: learner@email.com
-    password: jjhjghgfjkll
-    properties:
-      mail:
-        smtp:
-          auth: true
-          starttls:
-            enable: true
