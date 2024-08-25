@@ -95,7 +95,6 @@ public class NameAndBioTest {
         headers.set("Authorization", "Bearer " + token);
         HttpEntity<PersonalProfile> requestEntity = new HttpEntity<>(null, headers);
 
-        //Send HTTP request
         ResponseEntity<String> response = testRestTemplate.exchange(serviceLocation + "/" + initialProfile.getUser().getUserId(), HttpMethod.GET, requestEntity,String.class);
         
         //Verify response status code
