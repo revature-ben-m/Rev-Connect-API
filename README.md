@@ -1,5 +1,2 @@
-# Rev-Connect-APIfff
-Spring service for Rev Connect applicationffffffffffffffffffffffffffffffff
-ffffffffff
-ff
-f
+# Rev-Connect-API
+Spring service for Rev Connect application
