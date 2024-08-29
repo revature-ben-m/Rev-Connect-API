@@ -34,7 +34,7 @@ public class CommentsTest {
 
     @Test
     public void postCommentSuccessful() throws IOException, InterruptedException{
-        
+        assert(false);
     }
 
 }
